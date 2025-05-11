@@ -8,7 +8,7 @@
 #SBATCH --gres="gpu:1"
 #SBATCH --mem-per-cpu=16384
 #SBATCH --partition=gpu
-#SBATCH --array=0-0
+#SBATCH --array=0-6
 #
 #SBATCH --mail-user=pierre.poitier@unamur.be
 #SBATCH --mail-type=ALL
@@ -26,6 +26,12 @@ source /gpfs/home/acad/unamur-fac_info/ppoitier/envs/dl/bin/activate
 
 config_files=(
   "../configs/dgs/actionness.yaml"
+  "../configs/dgs/actionness_with_offsets.yaml"
+  "../configs/dgs/bio_tagging.yaml"
+  "../configs/dgs/bio_tagging_without_weights.yaml"
+  "../configs/dgs/boundaries.yaml"
+  "../configs/dgs/boundaries_without_weights.yaml"
+  "../configs/dgs/boundaries_with_offsets.yaml"
 )
 
 config_file=${config_files[$SLURM_ARRAY_TASK_ID]}

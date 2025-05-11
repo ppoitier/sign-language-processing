@@ -1,0 +1,30 @@
+from: "actionness.yaml"
+
+id: "dgs_bio_tagging"
+
+datasets:
+  training:
+    preprocessing:
+      segment_codecs:
+        - { name: 'bio_tags', args: {  } }
+  validation:
+    preprocessing:
+      segment_codecs:
+        - { name: 'bio_tags' }
+  testing:
+    preprocessing:
+      segment_codecs:
+        - { name: 'bio_tags' }
+
+backbone:
+  module_kwargs:
+    out_channels: 3
+
+training:
+  criterion:
+    n_classes: 3
+    use_weights: true
+
+target_codec:
+  name: "bio_tags"
+  use_offsets: false
