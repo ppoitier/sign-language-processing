@@ -1,0 +1,60 @@
+# sample_segmentation_config.yaml
+
+id: "my_awesome_segmentation_run_001"
+
+datasets:
+  train_set:
+    shards_url: "/data/shards/mitochondria/train/{0000..0099}.tar"
+    mode: "train"
+    loader:
+      batch_size: 8
+      shuffle: true
+      num_workers: 0
+    preprocessing:
+      transforms_pipeline: "basic_augmentations_3d"
+      segment_transforms_pipeline: "segmentation_specific_augs"
+  validation_set:
+    shards_url: "/data/shards/mitochondria/validation/{0000..0019}.tar"
+    mode: "validation"
+    loader:
+      batch_size: 4
+      shuffle: false
+      num_workers: 0
+    preprocessing:
+      transforms_pipeline: "resize_only_3d"
+      use_windows: true
+      window_size: [128, 128, 64]
+      window_stride: [128, 128, 64] # Usually no overlap for validation
+      # max_empty_window_nb can be omitted to use default (None)
+      segment_transforms_pipeline: "none" # No specific seg augmentations for val
+
+# Fields specific to SegmentationTaskConfig
+codec:
+  module_name: "MyCustomCodec"
+  module_kwargs:
+    quantization_bits: 8
+    some_other_param: "value"
+
+model:
+  module_name: "UNet3D" # Or any other segmentation model
+  module_kwargs:
+    in_channels: 1
+    out_channels: 2 # e.g., background and foreground
+    initial_features: 32
+    depth: 4
+    normalization_layer: "InstanceNorm3d"
+    activation_function: "ReLU"
+
+training:
+  criterion:
+    name: "DiceCELoss" # Common loss for segmentation
+    kwargs:
+      include_background: false
+      softmax: true
+      lambda_dice: 0.5
+      lambda_ce: 0.5
+    learning_rate: 0.0003
+    use_weights: true # e.g., if you have class weights for the loss
+  n_epochs: 200
+  gradient_clipping: 1.0
+  early_stopping_patience: 25

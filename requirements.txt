@@ -1,0 +1,10 @@
+click
+lightning
+numpy
+pydantic
+pyyaml
+tensorboard
+torch
+torchmetrics
+tqdm
+webdataset
