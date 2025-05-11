@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+py-modules = ['slp']
+
+[project]
+name = "slp"
+version = "0.0.1"
+authors = [
+    { name="Pierre Poitier", email="pierre.poitier@unamur.be" },
+]
+description = "Sign Language Processing toolbox"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+]
