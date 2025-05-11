@@ -1,6 +1,6 @@
 from: "actionness.yaml"
 
-id: "dgs_bio_tagging"
+id: "lsfb_bio_tagging"
 
 datasets:
   training:

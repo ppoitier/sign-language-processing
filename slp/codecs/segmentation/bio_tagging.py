@@ -13,7 +13,7 @@ from slp.utils.bio_tags import bio_probabilities_to_segments
 
 class BioTaggingCodec(SegmentationCodec):
     def __init__(
-        self, b_tag_size: int | float = 0.2, decoding_algorithm: str = "strict"
+        self, b_tag_size: int | float = 2, decoding_algorithm: str = "greedy"
     ):
         super().__init__()
         self.from_segments_to_bio_segments = BioTags(b_tag_size=b_tag_size)

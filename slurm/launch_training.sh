@@ -8,7 +8,7 @@
 #SBATCH --gres="gpu:1"
 #SBATCH --mem-per-cpu=16384
 #SBATCH --partition=gpu
-#SBATCH --array=0-6
+#SBATCH --array=0-23
 #
 #SBATCH --mail-user=pierre.poitier@unamur.be
 #SBATCH --mail-type=ALL
@@ -32,6 +32,25 @@ config_files=(
   "../configs/dgs/boundaries.yaml"
   "../configs/dgs/boundaries_without_weights.yaml"
   "../configs/dgs/boundaries_with_offsets.yaml"
+  "../configs/dgs/boundaries_with_offsets_without_weights.yaml"
+
+  "../configs/lsfb/actionness.yaml"
+  "../configs/lsfb/actionness_with_offsets.yaml"
+  "../configs/lsfb/bio_tagging.yaml"
+  "../configs/lsfb/bio_tagging_without_weights.yaml"
+  "../configs/lsfb/boundaries.yaml"
+  "../configs/lsfb/boundaries_without_weights.yaml"
+  "../configs/lsfb/boundaries_with_offsets.yaml"
+  "../configs/lsfb/boundaries_with_offsets_without_weights.yaml"
+
+  "../configs/phoenix/actionness.yaml"
+  "../configs/phoenix/actionness_with_offsets.yaml"
+  "../configs/phoenix/bio_tagging.yaml"
+  "../configs/phoenix/bio_tagging_without_weights.yaml"
+  "../configs/phoenix/boundaries.yaml"
+  "../configs/phoenix/boundaries_without_weights.yaml"
+  "../configs/phoenix/boundaries_with_offsets.yaml"
+  "../configs/phoenix/boundaries_with_offsets_without_weights.yaml"
 )
 
 config_file=${config_files[$SLURM_ARRAY_TASK_ID]}

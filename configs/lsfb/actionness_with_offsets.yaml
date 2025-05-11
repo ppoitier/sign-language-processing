@@ -1,0 +1,29 @@
+from: "actionness.yaml"
+
+id: "lsfb_actionness_with_offsets"
+
+datasets:
+  training:
+    preprocessing:
+      segment_codecs:
+        - { name: 'actionness+offsets' }
+  validation:
+    preprocessing:
+      segment_codecs:
+        - { name: 'actionness+offsets' }
+  testing:
+    preprocessing:
+      segment_codecs:
+        - { name: 'actionness+offsets' }
+
+target_codec:
+  name: "actionness+offsets"
+  use_offsets: true
+
+backbone:
+  module_kwargs:
+    out_channels: 4 # 2 labels (background + signing) and 2 offsets (start + end)
+
+training:
+  criterion:
+    name: "multi-layer+ce+smoothing+offsets"

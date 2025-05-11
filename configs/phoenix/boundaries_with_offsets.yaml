@@ -1,0 +1,29 @@
+from: "boundaries.yaml"
+
+id: "phoenix_boundaries_with_offsets"
+
+datasets:
+  training:
+    preprocessing:
+      segment_codecs:
+        - { name: 'boundaries+offsets' }
+  validation:
+    preprocessing:
+      segment_codecs:
+        - { name: 'boundaries+offsets' }
+  testing:
+    preprocessing:
+      segment_codecs:
+        - { name: 'boundaries+offsets' }
+
+target_codec:
+  name: "boundaries+offsets"
+  use_offsets: true
+
+backbone:
+  module_kwargs:
+    out_channels: 4 # 2 labels (background + signing) and 2 offsets (start + end)
+
+training:
+  criterion:
+    name: "multi-layer+ce+smoothing+offsets"

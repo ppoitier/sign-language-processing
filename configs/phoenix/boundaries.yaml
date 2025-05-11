@@ -1,0 +1,25 @@
+from: "actionness.yaml"
+
+id: "phoenix_boundaries"
+
+datasets:
+  training:
+    preprocessing:
+      segment_codecs:
+        - { name: 'boundaries' }
+  validation:
+    preprocessing:
+      segment_codecs:
+        - { name: 'boundaries' }
+  testing:
+    preprocessing:
+      segment_codecs:
+        - { name: 'boundaries' }
+
+training:
+  criterion:
+    use_weights: true
+
+target_codec:
+  name: "boundaries"
+  use_offsets: false

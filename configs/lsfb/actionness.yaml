@@ -1,8 +1,8 @@
-id: "dgs_actionness"
+id: "lsfb_actionness"
 
 datasets:
   training:
-    shards_url: "/gpfs/scratch/acad/lsfb/datasets/dgs_corpus/shards/shard_{000000..000003}.tar"
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/lsfb_cont/shards/shard_{000000..000003}.tar"
     mode: "train"
     loader:
       batch_size: 16
@@ -17,7 +17,7 @@ datasets:
       segment_codecs:
         - { name: 'actionness' }
   validation:
-    shards_url: "/gpfs/scratch/acad/lsfb/datasets/dgs_corpus/shards/shard_000004.tar"
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/lsfb_cont/shards/shard_000004.tar"
     mode: "validation"
     loader:
       batch_size: 16
@@ -32,7 +32,7 @@ datasets:
       segment_codecs:
         - { name: 'actionness' }
   testing:
-    shards_url: "/gpfs/scratch/acad/lsfb/datasets/dgs_corpus/shards/shard_000004.tar"
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/lsfb_cont/shards/shard_000004.tar"
     mode: "testing"
     loader:
       batch_size: 16
