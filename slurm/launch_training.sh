@@ -25,7 +25,7 @@ module load Python/3.10.4-GCCcore-11.3.0
 source /gpfs/home/acad/unamur-fac_info/ppoitier/envs/dl/bin/activate
 
 config_files=(
-  "../config/dgs/actionness.yaml"
+  "../configs/dgs/actionness.yaml"
 )
 
 config_file=${config_files[$SLURM_ARRAY_TASK_ID]}
