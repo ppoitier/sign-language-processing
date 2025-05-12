@@ -1,6 +1,6 @@
-from: "actionness.yaml"
+from: "1.actionness_with_weights.yaml"
 
-id: "phoenix_actionness_with_offsets"
+id: "actionness_with_offsets_and_weights"
 
 datasets:
   training:
@@ -27,3 +27,4 @@ backbone:
 training:
   criterion:
     name: "multi-layer+ce+smoothing+offsets"
+    use_weights: true

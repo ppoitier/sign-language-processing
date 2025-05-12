@@ -1,4 +1,6 @@
-id: "dgs_actionness"
+id: "actionness_with_weights"
+prefix: "dgs"
+seed: 42
 
 datasets:
   training:
@@ -63,7 +65,7 @@ backbone:
 training:
   criterion:
     name: "multi-layer+ce+smoothing"
-    use_weights: false
+    use_weights: true
   max_epochs: 300
   early_stopping_patience: 10
   learning_rate: 1e-4

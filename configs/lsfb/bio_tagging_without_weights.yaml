@@ -1,7 +1,0 @@
-from: "bio_tagging.yaml"
-
-id: "lsfb_bio_tagging_without_weights"
-
-training:
-  criterion:
-    use_weights: false

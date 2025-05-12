@@ -1,6 +1,6 @@
-from: "boundaries.yaml"
+from: "7.boundaries_with_weights.yaml"
 
-id: "phoenix_boundaries_with_offsets"
+id: "boundaries_with_offsets_and_weights"
 
 datasets:
   training:

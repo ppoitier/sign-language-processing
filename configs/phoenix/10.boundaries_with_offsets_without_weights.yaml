@@ -1,0 +1,7 @@
+from: "9.boundaries_with_offsets_and_weights.yaml"
+
+id: "boundaries_with_offsets_without_weights"
+
+training:
+  criterion:
+    use_weights: false

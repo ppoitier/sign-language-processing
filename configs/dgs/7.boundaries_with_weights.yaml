@@ -1,6 +1,6 @@
-from: "actionness.yaml"
+from: "1.actionness_with_weights.yaml"
 
-id: "lsfb_boundaries"
+id: "boundaries_with_weights"
 
 datasets:
   training:

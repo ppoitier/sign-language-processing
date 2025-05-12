@@ -1,0 +1,7 @@
+from: "7.boundaries_with_weights.yaml"
+
+id: "boundaries_without_weights"
+
+training:
+  criterion:
+    use_weights: false

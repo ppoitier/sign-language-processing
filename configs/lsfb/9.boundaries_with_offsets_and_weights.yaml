@@ -1,23 +1,23 @@
-from: "actionness.yaml"
+from: "7.boundaries_with_weights.yaml"
 
-id: "dgs_actionness_with_offsets"
+id: "boundaries_with_offsets_and_weights"
 
 datasets:
   training:
     preprocessing:
       segment_codecs:
-        - { name: 'actionness+offsets' }
+        - { name: 'boundaries+offsets' }
   validation:
     preprocessing:
       segment_codecs:
-        - { name: 'actionness+offsets' }
+        - { name: 'boundaries+offsets' }
   testing:
     preprocessing:
       segment_codecs:
-        - { name: 'actionness+offsets' }
+        - { name: 'boundaries+offsets' }
 
 target_codec:
-  name: "actionness+offsets"
+  name: "boundaries+offsets"
   use_offsets: true
 
 backbone:

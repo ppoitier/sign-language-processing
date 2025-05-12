@@ -1,4 +1,7 @@
 import click
+import random
+import numpy as np
+import torch
 
 from slp.config.load_config import load_segmentation_task_config
 from slp.config.loading.tasks import load_segmentation_task
@@ -11,8 +14,14 @@ from slp.trainers.utils import run_training, run_testing
 )
 def launch_segmentation_training(config_path):
     config = load_segmentation_task_config(config_path)
+
+    seed = config.seed
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+
     task_id, data_sets, data_loaders, module = load_segmentation_task(config)
-    exp_name = f"{task_id}_{str(int(config.task_datetime.timestamp() * 1000))}"
+    exp_name = f"{config.prefix}_{task_id}_{str(int(config.task_datetime.timestamp() * 1000))}"
     log_dir = f"{config.output_dir}/logs/{exp_name}"
     checkpoints_dir = f"{config.output_dir}/checkpoints/{exp_name}"
     print("Logs directory:", checkpoints_dir)

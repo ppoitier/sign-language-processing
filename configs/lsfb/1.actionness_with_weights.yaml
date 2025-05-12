@@ -1,4 +1,6 @@
-id: "lsfb_actionness"
+id: "actionness_with_weights"
+prefix: "lsfb"
+seed: 42
 
 datasets:
   training:
@@ -17,7 +19,7 @@ datasets:
       segment_codecs:
         - { name: 'actionness' }
   validation:
-    shards_url: "/gpfs/scratch/acad/lsfb/datasets/lsfb_cont/shards/shard_000004.tar"
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/dgs_corpus/shards/shard_000004.tar"
     mode: "validation"
     loader:
       batch_size: 16
@@ -32,7 +34,7 @@ datasets:
       segment_codecs:
         - { name: 'actionness' }
   testing:
-    shards_url: "/gpfs/scratch/acad/lsfb/datasets/lsfb_cont/shards/shard_000004.tar"
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/dgs_corpus/shards/shard_000004.tar"
     mode: "testing"
     loader:
       batch_size: 16
@@ -63,7 +65,7 @@ backbone:
 training:
   criterion:
     name: "multi-layer+ce+smoothing"
-    use_weights: false
+    use_weights: true
   max_epochs: 300
   early_stopping_patience: 10
   learning_rate: 1e-4

@@ -1,6 +1,6 @@
-from: "actionness.yaml"
+from: "1.actionness_with_weights.yaml"
 
-id: "phoenix_boundaries_without_weights"
+id: "boundaries_with_weights"
 
 datasets:
   training:
@@ -18,7 +18,7 @@ datasets:
 
 training:
   criterion:
-    use_weights: false
+    use_weights: true
 
 target_codec:
   name: "boundaries"

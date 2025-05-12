@@ -10,6 +10,8 @@ from slp.config.templates.training import TrainingConfig
 
 class TaskConfig(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid4()))
+    prefix: str = "experiment"
+    seed: int = 42
     task_datetime: datetime = Field(default_factory=datetime.now)
     datasets: dict[str, SegmentationDatasetConfig]
 

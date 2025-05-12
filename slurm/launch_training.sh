@@ -8,7 +8,7 @@
 #SBATCH --gres="gpu:1"
 #SBATCH --mem-per-cpu=16384
 #SBATCH --partition=gpu
-#SBATCH --array=0-23
+#SBATCH --array=0-29
 #
 #SBATCH --mail-user=pierre.poitier@unamur.be
 #SBATCH --mail-type=ALL
@@ -25,32 +25,38 @@ module load Python/3.10.4-GCCcore-11.3.0
 source /gpfs/home/acad/unamur-fac_info/ppoitier/envs/dl/bin/activate
 
 config_files=(
-  "../configs/dgs/actionness.yaml"
-  "../configs/dgs/actionness_with_offsets.yaml"
-  "../configs/dgs/bio_tagging.yaml"
-  "../configs/dgs/bio_tagging_without_weights.yaml"
-  "../configs/dgs/boundaries.yaml"
-  "../configs/dgs/boundaries_without_weights.yaml"
-  "../configs/dgs/boundaries_with_offsets.yaml"
-  "../configs/dgs/boundaries_with_offsets_without_weights.yaml"
+  "../configs/dgs/1.actionness_with_weights.yaml"
+  "../configs/dgs/2.actionness_without_weights.yaml"
+  "../configs/dgs/3.actionness_with_offsets_and_weights.yaml"
+  "../configs/dgs/4.actionness_with_offsets_without_weights.yaml"
+  "../configs/dgs/5.bio_tagging_with_weights.yaml"
+  "../configs/dgs/6.bio_tagging_without_weights.yaml"
+  "../configs/dgs/7.boundaries_with_weights.yaml"
+  "../configs/dgs/8.boundaries_without_weights.yaml"
+  "../configs/dgs/9.boundaries_with_offsets_and_weights.yaml"
+  "../configs/dgs/10.boundaries_with_offsets_without_weights.yaml"
 
-  "../configs/lsfb/actionness.yaml"
-  "../configs/lsfb/actionness_with_offsets.yaml"
-  "../configs/lsfb/bio_tagging.yaml"
-  "../configs/lsfb/bio_tagging_without_weights.yaml"
-  "../configs/lsfb/boundaries.yaml"
-  "../configs/lsfb/boundaries_without_weights.yaml"
-  "../configs/lsfb/boundaries_with_offsets.yaml"
-  "../configs/lsfb/boundaries_with_offsets_without_weights.yaml"
+  "../configs/lsfb/1.actionness_with_weights.yaml"
+  "../configs/lsfb/2.actionness_without_weights.yaml"
+  "../configs/lsfb/3.actionness_with_offsets_and_weights.yaml"
+  "../configs/lsfb/4.actionness_with_offsets_without_weights.yaml"
+  "../configs/lsfb/5.bio_tagging_with_weights.yaml"
+  "../configs/lsfb/6.bio_tagging_without_weights.yaml"
+  "../configs/lsfb/7.boundaries_with_weights.yaml"
+  "../configs/lsfb/8.boundaries_without_weights.yaml"
+  "../configs/lsfb/9.boundaries_with_offsets_and_weights.yaml"
+  "../configs/lsfb/10.boundaries_with_offsets_without_weights.yaml"
 
-  "../configs/phoenix/actionness.yaml"
-  "../configs/phoenix/actionness_with_offsets.yaml"
-  "../configs/phoenix/bio_tagging.yaml"
-  "../configs/phoenix/bio_tagging_without_weights.yaml"
-  "../configs/phoenix/boundaries.yaml"
-  "../configs/phoenix/boundaries_without_weights.yaml"
-  "../configs/phoenix/boundaries_with_offsets.yaml"
-  "../configs/phoenix/boundaries_with_offsets_without_weights.yaml"
+  "../configs/phoenix/1.actionness_with_weights.yaml"
+  "../configs/phoenix/2.actionness_without_weights.yaml"
+  "../configs/phoenix/3.actionness_with_offsets_and_weights.yaml"
+  "../configs/phoenix/4.actionness_with_offsets_without_weights.yaml"
+  "../configs/phoenix/5.bio_tagging_with_weights.yaml"
+  "../configs/phoenix/6.bio_tagging_without_weights.yaml"
+  "../configs/phoenix/7.boundaries_with_weights.yaml"
+  "../configs/phoenix/8.boundaries_without_weights.yaml"
+  "../configs/phoenix/9.boundaries_with_offsets_and_weights.yaml"
+  "../configs/phoenix/10.boundaries_with_offsets_without_weights.yaml"
 )
 
 config_file=${config_files[$SLURM_ARRAY_TASK_ID]}

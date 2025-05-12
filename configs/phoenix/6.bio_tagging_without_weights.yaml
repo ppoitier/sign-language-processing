@@ -1,0 +1,7 @@
+from: "5.bio_tagging_with_weights.yaml"
+
+id: "bio_tagging_without_weights"
+
+training:
+  criterion:
+    use_weights: false

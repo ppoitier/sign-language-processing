@@ -1,6 +1,6 @@
-from: "actionness.yaml"
+from: "1.actionness_with_weights.yaml"
 
-id: "dgs_bio_tagging"
+id: "bio_tagging_with_weights"
 
 datasets:
   training:
