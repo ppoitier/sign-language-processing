@@ -1,4 +1,4 @@
-from: "2.actionness_with_weights.yaml"
+from: "1.actionness_with_weights.yaml"
 
 id: "actionness_without_weights"
 
