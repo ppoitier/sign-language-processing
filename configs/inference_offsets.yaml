@@ -1,4 +1,4 @@
-id: "per_frames_testing"
+id: "offsets_testing"
 #prefix: "dgs"
 prefix: "lsfb"
 seed: 42
@@ -15,26 +15,26 @@ datasets:
       window_stride: 2800
       max_empty_windows: 0
       segment_codecs:
-        - { name: 'actionness' }
+        - { name: 'actionness+offsets' }
 
 target_codec:
-  name: "actionness"
-  use_offsets: false
+  name: "actionness+offsets"
+  use_offsets: true
 
 backbone:
   module_name: "mstcn"
-#  checkpoint_path: "D:/data/sign-languages/outs/slp_old/segmentation/slp/checkpoints/dgs_actionness_1746993295798/epoch=78-step=22673.ckpt"
-  checkpoint_path: "D:/data/sign-languages/outs/slp_old/segmentation/slp/checkpoints/lsfb_actionness_1746993295798/epoch=53-step=8262.ckpt"
+#  checkpoint_path: "D:/data/sign-languages/outs/slp_old/segmentation/slp/checkpoints/dgs_actionness_with_offsets_1746993295800/epoch=97-step=28126.ckpt"
+  checkpoint_path: "D:/data/sign-languages/outs/slp_old/segmentation/slp/checkpoints/lsfb_actionness_with_offsets_1746993295800/epoch=112-step=17289.ckpt"
   module_kwargs:
     in_channels: 130
-    out_channels: 2
+    out_channels: 4
     hidden_channels: 64
     n_stages: 4
     n_layers: 10
 
 training:
   criterion:
-    name: "multi-layer+ce+smoothing"
+    name: "multi-layer+ce+smoothing+offsets"
     use_weights: false
   max_epochs: 300
   early_stopping_patience: 10

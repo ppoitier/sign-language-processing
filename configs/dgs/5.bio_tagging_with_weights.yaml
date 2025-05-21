@@ -6,15 +6,15 @@ datasets:
   training:
     preprocessing:
       segment_codecs:
-        - { name: 'bio_tags', args: { b_tag_size: 2 } }
+        - { name: 'bio_tags', args: { b_tag_size: 0.1 } }
   validation:
     preprocessing:
       segment_codecs:
-        - { name: 'bio_tags', args: { b_tag_size: 2 } }
+        - { name: 'bio_tags', args: { b_tag_size: 0.1 } }
   testing:
     preprocessing:
       segment_codecs:
-        - { name: 'bio_tags', args: { b_tag_size: 2 } }
+        - { name: 'bio_tags', args: { b_tag_size: 0.1 } }
 
 backbone:
   module_kwargs:

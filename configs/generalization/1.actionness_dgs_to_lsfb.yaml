@@ -1,13 +1,15 @@
-id: "per_frames_testing"
-#prefix: "dgs"
-prefix: "lsfb"
+id: "actionness_without_weights"
+prefix: "dgs2lsfb"
 seed: 42
 
 datasets:
   testing:
-#    shards_url: "file:D:/data/sign-languages/dgs-corpus/shards_processed/shard_000004.tar"
     shards_url: "file:D:/data/sign-languages/lsfb-cont/shards/shard_000004.tar"
     mode: "testing"
+    loader:
+      batch_size: 16
+      shuffle: false
+      num_workers: 0
     preprocessing:
       pose_transforms_pipeline: "normalize_and_flatten"
       use_windows: true
@@ -23,8 +25,7 @@ target_codec:
 
 backbone:
   module_name: "mstcn"
-#  checkpoint_path: "D:/data/sign-languages/outs/slp_old/segmentation/slp/checkpoints/dgs_actionness_1746993295798/epoch=78-step=22673.ckpt"
-  checkpoint_path: "D:/data/sign-languages/outs/slp_old/segmentation/slp/checkpoints/lsfb_actionness_1746993295798/epoch=53-step=8262.ckpt"
+  checkpoint_path: "D:/data/sign-languages/outs/slp/checkpoints/dgs_actionness_without_weights_1747306011968/epoch=78-step=22673.ckpt"
   module_kwargs:
     in_channels: 130
     out_channels: 2

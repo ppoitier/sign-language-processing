@@ -1,0 +1,23 @@
+from: "1.actionness_dgs_to_lsfb.yaml"
+
+id: "actionness_with_offsets_and_weights"
+
+datasets:
+  testing:
+    preprocessing:
+      segment_codecs:
+        - { name: 'actionness+offsets' }
+
+target_codec:
+  name: "actionness+offsets"
+  use_offsets: true
+
+backbone:
+  checkpoint_path: "D:/data/sign-languages/outs/slp/checkpoints/dgs_actionness_with_offsets_without_weights_1747306011606/epoch=152-step=43911.ckpt"
+  module_kwargs:
+    out_channels: 4 # 2 labels (background + signing) and 2 offsets (start + end)
+
+training:
+  criterion:
+    name: "multi-layer+ce+smoothing+offsets"
+    use_weights: false
