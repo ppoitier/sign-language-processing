@@ -1,3 +1,5 @@
+from pytorch_metric_learning.losses import SupConLoss
+
 from slp.config.templates.training import CriterionConfig
 from slp.nn.losses.smoothing import MultiLayerClassificationLossWithSmoothing, ClassificationLossWithSmoothing
 from slp.nn.losses.offsets import MultiLayerClassificationWithOffsetsLoss
@@ -21,5 +23,13 @@ def load_segmentation_criterion(config: CriterionConfig, criterion_weights=None)
             n_classes=config.n_classes,
             return_loss_components=True,
         )
+    else:
+        raise ValueError(f'Unknown criterion: {name}.')
+
+
+def load_contrastive_criterion(config: CriterionConfig, criterion_weights=None):
+    name = config.name
+    if name == 'supcon':
+        return SupConLoss(**config.kwargs)
     else:
         raise ValueError(f'Unknown criterion: {name}.')

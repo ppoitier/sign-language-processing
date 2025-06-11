@@ -30,9 +30,17 @@ class SegmentationDataPreprocessing(ContinuousDataPreprocessing):
     segment_codecs: list[SegmentCodecConfig] = Field(default_factory=list)
 
 
-class SegmentationDatasetConfig(BaseModel):
+class DatasetConfig(BaseModel):
     shards_url: str
     mode: str = 'test'
     loader: DataLoaderConfig | None = None
-    preprocessing: SegmentationDataPreprocessing | None = None
     verbose: bool = False
+
+
+class SegmentationDatasetConfig(DatasetConfig):
+    preprocessing: SegmentationDataPreprocessing | None = None
+
+
+class RecognitionDatasetConfig(DatasetConfig):
+    vocab_size: int | None = None
+    preprocessing: DataPreprocessing | None = None

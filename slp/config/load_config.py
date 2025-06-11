@@ -3,7 +3,7 @@ from pathlib import Path
 import yaml
 
 from slp.utils.dict import deep_merge
-from slp.config.templates.task import SegmentationTaskConfig
+from slp.config.templates.task import SegmentationTaskConfig, ContrastiveRecognitionTask
 
 
 def _load_config_to_dict(yaml_filepath: str | Path) -> dict:
@@ -21,3 +21,7 @@ def _load_config_to_dict(yaml_filepath: str | Path) -> dict:
 
 def load_segmentation_task_config(yaml_filepath: str) -> SegmentationTaskConfig:
     return SegmentationTaskConfig.model_validate(_load_config_to_dict(yaml_filepath))
+
+
+def load_contrastive_recognition_task_config(yaml_filepath: str) -> ContrastiveRecognitionTask:
+    return ContrastiveRecognitionTask.model_validate(_load_config_to_dict(yaml_filepath))

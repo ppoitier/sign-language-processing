@@ -1,8 +1,12 @@
 click
+einops
 lightning
 numpy
 pydantic
+opencv-python
+pytorch-metric-learning
 pyyaml
+scikit-learn
 sign-language-tools @ git+https://github.com/ppoitier/sign-language-tools/tree/dev
 tensorboard
 torch

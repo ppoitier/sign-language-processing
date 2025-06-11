@@ -1,0 +1,49 @@
+id: "contrastive_slr"
+prefix: "lsfb_isol"
+seed: 42
+
+datasets:
+  training:
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/lsfb_isol/shards/500/shard_{000000..000003}.tar"
+    mode: "train"
+    preprocessing:
+      pose_transforms_pipeline: "concat+norm+nfrts+flatten"
+    loader:
+      batch_size: 128
+      shuffle: true
+  validation:
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/lsfb_isol/shards/500/shard_000004.tar"
+    mode: "validation"
+    preprocessing:
+      pose_transforms_pipeline: "concat+norm+flatten"
+    loader:
+      batch_size: 128
+      shuffle: true
+
+backbone:
+  module_name: "vit"
+  module_kwargs:
+    in_channels: 210
+    out_channels: 1024
+    max_length: 64
+    n_layers: 8
+    n_heads: 4
+    pool: "cls_token"
+
+projector:
+  module_name: "mlp-block"
+  module_kwargs:
+    in_channels: 1024
+    hidden_channels: 512
+    out_channels: 128
+
+training:
+  criterion:
+    name: "supcon"
+    use_weights: false
+  max_epochs: 100
+  early_stopping_patience: 20
+  learning_rate: 1e-4
+  debug: false
+
+output_dir: "/gpfs/scratch/acad/lsfb/out/slp/recognition"
