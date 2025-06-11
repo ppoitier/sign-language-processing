@@ -33,5 +33,5 @@ config_file=${config_files[$SLURM_ARRAY_TASK_ID]}
 nvidia-smi
 echo "Job array ID: $SLURM_ARRAY_TASK_ID"
 echo "Job start at $(date)"
-python ../scripts/contrastive_recognition/train.py --config-path="$config_file"
+python ../../scripts/contrastive_recognition/train.py --config-path="$config_file"
 echo "Job end at $(date)"
