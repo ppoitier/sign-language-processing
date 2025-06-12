@@ -7,23 +7,23 @@ datasets:
     shards_url: "/gpfs/scratch/acad/lsfb/datasets/lsfb_isol/shards/500/shard_{000000..000003}.tar"
     mode: "train"
     preprocessing:
-      pose_transforms_pipeline: "concat+norm+nfrts+flatten"
+      pose_transforms_pipeline: "concat+nfrts+flatten"
     loader:
-      batch_size: 128
+      batch_size: 512
       shuffle: true
   validation:
     shards_url: "/gpfs/scratch/acad/lsfb/datasets/lsfb_isol/shards/500/shard_000004.tar"
     mode: "validation"
     preprocessing:
-      pose_transforms_pipeline: "concat+norm+flatten"
+      pose_transforms_pipeline: "concat+flatten"
     loader:
-      batch_size: 128
-      shuffle: true
+      batch_size: 512
+      shuffle: false
 
 backbone:
   module_name: "vit"
   module_kwargs:
-    in_channels: 210
+    in_channels: 130
     out_channels: 1024
     max_length: 64
     n_layers: 8

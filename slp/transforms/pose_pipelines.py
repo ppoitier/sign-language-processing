@@ -32,14 +32,13 @@ def get_pose_pipeline(pipeline_name: str):
     elif pipeline_name == "norm":
         return normalization_transforms()
     elif pipeline_name == "concat":
-        return Concatenate(["upper_pose", "left_hand", "right_hand", "lips"])
+        return Concatenate(["upper_pose", "left_hand", "right_hand"])
     elif pipeline_name == "split":
         return Split(
             {
                 "upper_pose": (0, 23),
                 "left_hand": (23, 44),
                 "right_hand": (44, 65),
-                "lips": (65, 105),
             }
         )
     elif pipeline_name == "flatten":

@@ -35,6 +35,7 @@ def launch_contrastive_recognition_training(config_path):
         max_epochs=config.training.max_epochs,
         early_stopping_patience=config.training.early_stopping_patience,
         debug=config.training.debug,
+        show_progress_bar=False,
     )
     # run_testing(
     #     module,

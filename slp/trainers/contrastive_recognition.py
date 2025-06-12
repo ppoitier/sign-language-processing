@@ -50,5 +50,11 @@ class ContrastiveRecognitionTrainer(TrainerBase):
 
     def configure_optimizers(self):
         optimizer = optim.AdamW(self.parameters(), lr=self.learning_rate)
-        scheduler = CosineAnnealingWithLinearWarmup(optimizer, n_warmup_steps=20, max_steps=100, lr=self.learning_rate, start_lr=1e-8, end_lr=1e-6)
-        return [optimizer], [{"scheduler": scheduler, "interval": "epoch"}]
+        scheduler = CosineAnnealingWithLinearWarmup(optimizer, n_warmup_steps=20, max_steps=100, lr=self.learning_rate, start_lr=1e-8, end_lr=1e-8)
+        return {
+            "optimizer": optimizer,
+            "lr_scheduler": {
+                "scheduler": scheduler,
+                "interval": "epoch",
+            },
+        }

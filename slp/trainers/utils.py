@@ -16,6 +16,7 @@ def run_training(
     early_stopping_patience: int = 10,
     gradient_clipping: float = 0.0,
     debug: bool = False,
+    show_progress_bar: bool = False,
 ):
     checkpoint_callback = ModelCheckpoint(
         dirpath=checkpoints_dir,
@@ -43,6 +44,7 @@ def run_training(
         max_epochs=max_epochs,
         logger=[tb_logger, csv_logger],
         callbacks=callbacks,
+        enable_progress_bar=show_progress_bar,
     )
     trainer.fit(
         module,
@@ -58,12 +60,14 @@ def run_testing(
     log_dir: str,
     checkpoint_path: str | None = None,
     debug: bool = False,
+    show_progress_bar: bool = False,
 ):
     tb_logger = TensorBoardLogger(name="tb", save_dir=log_dir)
     csv_logger = CSVLogger(name="csv", save_dir=log_dir)
     trainer = pl.Trainer(
         fast_dev_run=debug,
         logger=[tb_logger, csv_logger],
+        enable_progress_bar=show_progress_bar,
     )
     trainer.test(
         module,
