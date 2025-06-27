@@ -33,6 +33,6 @@ training:
   max_epochs: 200
   early_stopping_patience: 10
   learning_rate: 1e-3
-  debug: true
+  debug: false
 
 output_dir: "/gpfs/scratch/acad/lsfb/out/slp/recognition"
