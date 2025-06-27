@@ -51,7 +51,7 @@ def load_segmentation_dataset(config: SegmentationDatasetConfig) -> tuple[Densel
     return dataset, loader
 
 
-def load_recognition_dataset(config: RecognitionDatasetConfig) -> tuple[IsolatedSignsRecognition, DataLoader | None]:
+def load_recognition_dataset(config: RecognitionDatasetConfig, custom_collate: bool = True) -> tuple[IsolatedSignsRecognition, DataLoader | None]:
     pose_transforms = None
     if config.preprocessing is not None:
         pose_transforms = get_pose_pipeline(
@@ -72,6 +72,6 @@ def load_recognition_dataset(config: RecognitionDatasetConfig) -> tuple[Isolated
         num_workers=loader_config.num_workers,
         persistent_workers=True if loader_config.num_workers > 0 else False,
         pin_memory=loader_config.pin_memory,
-        collate_fn=ISLRCollator(min_length=64, flatten_poses=True),
+        collate_fn=ISLRCollator(min_length=64, flatten_poses=True) if custom_collate else None,
     )
     return dataset, loader

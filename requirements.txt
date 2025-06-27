@@ -11,5 +11,6 @@ sign-language-tools @ git+https://github.com/ppoitier/sign-language-tools/tree/d
 tensorboard
 torch
 torchmetrics
+torchvision
 tqdm
 webdataset

@@ -1,3 +1,5 @@
+from collections import Counter
+import numpy as np
 import torch
 from torch.utils.data import Dataset, default_collate
 from torch.nn.utils.rnn import pad_sequence
@@ -14,6 +16,14 @@ def _map_wds_to_sample(wds_sample):
         },
         'label': int(wds_sample['label.idx']),
     }
+
+
+def _compute_label_occurrences(samples: list[dict]):
+    label_counter = Counter([s['label'] for s in samples])
+    occurrences = np.zeros(len(label_counter))
+    for label, count in label_counter.items():
+        occurrences[int(label)] = count
+    return occurrences
 
 
 class ISLRCollator:
@@ -63,6 +73,16 @@ class IsolatedSignsRecognition(Dataset):
         )
         print("Loading instances from shards:", url)
         self.samples = list(web_dataset)
+
+    def get_label_occurrences(self):
+        return _compute_label_occurrences(self.samples)
+
+    def get_label_frequencies(self):
+        occurrences = self.get_label_occurrences()
+        return occurrences / occurrences.sum()
+
+    def get_label_weights(self):
+        return 1 / self.get_label_frequencies()
 
     def __len__(self):
         return len(self.samples)

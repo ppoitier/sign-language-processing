@@ -1,3 +1,5 @@
+from torchvision.transforms import ToTensor
+
 from sign_language_tools.common.transforms import Compose, Randomize, Identity
 from sign_language_tools.pose.transform import (
     Concatenate,
@@ -13,6 +15,8 @@ from sign_language_tools.pose.transform import (
     RandomScale,
     Split,
     RandomTemporalScale,
+    ToRGBImage,
+    Resample,
 )
 
 
@@ -33,6 +37,13 @@ def get_pose_pipeline(pipeline_name: str):
         return normalization_transforms()
     elif pipeline_name == "concat":
         return Concatenate(["upper_pose", "left_hand", "right_hand"])
+    elif pipeline_name == "resample":
+        return Resample(new_length=64, method='nearest')
+    elif pipeline_name == "img":
+        return Compose([
+            ToRGBImage(),
+            ToTensor(),
+        ])
     elif pipeline_name == "split":
         return Split(
             {

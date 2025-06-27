@@ -23,6 +23,12 @@ class SegmentationTaskConfig(TaskConfig):
     training: TrainingConfig
 
 
+class RecognitionTaskConfig(TaskConfig):
+    datasets: dict[str, RecognitionDatasetConfig]
+    backbone: ModuleConfig
+    training: TrainingConfig
+
+
 class ContrastiveRecognitionTask(TaskConfig):
     datasets: dict[str, RecognitionDatasetConfig]
     backbone: ModuleConfig

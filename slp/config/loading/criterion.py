@@ -1,3 +1,4 @@
+from torch import nn
 from pytorch_metric_learning.losses import SupConLoss
 
 from slp.config.templates.training import CriterionConfig
@@ -23,6 +24,14 @@ def load_segmentation_criterion(config: CriterionConfig, criterion_weights=None)
             n_classes=config.n_classes,
             return_loss_components=True,
         )
+    else:
+        raise ValueError(f'Unknown criterion: {name}.')
+
+
+def load_recognition_criterion(config: CriterionConfig, criterion_weights=None):
+    name = config.name
+    if name == 'ce':
+        return nn.CrossEntropyLoss(weight=criterion_weights)
     else:
         raise ValueError(f'Unknown criterion: {name}.')
 
