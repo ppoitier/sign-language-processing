@@ -1,7 +1,7 @@
 #!/bin/bash
 # Submission script for Lucia
 #SBATCH --job-name=slp
-#SBATCH --time=08:00:00 # hh:mm:ss
+#SBATCH --time=12:00:00 # hh:mm:ss
 #
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
@@ -25,7 +25,7 @@ module load Python/3.10.4-GCCcore-11.3.0
 source /gpfs/home/acad/unamur-fac_info/ppoitier/envs/dl/bin/activate
 
 config_files=(
-  "../../configs/recognition/resnet_islr.yaml"
+  "../../configs/recognition/1.contrastive_slr.yaml"
 )
 
 config_file=${config_files[$SLURM_ARRAY_TASK_ID]}
@@ -33,5 +33,5 @@ config_file=${config_files[$SLURM_ARRAY_TASK_ID]}
 nvidia-smi
 echo "Job array ID: $SLURM_ARRAY_TASK_ID"
 echo "Job start at $(date)"
-python ../../scripts/recognition/train.py --config-path="$config_file"
+python ../../scripts/contrastive_recognition/train.py --config-path="$config_file"
 echo "Job end at $(date)"
