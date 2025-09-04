@@ -1,0 +1,65 @@
+datasets:
+  training:
+    shards_url: "file:D:/data/sign-languages/lsfb-cont/shards/shard_000004.tar"
+    loader:
+      batch_size: 16
+      shuffle: true
+      num_workers: 0
+    preprocessing:
+      pose_transforms_pipeline: "concat+norm+flatten"
+      use_windows: true
+      window_size: 3500
+      window_stride: 2800
+      max_empty_windows: 0
+      segment_codecs:
+        - { name: 'actionness' }
+  validation:
+    shards_url: "file:D:/data/sign-languages/lsfb-cont/shards/shard_000004.tar"
+    loader:
+      batch_size: 16
+      shuffle: false
+      num_workers: 0
+    preprocessing:
+      pose_transforms_pipeline: "concat+norm+flatten"
+      use_windows: true
+      window_size: 3500
+      window_stride: 2800
+      max_empty_windows: 0
+      segment_codecs:
+        - { name: 'actionness' }
+
+model:
+  name: "mstcn"
+  encoder:
+    in_channels: 130
+    out_channels: 2
+    hidden_channels: 64
+    n_stages: 4
+    n_layers: 10
+  heads:
+    classification:
+      in_channels: 2
+      out_channels: 2
+      layer: identity
+
+
+training:
+  heads_to_targets:
+    classification: frame_labels
+  criterion:
+    classification:
+      name: "multi-layer+smoothing+cross-entropy"
+      use_weights: true
+  use_offsets: true
+  max_epochs: 300
+  early_stopping_patience: 10
+  learning_rate: 1e-4
+  is_output_multilayer: true
+
+experiment:
+  id: "example"
+  suffix: "lsfb"
+  seed: 42
+  output_dir: "D:/data/sign-languages/outs/test"
+  show_progress_bar: true
+  debug: true

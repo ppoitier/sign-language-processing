@@ -24,7 +24,7 @@ def normalization_transforms():
     return Compose(
         [
             DropCoordinates("z"),
-            NormalizeEdgeLengths(unitary_edge=(11, 12)),
+            NormalizeEdgeLengths(ref_edge=(11, 12)),
             CenterOnLandmarks((11, 12)),
         ]
     )
@@ -36,7 +36,7 @@ def get_pose_pipeline(pipeline_name: str):
     elif pipeline_name == "norm":
         return normalization_transforms()
     elif pipeline_name == "concat":
-        return Concatenate(["upper_pose", "left_hand", "right_hand"])
+        return Concatenate(['upper_pose', 'left_hand', 'right_hand'])
     elif pipeline_name == "resample":
         return Resample(new_length=64, method='nearest')
     elif pipeline_name == "img":

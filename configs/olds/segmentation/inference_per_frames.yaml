@@ -1,0 +1,45 @@
+id: "per_frames_testing"
+#prefix: "dgs"
+prefix: "lsfb"
+seed: 42
+
+datasets:
+  testing:
+#    shards_url: "file:D:/data/sign-languages/dgs-corpus/shards_processed/shard_000004.tar"
+    shards_url: "file:D:/data/sign-languages/lsfb-cont/shards/shard_000004.tar"
+    mode: "testing"
+    preprocessing:
+      pose_transforms_pipeline: "norm+flatten"
+      use_windows: true
+      window_size: 3500
+      window_stride: 2800
+      max_empty_windows: 0
+      segment_codecs:
+        - { name: 'actionness' }
+
+target_codec:
+  name: "actionness"
+  use_offsets: false
+
+backbone:
+  module_name: "mstcn"
+#  checkpoint_path: "D:/data/sign-languages/outs/slp/segmentation/slp/segmentation/checkpoints/dgs_actionness_1746993295798/epoch=78-step=22673.ckpt"
+  checkpoint_path: "D:/data/sign-languages/outs/slp/segmentation/slp/segmentation/checkpoints/lsfb_actionness_1746993295798/epoch=53-step=8262.ckpt"
+  module_kwargs:
+    in_channels: 130
+    out_channels: 2
+    hidden_channels: 64
+    n_stages: 4
+    n_layers: 10
+
+training:
+  criterion:
+    name: "multi-layer+ce+smoothing"
+    use_weights: false
+  max_epochs: 300
+  early_stopping_patience: 10
+  learning_rate: 1e-4
+  multi_layer_output: true
+  debug: false
+
+output_dir: "D:/data/sign-languages/outs/slp_test"

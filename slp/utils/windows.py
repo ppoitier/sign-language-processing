@@ -35,7 +35,7 @@ def get_segments_in_range(segments: np.ndarray, start: int, end: int) -> np.ndar
 
 
 def get_window_from_instance(
-    instance: dict,
+    instance: any,
     start: int,
     end: int,
     add_metadata: bool = False,
@@ -49,10 +49,11 @@ def get_window_from_instance(
         if add_metadata:
             new_instance["start"] = start
             new_instance["end"] = end
+            new_instance["length"] = end - start
         for k, v in instance.items():
             if ignored is not None and k in ignored:
                 continue
-            if specials is not None and k in specials:
+            elif specials is not None and k in specials:
                 new_instance[k] = specials[k](v, start, end)
             else:
                 new_instance[k] = get_window_from_instance(v, start, end, ignored=ignored, specials=specials)
@@ -70,7 +71,7 @@ def get_windows_from_segmentation_instance(
             start,
             end,
             add_metadata=True,
-            ignored={"segment_classes"},
+            ignored={"segment_classes", "length"},
             specials={"segments": get_segments_in_range},
         )
         for start, end in window_indices

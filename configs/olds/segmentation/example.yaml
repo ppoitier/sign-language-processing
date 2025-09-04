@@ -1,0 +1,75 @@
+id: "example"
+prefix: "lsfb"
+seed: 42
+
+datasets:
+  training:
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/lsfb_cont/shards/shard_{000000..000003}.tar"
+    mode: "train"
+    loader:
+      batch_size: 16
+      shuffle: true
+      num_workers: 0
+    preprocessing:
+      pose_transforms_pipeline: "norm+flatten"
+      use_windows: true
+      window_size: 3500
+      window_stride: 2800
+      max_empty_windows: 0
+      segment_codecs:
+        - { name: 'actionness' }
+  validation:
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/lsfb_cont/shards/shard_000004.tar"
+    mode: "validation"
+    loader:
+      batch_size: 16
+      shuffle: false
+      num_workers: 0
+    preprocessing:
+      pose_transforms_pipeline: "norm+flatten"
+      use_windows: true
+      window_size: 3500
+      window_stride: 2800
+      max_empty_windows: 0
+      segment_codecs:
+        - { name: 'actionness' }
+  testing:
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/lsfb_cont/shards/shard_000004.tar"
+    mode: "testing"
+    loader:
+      batch_size: 16
+      shuffle: false
+      num_workers: 0
+    preprocessing:
+      pose_transforms_pipeline: "norm+flatten"
+      use_windows: true
+      window_size: 3500
+      window_stride: 2800
+      max_empty_windows: 0
+      segment_codecs:
+        - { name: 'actionness' }
+
+target_codec:
+  name: "actionness"
+  use_offsets: false
+
+backbone:
+  module_name: "mstcn"
+  module_kwargs:
+    in_channels: 130
+    out_channels: 2
+    hidden_channels: 64
+    n_stages: 4
+    n_layers: 10
+
+training:
+  criterion:
+    name: "multi-layer+ce+smoothing"
+    use_weights: true
+  max_epochs: 300
+  early_stopping_patience: 10
+  learning_rate: 1e-4
+  multi_layer_output: true
+  debug: false
+
+output_dir: "/gpfs/scratch/acad/lsfb/out/slp"

@@ -2,10 +2,10 @@ from torch import nn
 from pytorch_metric_learning.losses import SupConLoss
 
 from slp.config.templates.training import CriterionConfig
-from slp.nn.losses.smoothing import MultiLayerClassificationLossWithSmoothing, ClassificationLossWithSmoothing
-from slp.nn.losses.offsets import MultiLayerClassificationWithOffsetsLoss
-from slp.nn.losses.cross_entropy import CrossEntropyLoss
-from slp.nn.losses.generalized_iou import GeneralizedIoU
+from slp.losses.smoothing import MultiLayerClassificationLossWithSmoothing, ClassificationLossWithSmoothing
+from slp.losses.offsets import MultiLayerClassificationWithOffsetsLoss
+from slp.losses import CrossEntropyLoss
+from slp.losses.generalized_iou import GeneralizedIoU
 
 
 def load_segmentation_criterion(config: CriterionConfig, criterion_weights=None):

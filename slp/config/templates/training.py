@@ -9,10 +9,14 @@ class CriterionConfig(BaseModel):
 
 
 class TrainingConfig(BaseModel):
-    criterion: CriterionConfig
+    criterion: dict[str, CriterionConfig]
     max_epochs: int
     learning_rate: float
-    multi_layer_output: bool = False
+    is_output_multilayer: bool = False
     gradient_clipping: float = 0.0
     early_stopping_patience: int = 10
-    debug: bool = False
+
+
+class SegmentationTrainingConfig(TrainingConfig):
+    use_offsets: bool = False
+    heads_to_targets: dict[str, str]

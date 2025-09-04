@@ -1,0 +1,38 @@
+id: "example_recognition"
+prefix: "lsfb_isol"
+seed: 42
+
+datasets:
+  training:
+    shards_url: "file:D:/data/sign-languages/lsfb-isol/shards/500/shard_{000000..000003}.tar"
+    mode: "train"
+    preprocessing:
+      pose_transforms_pipeline: "concat+resample+img"
+    loader:
+      batch_size: 32
+      shuffle: true
+  validation:
+    shards_url: "file:D:/data/sign-languages/lsfb-isol/shards/500/shard_000004.tar"
+    mode: "validation"
+    preprocessing:
+      pose_transforms_pipeline: "concat+resample+img"
+    loader:
+      batch_size: 32
+      shuffle: false
+
+backbone:
+  module_name: "resnet50"
+  module_kwargs:
+    out_features: 500
+
+training:
+  criterion:
+    name: "ce"
+    use_weights: true
+    n_classes: 500
+  max_epochs: 100
+  early_stopping_patience: 10
+  learning_rate: 1e-3
+  debug: true
+
+output_dir: "D:/data/sign-languages/outs/slp/recognition"
