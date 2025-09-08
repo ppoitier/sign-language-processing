@@ -1,6 +1,6 @@
 datasets:
   training:
-    shards_url: "file:D:/data/sign-languages/lsfb-cont/shards/shard_{000000..000003}.tar"
+    shards_url: "/home/sign-language/datasets/lsfb-cont/shards/shard_{000000..000003}.tar"
     loader:
       batch_size: 16
       shuffle: true
@@ -14,7 +14,7 @@ datasets:
       segment_codecs:
         - { name: 'actionness' }
   validation:
-    shards_url: "file:D:/data/sign-languages/lsfb-cont/shards/shard_000004.tar"
+    shards_url: "/home/sign-language/datasets/lsfb-cont/shards/shard_000004.tar"
     loader:
       batch_size: 16
       shuffle: false
@@ -28,7 +28,7 @@ datasets:
       segment_codecs:
         - { name: 'actionness' }
   testing:
-    shards_url: "file:D:/data/sign-languages/lsfb-cont/shards/shard_000004.tar"
+    shards_url: "/home/sign-language/datasets/lsfb-cont/shards/shard_000004.tar"
     loader:
       batch_size: 16
       shuffle: false
@@ -62,7 +62,7 @@ training:
   criterion:
     classification:
       name: "multi-layer+smoothing+cross-entropy"
-      use_weights: false
+      use_weights: true
   max_epochs: 300
   early_stopping_patience: 10
   learning_rate: 1e-4
@@ -70,9 +70,10 @@ training:
   use_offsets: false
 
 experiment:
-  id: "example"
-  suffix: "lsfb"
+  id: "actionness"
+  suffix: "lsfb/mstcn/weights"
   seed: 42
-  output_dir: "D:/data/sign-languages/outs/slp2/segmentation"
+  output_dir: ":home/sign-language/outputs/segmentation"
+  mlflow_uri: "http://138.48.114.159:8142"
   show_progress_bar: true
   debug: false

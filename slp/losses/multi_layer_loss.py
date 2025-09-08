@@ -8,7 +8,6 @@ class MultiLayerLoss(nn.Module):
 
     def forward(self, multilayer_logits: tuple[Tensor], targets: Tensor):
         loss = 0
-        # TODO: resize targets when necessary
         for logits in multilayer_logits:
             loss += self.loss(logits, targets)
         return loss

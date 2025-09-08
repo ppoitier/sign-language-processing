@@ -1,6 +1,6 @@
 datasets:
   training:
-    shards_url: "file:D:/data/sign-languages/lsfb-cont/shards/shard_000004.tar"
+    shards_url: "file:D:/data/sign-languages/lsfb-cont/shards/shard_{000000..000003}.tar"
     loader:
       batch_size: 16
       shuffle: true
@@ -13,7 +13,7 @@ datasets:
       max_empty_windows: 0
       segment_codecs:
         - { name: 'actionness' }
-        - { name: 'offsets', use_offsets: true }
+        - { name: 'offsets' }
   validation:
     shards_url: "file:D:/data/sign-languages/lsfb-cont/shards/shard_000004.tar"
     loader:
@@ -84,6 +84,6 @@ experiment:
   id: "example_offsets"
   suffix: "lsfb"
   seed: 42
-  output_dir: "D:/data/sign-languages/outs/test"
+  output_dir: "D:/data/sign-languages/outs/slp2/segmentation"
   show_progress_bar: true
-  debug: true
+  debug: false

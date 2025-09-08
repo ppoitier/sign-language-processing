@@ -115,9 +115,9 @@ class SegmentationTrainer(TrainerBase):
             )
         self.test_results += results
 
-        pred_segments = self.offset_decoder.decode_batch(logits, self.n_classes, batch_size)
-        segment_metrics = self.segment_metrics_test(pred_segments, gt_segments)
-        self.log_metrics(segment_metrics, batch_size=batch_size)
+        # pred_segments = self.offset_decoder.decode_batch(logits, self.n_classes, batch_size)
+        # segment_metrics = self.segment_metrics_test(pred_segments, gt_segments)
+        # self.log_metrics(segment_metrics, batch_size=batch_size)
 
     def configure_optimizers(self):
         return optim.AdamW(self.parameters(), lr=self.learning_rate)

@@ -10,15 +10,16 @@ class SmoothingLoss(nn.Module):
     def forward(self, logits: Tensor) -> Tensor:
         """
         Args:
-            logits: tensor of shape (N, T, C_out)
+            logits: tensor of shape (N, C_out, T)
 
         Returns:
             loss
         """
+        # TODO: add masking
         return (
             F.mse_loss(
-                logits[:, 1:].log_softmax(dim=-1),
-                logits.detach()[:, :-1].log_softmax(dim=-1),
+                logits[:, :, 1:].log_softmax(dim=1),
+                logits.detach()[:, :, :-1].log_softmax(dim=1),
                 reduction='none',
             )
             .clamp(min=0, max=self.theta)

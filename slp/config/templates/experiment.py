@@ -8,5 +8,6 @@ class ExperimentConfig(BaseModel):
     seed: int = 42
     task_datetime: datetime = Field(default_factory=datetime.now)
     output_dir: str
+    mlflow_uri: str |None = None
     show_progress_bar: bool = False
     debug: bool = False

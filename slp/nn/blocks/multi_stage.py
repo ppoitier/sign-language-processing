@@ -25,8 +25,8 @@ class MultiStageModel(nn.Module):
         """
         out = x
         outs: tuple[Tensor] = tuple()
-        for stage in self.stages:
-            out = stage(self.activation(out), mask)
+        for idx, stage in enumerate(self.stages):
+            out = stage(self.activation(out) if idx > 0 else out, mask)
             outs += (out,)
             if mask.size(-1) != out.size(-1):
                 mask = F.interpolate(mask.float(), out.shape[-1], mode="nearest").bool()

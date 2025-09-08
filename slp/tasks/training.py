@@ -7,7 +7,7 @@ from lightning.pytorch.callbacks import (
     LearningRateMonitor,
     EarlyStopping,
 )
-from lightning.pytorch.loggers import TensorBoardLogger, CSVLogger
+from lightning.pytorch.loggers import Logger, TensorBoardLogger, CSVLogger, MLFlowLogger
 from torch.utils.data import DataLoader
 
 from slp.config.templates.experiment import ExperimentConfig
@@ -22,8 +22,8 @@ def run_training(
     training_config: TrainingConfig,
 ) -> tuple[lightning.LightningModule, str]:
     exp_name = f"{experiment_config.id}_{experiment_config.suffix}"
-    checkpoints_dir = f"{experiment_config.output_dir}/{exp_name}/checkpoints"
-    logs_dir = f"{experiment_config.output_dir}/{exp_name}/logs"
+    checkpoints_dir = f"{experiment_config.output_dir}/checkpoints/{exp_name}"
+    logs_dir = f"{experiment_config.output_dir}/logs/{exp_name}"
     os.makedirs(checkpoints_dir, exist_ok=True)
     os.makedirs(logs_dir, exist_ok=True)
 
@@ -45,13 +45,23 @@ def run_training(
             patience=training_config.early_stopping_patience,
         ),
     ]
-    tb_logger = TensorBoardLogger(name="tb", save_dir=logs_dir)
-    csv_logger = CSVLogger(name="csv", save_dir=logs_dir)
+    loggers: list[Logger] = [
+        TensorBoardLogger(name="tb", save_dir=logs_dir),
+        CSVLogger(name="csv", save_dir=logs_dir),
+    ]
+    if experiment_config.mlflow_uri is not None:
+        loggers.append(
+            MLFlowLogger(
+                experiment_name=experiment_config.id,
+                run_name=f"{experiment_config.suffix}",
+                tracking_uri=experiment_config.mlflow_uri,
+            )
+        )
     lightning_trainer = pl.Trainer(
         fast_dev_run=experiment_config.debug,
         gradient_clip_val=training_config.gradient_clipping,
         max_epochs=training_config.max_epochs,
-        logger=[tb_logger, csv_logger],
+        logger=loggers,
         callbacks=callbacks,
         enable_progress_bar=experiment_config.show_progress_bar,
     )
