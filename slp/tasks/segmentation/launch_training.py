@@ -1,5 +1,8 @@
 import click
 
+import torch
+torch.set_float32_matmul_precision('medium')
+
 from slp.config.parser import parse_config
 from slp.tasks.segmentation.config import SegmentationTaskConfig
 from slp.tasks.segmentation.data import load_segmentation_datasets

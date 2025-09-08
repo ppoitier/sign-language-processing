@@ -4,7 +4,7 @@ datasets:
     loader:
       batch_size: 16
       shuffle: true
-      num_workers: 0
+      num_workers: 23
     preprocessing:
       pose_transforms_pipeline: "concat+norm+flatten"
       use_windows: true
@@ -18,7 +18,7 @@ datasets:
     loader:
       batch_size: 16
       shuffle: false
-      num_workers: 0
+      num_workers: 23
     preprocessing:
       pose_transforms_pipeline: "concat+norm+flatten"
       use_windows: true
@@ -32,7 +32,7 @@ datasets:
     loader:
       batch_size: 16
       shuffle: false
-      num_workers: 0
+      num_workers: 23
     preprocessing:
       pose_transforms_pipeline: "concat+norm+flatten"
       use_windows: true
@@ -73,7 +73,7 @@ experiment:
   id: "actionness"
   suffix: "lsfb/mstcn/weights"
   seed: 42
-  output_dir: ":home/sign-language/outputs/segmentation"
-  mlflow_uri: "http://138.48.114.159:8142"
+  output_dir: "/home/sign-language/outputs/segmentation"
+  mlflow_uri: "http://127.0.0.1:8142"
   show_progress_bar: true
   debug: false
