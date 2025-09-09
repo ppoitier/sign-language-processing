@@ -90,8 +90,10 @@ class SegmentationTrainer(TrainerBase):
         self.prediction_step(batch, mode="validation")
 
     def test_step(self, batch, batch_index):
-        instance_ids, lengths, gt_segments = (
+        instance_ids, starts, ends, lengths, gt_segments = (
             batch["id"],
+            batch["start"],
+            batch["end"],
             batch["length"],
             batch["targets"]["segments"],
         )
@@ -102,7 +104,7 @@ class SegmentationTrainer(TrainerBase):
         batch_size = len(instance_ids)
         for idx in range(batch_size):
             instance_id = instance_ids[idx]
-            self.test_logits[instance_id] = {
+            self.test_logits[f"{instance_id}_{starts[idx]}_{ends[idx]}"] = {
                 head_name: head_logits[idx]
                 .detach()
                 .cpu()
