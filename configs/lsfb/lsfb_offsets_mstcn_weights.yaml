@@ -1,0 +1,36 @@
+from: "lsfb_actionness_mstcn_weights.yaml"
+
+datasets:
+  training:
+    segment_codecs:
+      - { name: 'offsets' }
+  validation:
+    segment_codecs:
+      - { name: 'offsets' }
+  testing:
+    segment_codecs:
+      - { name: 'offsets' }
+
+model:
+  name: "mstcn"
+  encoder:
+    out_channels: 4
+  heads:
+    regression:
+      in_channels: 2
+      out_channels: 2
+      layer: identity
+
+training:
+  heads_to_targets:
+    regression: offsets
+  criterion:
+    regression:
+      name: "multi-layer+gIoU"
+  use_offsets: true
+
+
+experiment:
+  id: "segmentation"
+  suffix: "offsets/lsfb/mstcn/weights"
+  debug: false

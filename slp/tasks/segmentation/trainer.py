@@ -41,7 +41,8 @@ class SegmentationTrainer(TrainerBase):
 
         self.segment_metrics_test = SegmentBasedMetrics(prefix="test/segments/")
 
-        self.test_results = []
+        self.test_metrics = {}
+        self.test_logits = {}
         self.save_hyperparameters(ignore=["model", "criterion", "test_results"])
 
     def prediction_step(self, batch, mode):
@@ -76,10 +77,10 @@ class SegmentationTrainer(TrainerBase):
         else:
             raise ValueError(f"Unknown mode: {mode}")
         self.log_metrics(metrics, batch_size=batch_size)
-        return logits, loss
+        return logits, loss, metrics
 
     def training_step(self, batch, batch_idx):
-        _, loss = self.prediction_step(batch, "training")
+        _, loss, _ = self.prediction_step(batch, "training")
         return loss
 
     def validation_step(self, batch, batch_index):
@@ -91,33 +92,41 @@ class SegmentationTrainer(TrainerBase):
             batch["length"],
             batch["targets"]["segments"],
         )
-        logits, loss = self.prediction_step(batch, "testing")
+        logits, loss, frame_metrics = self.prediction_step(batch, "testing")
         if self.is_output_multilayer:
             logits = {k: v[-1] for k, v in logits.items()}
 
         batch_size = len(instance_ids)
-        results = []
         for idx in range(batch_size):
-            results.append(
-                {
-                    "id": instance_ids[idx],
-                    "length": lengths[idx].item(),
-                    "segments": gt_segments[idx].detach().cpu().numpy().astype("int32"),
-                    "logits": {
-                        head_name: head_logits[idx]
-                        .detach()
-                        .cpu()
-                        .numpy()[..., : lengths[idx]]
-                        .astype("float16")
-                        for head_name, head_logits in logits.items()
-                    },
-                }
-            )
-        self.test_results += results
+            instance_id = instance_ids[idx]
+            self.test_logits[instance_id] = {
+                head_name: head_logits[idx]
+                .detach()
+                .cpu()
+                .numpy()[..., : lengths[idx]]
+                .astype("float16")
+                for head_name, head_logits in logits.items()
+            }
+            # results.append(
+            #     {
+            #         "id": instance_ids[idx],
+            #         "length": lengths[idx].item(),
+            #         "segments": gt_segments[idx].detach().cpu().numpy().astype("int32"),
+            #         "logits": {
+            #             head_name: head_logits[idx]
+            #             .detach()
+            #             .cpu()
+            #             .numpy()[..., : lengths[idx]]
+            #             .astype("float16")
+            #             for head_name, head_logits in logits.items()
+            #         },
+            #     }
+            # )
+        # self.test_results += results
 
-        # pred_segments = self.offset_decoder.decode_batch(logits, self.n_classes, batch_size)
-        # segment_metrics = self.segment_metrics_test(pred_segments, gt_segments)
-        # self.log_metrics(segment_metrics, batch_size=batch_size)
+        pred_segments = self.offset_decoder.decode_batch(logits, self.n_classes, batch_size)
+        segment_metrics = self.segment_metrics_test(pred_segments, gt_segments)
+        self.log_metrics(segment_metrics, batch_size=batch_size)
 
     def configure_optimizers(self):
         return optim.AdamW(self.parameters(), lr=self.learning_rate)

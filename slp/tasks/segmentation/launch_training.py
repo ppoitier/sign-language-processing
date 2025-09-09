@@ -9,6 +9,7 @@ from slp.tasks.segmentation.data import load_segmentation_datasets
 from slp.tasks.segmentation.trainer import load_segmentation_trainer
 from slp.tasks.training import run_training
 from slp.tasks.testing import run_testing
+from slp.utils.random import set_seed
 
 
 @click.command()
@@ -17,6 +18,7 @@ from slp.tasks.testing import run_testing
 )
 def launch_segmentation_training(config_path):
     config: SegmentationTaskConfig = parse_config(config_path, SegmentationTaskConfig)
+    set_seed(config.experiment.seed)
     datasets, dataloaders = load_segmentation_datasets(config)
     assert config.training is not None, "Missing training configuration."
     assert "training" in datasets, "Missing training dataset."

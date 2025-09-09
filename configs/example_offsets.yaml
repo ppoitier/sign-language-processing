@@ -86,4 +86,4 @@ experiment:
   seed: 42
   output_dir: "D:/data/sign-languages/outs/slp2/segmentation"
   show_progress_bar: true
-  debug: false
+  debug: true
