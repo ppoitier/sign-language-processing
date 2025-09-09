@@ -5,7 +5,7 @@ from lightning.pytorch.loggers import Logger, TensorBoardLogger, CSVLogger, MLFl
 from slp.config.templates.experiment import ExperimentConfig
 
 
-def load_loggers(experiment_config: ExperimentConfig):
+def load_loggers(experiment_config: ExperimentConfig, prefix: str = ''):
     exp_name = f"{experiment_config.id}_{experiment_config.suffix}"
     logs_dir = f"{experiment_config.output_dir}/logs/{exp_name}"
     os.makedirs(logs_dir, exist_ok=True)
@@ -17,7 +17,7 @@ def load_loggers(experiment_config: ExperimentConfig):
         loggers.append(
             MLFlowLogger(
                 experiment_name=experiment_config.id,
-                run_name=f"{experiment_config.suffix}",
+                run_name=f"{prefix}{experiment_config.suffix}",
                 tracking_uri=experiment_config.mlflow_uri,
                 # log_model=True,
             )

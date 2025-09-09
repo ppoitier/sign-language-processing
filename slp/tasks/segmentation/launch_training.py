@@ -38,21 +38,20 @@ def launch_segmentation_training(config_path):
     assert "training" in datasets, "Missing training dataset."
     assert "validation" in datasets, "Missing validation dataset."
     trainer = load_segmentation_trainer(datasets['training'], config.model, config.training)
-    loggers = load_loggers(config.experiment)
     lightning_module, best_checkpoint_path = run_training(
         training_dataloader=dataloaders['training'],
         validation_dataloader=dataloaders['validation'],
         lightning_module=trainer,
         experiment_config=config.experiment,
         training_config=config.training,
-        loggers=loggers,
+        loggers=load_loggers(config.experiment, prefix='train/'),
     )
     run_testing(
         checkpoint_path=best_checkpoint_path,
         testing_dataloader=dataloaders['testing'],
         lightning_module=lightning_module,
         experiment_config=config.experiment,
-        loggers=loggers,
+        loggers=load_loggers(config.experiment, 'test/'),
     )
     save_logits(lightning_module, config)
 
