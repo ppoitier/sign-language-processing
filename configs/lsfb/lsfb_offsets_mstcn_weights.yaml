@@ -4,14 +4,17 @@ datasets:
   training:
     preprocessing:
       segment_codecs:
+        - { name: 'actionness' }
         - { name: 'offsets' }
   validation:
     preprocessing:
       segment_codecs:
+        - { name: 'actionness' }
         - { name: 'offsets' }
   testing:
     preprocessing:
       segment_codecs:
+        - { name: 'actionness' }
         - { name: 'offsets' }
 
 model:

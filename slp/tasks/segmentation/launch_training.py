@@ -1,5 +1,4 @@
 import click
-from pprint import pprint
 
 import torch
 torch.set_float32_matmul_precision('medium')
@@ -19,7 +18,7 @@ from slp.utils.random import set_seed
 )
 def launch_segmentation_training(config_path):
     config: SegmentationTaskConfig = parse_config(config_path, SegmentationTaskConfig)
-    pprint(config)
+    print(config)
     set_seed(config.experiment.seed)
     datasets, dataloaders = load_segmentation_datasets(config)
     assert config.training is not None, "Missing training configuration."
