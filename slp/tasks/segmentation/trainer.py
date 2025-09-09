@@ -10,7 +10,9 @@ from slp.metrics.segmentation.segment_based_group import SegmentBasedMetrics
 from slp.tasks.segmentation.model import load_model
 from slp.trainers.base import TrainerBase
 from slp.utils.model import count_parameters
+from slp.codecs.annotations.base import AnnotationCodec
 from slp.codecs.annotations.offsets import OffsetsCodec
+from slp.codecs.annotations.loading import load_annotation_codec
 
 
 class SegmentationTrainer(TrainerBase):
@@ -24,6 +26,7 @@ class SegmentationTrainer(TrainerBase):
         is_output_multilayer: bool,
         use_offsets: bool,
         heads_to_targets: dict[str, str],
+        segment_decoder: AnnotationCodec,
     ):
         super().__init__()
         self.model = model
@@ -33,13 +36,13 @@ class SegmentationTrainer(TrainerBase):
         self.is_output_multilayer = is_output_multilayer
         self.use_offsets = use_offsets
         self.heads_to_targets = heads_to_targets
-        self.offset_decoder = OffsetsCodec()
+        self.segment_decoder = segment_decoder
 
-        self.frame_metrics_train = FrameBasedMetrics(prefix="train/frames/", n_classes=n_classes)
-        self.frame_metrics_val = FrameBasedMetrics(prefix="val/frames/", n_classes=n_classes)
-        self.frame_metrics_test = FrameBasedMetrics(prefix="test/frames/", n_classes=n_classes)
+        self.frame_metrics_train = FrameBasedMetrics(prefix="training/frames/", n_classes=n_classes)
+        self.frame_metrics_val = FrameBasedMetrics(prefix="validation/frames/", n_classes=n_classes)
+        self.frame_metrics_test = FrameBasedMetrics(prefix="testing/frames/", n_classes=n_classes)
 
-        self.segment_metrics_test = SegmentBasedMetrics(prefix="test/segments/")
+        self.segment_metrics_test = SegmentBasedMetrics(prefix="testing/segments/")
 
         self.test_metrics = {}
         self.test_logits = {}
@@ -63,7 +66,7 @@ class SegmentationTrainer(TrainerBase):
         )
 
         self.log(
-            f"{mode}_loss", loss, on_step=True, on_epoch=True, batch_size=batch_size
+            f"{mode}/loss", loss, on_step=True, on_epoch=True, batch_size=batch_size
         )
         cls_logits = logits["classification"]
         cls_logits = cls_logits[-1] if self.is_output_multilayer else cls_logits
@@ -124,7 +127,7 @@ class SegmentationTrainer(TrainerBase):
             # )
         # self.test_results += results
 
-        pred_segments = self.offset_decoder.decode_batch(logits, self.n_classes, batch_size)
+        pred_segments = self.segment_decoder.decode_batch(logits, self.n_classes, batch_size)
         segment_metrics = self.segment_metrics_test(pred_segments, gt_segments)
         self.log_metrics(segment_metrics, batch_size=batch_size)
 
@@ -165,4 +168,5 @@ def load_segmentation_trainer(
         is_output_multilayer=training_config.is_output_multilayer,
         use_offsets=training_config.use_offsets,
         heads_to_targets=training_config.heads_to_targets,
+        segment_decoder=load_annotation_codec(training_config.segment_decoder)
     )

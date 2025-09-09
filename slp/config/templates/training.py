@@ -1,5 +1,7 @@
 from pydantic import BaseModel
 
+from slp.config.templates.codec import SegmentCodecConfig
+
 
 class CriterionConfig(BaseModel):
     name: str
@@ -20,3 +22,4 @@ class TrainingConfig(BaseModel):
 class SegmentationTrainingConfig(TrainingConfig):
     use_offsets: bool = False
     heads_to_targets: dict[str, str]
+    segment_decoder: SegmentCodecConfig

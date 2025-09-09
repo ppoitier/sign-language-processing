@@ -34,6 +34,7 @@ training:
     regression:
       name: "multi-layer+gIoU"
   use_offsets: true
+  segment_decoder: { name: 'offsets' }
 
 
 experiment:

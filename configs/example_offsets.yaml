@@ -79,6 +79,7 @@ training:
   learning_rate: 1e-4
   is_output_multilayer: true
   use_offsets: true
+  segment_decoder: { name: 'offsets' }
 
 experiment:
   id: "example_offsets"
