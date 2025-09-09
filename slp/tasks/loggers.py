@@ -19,7 +19,7 @@ def load_loggers(experiment_config: ExperimentConfig):
                 experiment_name=experiment_config.id,
                 run_name=f"{experiment_config.suffix}",
                 tracking_uri=experiment_config.mlflow_uri,
-                log_model=True,
+                # log_model=True,
             )
         )
     return loggers
