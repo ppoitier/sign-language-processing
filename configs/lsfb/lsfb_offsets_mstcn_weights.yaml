@@ -2,14 +2,17 @@ from: "lsfb_actionness_mstcn_weights.yaml"
 
 datasets:
   training:
-    segment_codecs:
-      - { name: 'offsets' }
+    preprocessing:
+      segment_codecs:
+        - { name: 'offsets' }
   validation:
-    segment_codecs:
-      - { name: 'offsets' }
+    preprocessing:
+      segment_codecs:
+        - { name: 'offsets' }
   testing:
-    segment_codecs:
-      - { name: 'offsets' }
+    preprocessing:
+      segment_codecs:
+        - { name: 'offsets' }
 
 model:
   name: "mstcn"
