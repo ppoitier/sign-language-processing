@@ -1,0 +1,60 @@
+datasets:
+  training:
+    shards_url: "/home/sign-language/datasets/lsa64/shards/shard_{000000..000004}.tar"
+    loader:
+      batch_size: 64
+      shuffle: true
+      num_workers: 0
+    preprocessing:
+      pose_transforms_pipeline: "concat+temporal-crop+norm+flatten"
+  validation:
+    shards_url: "/home/sign-language/datasets/lsa64/shards/shard_000004.tar"
+    loader:
+      batch_size: 64
+      shuffle: false
+      num_workers: 0
+    preprocessing:
+      pose_transforms_pipeline: "concat+temporal-crop+norm+flatten"
+  testing:
+    shards_url: "/home/sign-language/datasets/lsa64/shards/shard_000004.tar"
+    loader:
+      batch_size: 64
+      shuffle: false
+      num_workers: 0
+    preprocessing:
+      pose_transforms_pipeline: "concat+temporal-crop+norm+flatten"
+
+model:
+  name: "spoter"
+  encoder:
+    n_classes: 64,
+    c_in: 108,
+    max_sequence_lengths: 100,
+    n_heads: 9,
+    n_encoder_layers: 6,
+    n_decoder_layers: 6,
+    dim_feedforward: 2048,
+    dropout: 0.1,
+  heads:
+    classification:
+      in_channels: 256
+      out_channels: 64
+
+training:
+  criterion:
+    classification:
+      name: "cross-entropy"
+      use_weights: false
+  max_epochs: 500
+  early_stopping_patience: 30
+  learning_rate: 1e-3
+  is_output_multilayer: false
+
+experiment:
+  id: "islr"
+  suffix: "lsa64"
+  seed: 42
+  output_dir: "/home/sign-language/outputs/isolated-recognition"
+  mlflow_uri: "http://127.0.0.1:8142"
+  show_progress_bar: true
+  debug: true
