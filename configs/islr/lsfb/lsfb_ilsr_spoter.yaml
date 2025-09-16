@@ -1,24 +1,24 @@
 datasets:
   training:
-    shards_url: "/home/sign-language/datasets/lsa64/shards/shard_{000000..000004}.tar"
+    shards_url: "/home/sign-language/datasets/lsfb-isol/shards/500/shard_{000000..000004}.tar"
     loader:
-      batch_size: 64
+      batch_size: 32
       shuffle: true
       num_workers: 23
     preprocessing:
       pose_transforms_pipeline: "concat+temporal-crop+flatten"
   validation:
-    shards_url: "/home/sign-language/datasets/lsa64/shards/shard_000004.tar"
+    shards_url: "/home/sign-language/datasets/lsfb-isol/shards/500/shard_000004.tar"
     loader:
-      batch_size: 64
+      batch_size: 32
       shuffle: false
       num_workers: 23
     preprocessing:
       pose_transforms_pipeline: "concat+temporal-crop+flatten"
   testing:
-    shards_url: "/home/sign-language/datasets/lsa64/shards/shard_000004.tar"
+    shards_url: "/home/sign-language/datasets/lsfb-isol/shards/500/shard_000004.tar"
     loader:
-      batch_size: 64
+      batch_size: 32
       shuffle: false
       num_workers: 23
     preprocessing:
@@ -27,7 +27,7 @@ datasets:
 model:
   name: "spoter"
   encoder:
-    n_classes: 64
+    n_classes: 500
     c_in: 130
     max_sequence_lengths: 200
     n_heads: 10
@@ -37,8 +37,8 @@ model:
     dropout: 0.1
   heads:
     classification:
-      in_channels: 64
-      out_channels: 64
+      in_channels: 500
+      out_channels: 500
       layer: identity
 
 training:
@@ -53,7 +53,7 @@ training:
 
 experiment:
   id: "islr"
-  suffix: "lsa64/transformer-encoder"
+  suffix: "lsfb/transformer-encoder"
   seed: 42
   output_dir: "/home/sign-language/outputs/isolated-recognition"
   mlflow_uri: "http://127.0.0.1:8142"

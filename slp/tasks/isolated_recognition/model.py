@@ -5,7 +5,7 @@ from slp.config.templates.model import ModelConfig
 from slp.nn.spoter import SPOTER
 
 class ClassificationModel(nn.Module):
-    def __init__(self):
+    def __init__(self, **kwargs):
         super().__init__()
         self.model = SPOTER(
             n_classes=64,
@@ -66,6 +66,6 @@ def load_model(config: ModelConfig) -> nn.Module:
         #         n_classes=config.heads['classification'].out_channels,
         #     )
         case 'spoter':
-            return ClassificationModel()
+            return ClassificationModel(**config.encoder)
         case _:
             raise ValueError(f"Unknown model: {config.name}")

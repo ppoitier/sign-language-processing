@@ -95,17 +95,17 @@ class SPOTER(nn.Module):
 
         # -- Modules
         # Create a custom decoder layer and overwrite the default layers inside the already-built transformer.
-        custom_decoder_layer = SPOTERTransformerDecoderLayer(
-            d_model=self.transformer.d_model,
-            nhead=self.transformer.nhead,
-            dim_feedforward=dim_feedforward,
-            dropout=dropout,
-            activation="relu",
-            batch_first=True,
-        )
-        self.transformer.decoder.layers = _get_clones(
-            custom_decoder_layer, n_decoder_layers
-        )
+        # custom_decoder_layer = SPOTERTransformerDecoderLayer(
+        #     d_model=self.transformer.d_model,
+        #     nhead=self.transformer.nhead,
+        #     dim_feedforward=dim_feedforward,
+        #     dropout=dropout,
+        #     activation="relu",
+        #     batch_first=True,
+        # )
+        # self.transformer.decoder.layers = _get_clones(
+        #     custom_decoder_layer, n_decoder_layers
+        # )
         self.linear_class = nn.Linear(c_in, n_classes)
 
     def forward(

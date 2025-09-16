@@ -86,7 +86,7 @@ class IsolatedRecognitionTrainer(TrainerBase):
         #     }
 
     def configure_optimizers(self):
-        return optim.AdamW(self.parameters(), lr=self.learning_rate)
+        return optim.SGD(self.parameters(), lr=self.learning_rate)
 
 
 def load_isolated_recognition_trainer(

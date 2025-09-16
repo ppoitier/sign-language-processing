@@ -28,17 +28,18 @@ model:
   name: "spoter"
   encoder:
     n_classes: 64,
-    c_in: 108,
-    max_sequence_lengths: 100,
-    n_heads: 9,
+    c_in: 130,
+    max_sequence_lengths: 200,
+    n_heads: 10,
     n_encoder_layers: 6,
     n_decoder_layers: 6,
     dim_feedforward: 2048,
     dropout: 0.1,
   heads:
     classification:
-      in_channels: 256
+      in_channels: 64
       out_channels: 64
+      layer: identity
 
 training:
   criterion:
@@ -52,7 +53,7 @@ training:
 
 experiment:
   id: "islr_example"
-  suffix: "lsfb"
+  suffix: "test"
   seed: 42
   output_dir: "D:/data/sign-languages/outs/slp2/isolated-recognition"
   show_progress_bar: true
