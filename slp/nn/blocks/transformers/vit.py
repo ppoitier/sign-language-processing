@@ -1,5 +1,5 @@
 import torch
-from torch import nn
+from torch import nn, Tensor
 from torch.nn.functional import pad
 from einops import repeat
 
@@ -16,11 +16,15 @@ class InputEmbedding(nn.Module):
         self.cls_token = nn.Parameter(torch.randn(1, 1, out_channels))
         self.dropout = nn.Dropout(p=dropout)
 
-    def forward(self, x, mask):
+    def forward(self, x: Tensor, mask: Tensor) -> tuple[Tensor, Tensor]:
         """
         Args:
             x: Tensor of shape (N, L, C_in)
             mask: Tensor of shape (N, L)
+
+        Returns:
+            out: Tensor of shape (N, L+1, C_out)
+            mask: Tensor of shape (N, L+1)
         """
         x = self.input_projection(x)
         cls_tokens = repeat(self.cls_token, "() l c -> b l c", b=x.size(0))
@@ -30,11 +34,12 @@ class InputEmbedding(nn.Module):
 
 
 class ViT(nn.Module):
+
     def __init__(
         self,
         in_channels: int,
-        max_length: int,
         out_channels: int,
+        max_length: int,
         n_heads: int,
         n_layers: int,
         pool: str | None = "cls_token",
@@ -52,11 +57,14 @@ class ViT(nn.Module):
         self.to_latent = nn.Identity()
         self.pool = pool
 
-    def forward(self, x, mask):
+    def forward(self, x: Tensor, mask: Tensor) -> Tensor:
         """
         Args:
             x: Tensor of shape (N, L, C_in) containing the input features.
             mask: Tensor of shape (N, L) where 1's are included and 0's excluded.
+
+        Returns:
+            out: Tensor of shape (N, C_out) if pool is 'cls_token' or 'mean', else (N, L+1, C_out)
         """
         x, mask = self.input_embedding(x, mask)
         # `src_mask` should be inverted for transformer layers.

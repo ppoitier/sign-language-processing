@@ -31,7 +31,7 @@ def _compute_label_occurrences(samples: list[dict]):
     return occurrences
 
 
-class IsolatedSignsRecognition(Dataset):
+class IsolatedSignsRecognitionDataset(Dataset):
     def __init__(self, url: str, pose_transforms=None, verbose=False):
         super().__init__()
         self.pose_transforms = pose_transforms
@@ -66,13 +66,13 @@ class IsolatedSignsRecognition(Dataset):
         return sample
 
 
-def load_recognition_pose_dataset(config: RecognitionDatasetConfig) -> tuple[IsolatedSignsRecognition, DataLoader | None]:
+def load_pose_dataset(config: RecognitionDatasetConfig) -> tuple[IsolatedSignsRecognitionDataset, DataLoader | None]:
     pose_transforms = None
     if config.preprocessing is not None:
         pose_transforms = get_pose_pipeline(
             config.preprocessing.pose_transforms_pipeline
         )
-    dataset = IsolatedSignsRecognition(
+    dataset = IsolatedSignsRecognitionDataset(
         url=config.shards_url,
         pose_transforms=pose_transforms,
         verbose=config.verbose,

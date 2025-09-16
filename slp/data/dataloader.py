@@ -32,17 +32,19 @@ class PoseDataCollator:
 
     def __call__(self, batch: list[dict]) -> dict:
         if self.flatten_poses:
+            lengths = [b['poses'].shape[0] for b in batch]
             poses = self._pad_poses(batch).permute(0, 2, 1).contiguous()
         else:
             poses = {
                 k: self._pad_poses(batch, lambda s: s["poses"][k]).contiguous()
                 for k in self.body_regions
             }
-            [b.pop("poses") for b in batch]
+            lengths = [b.pop("poses")[self.body_regions[0]].shape[0] for b in batch]
         final_batch = default_collate(batch)
         final_batch["poses"] = poses
+        final_batch["length"] = torch.tensor(lengths, dtype=torch.long)
         final_batch["masks"] = (
-            self._create_masks(final_batch["length"].tolist()).unsqueeze(1).contiguous()
+            self._create_masks(lengths).unsqueeze(1).contiguous()
         )
         return final_batch
 
@@ -77,43 +79,6 @@ class DenselyAnnotatedPoseDataCollator(PoseDataCollator):
             for name in batch[0]["targets"].keys()
         }
         [b.pop('targets') for b in batch]
-        # targets = [{k: v for k, v in b.pop('targets').items()} for b in batch]
-        # codec_data_per_name = {
-        #     name: [b.pop(name) for b in batch] for name in self.segment_codec_names
-        # }
-        # segment_codecs = {
-        #     name: {
-        #         key: (
-        #             # Pad sequences for any key that is NOT 'segments'.
-        #             pad_sequence(
-        #                 [
-        #                     torch.from_numpy(d[key]).to(self.annots_dtype)
-        #                     for d in codec_batch
-        #                 ],
-        #                 batch_first=True,
-        #                 padding_value=-1,
-        #             )
-        #             if key != "segments"
-        #             else
-        #             # For 'segments', just convert to a list of tensors.
-        #             [
-        #                 torch.from_numpy(d[key]).to(self.annots_dtype)
-        #                 for d in codec_batch
-        #             ]
-        #         )
-        #         # Iterate over the keys of the *first item* for this codec.
-        #         # This assumes all items in a batch share the same annotation structure.
-        #         for key in codec_batch[0].keys()
-        #     }
-        #     for name, codec_batch in codec_data_per_name.items()
-        # }
-        # segment_codecs = {
-        #     name: {
-        #         "frames": self._pad_per_frame_annots(batch, name),
-        #         "segments": [torch.from_numpy(b.pop(name)["segments"]).to(self.annots_dtype) for b in batch],
-        #     }
-        #     for name in self.segment_codec_names
-        # }
         batch = super().__call__(batch)
         batch['segments'] = segments
         batch['targets'] = targets

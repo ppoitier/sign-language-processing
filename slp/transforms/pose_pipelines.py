@@ -17,6 +17,7 @@ from sign_language_tools.pose.transform import (
     RandomTemporalScale,
     ToRGBImage,
     Resample,
+TemporalCrop
 )
 
 
@@ -39,6 +40,8 @@ def get_pose_pipeline(pipeline_name: str):
         return Concatenate(['upper_pose', 'left_hand', 'right_hand'])
     elif pipeline_name == "resample":
         return Resample(new_length=64, method='nearest')
+    elif pipeline_name == "temporal-crop":
+        return TemporalCrop(size=200, location='start')
     elif pipeline_name == "img":
         return Compose([
             ToRGBImage(),
