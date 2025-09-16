@@ -4,7 +4,7 @@ datasets:
     loader:
       batch_size: 64
       shuffle: true
-      num_workers: 0
+      num_workers: 23
     preprocessing:
       pose_transforms_pipeline: "concat+temporal-crop+norm+flatten"
   validation:
@@ -12,7 +12,7 @@ datasets:
     loader:
       batch_size: 64
       shuffle: false
-      num_workers: 0
+      num_workers: 23
     preprocessing:
       pose_transforms_pipeline: "concat+temporal-crop+norm+flatten"
   testing:
@@ -20,7 +20,7 @@ datasets:
     loader:
       batch_size: 64
       shuffle: false
-      num_workers: 0
+      num_workers: 23
     preprocessing:
       pose_transforms_pipeline: "concat+temporal-crop+norm+flatten"
 
@@ -57,4 +57,4 @@ experiment:
   output_dir: "/home/sign-language/outputs/isolated-recognition"
   mlflow_uri: "http://127.0.0.1:8142"
   show_progress_bar: true
-  debug: true
+  debug: false
