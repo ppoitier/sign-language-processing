@@ -9,6 +9,7 @@ from slp.metrics.classification.base import ClassificationMetrics
 from slp.tasks.isolated_recognition.model import load_model
 from slp.trainers.base import TrainerBase
 from slp.utils.model import count_parameters
+from slp.schedulers.cosine_annealing_with_linear_warmup import create_warmup_plateau_cosine_scheduler
 
 
 class IsolatedRecognitionTrainer(TrainerBase):
@@ -86,7 +87,17 @@ class IsolatedRecognitionTrainer(TrainerBase):
         #     }
 
     def configure_optimizers(self):
-        return optim.SGD(self.parameters(), lr=self.learning_rate)
+        optimizer = optim.Adam(self.parameters(), lr=self.learning_rate)
+        scheduler = create_warmup_plateau_cosine_scheduler(
+            optimizer,
+            n_warmup_steps=20,
+            n_plateau_steps=10,
+            max_steps=150,
+            lr=self.learning_rate,
+            start_lr=1e-12,
+            end_lr=1e-6,
+        )
+        return {"optimizer": optimizer, "lr_scheduler": scheduler}
 
 
 def load_isolated_recognition_trainer(
