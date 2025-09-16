@@ -109,25 +109,27 @@ class SPOTER(nn.Module):
         self.linear_class = nn.Linear(c_in, n_classes)
 
     def forward(
-        self, src: torch.Tensor, src_padding_mask: Optional[torch.Tensor] = None
+        self,
+            x: torch.Tensor,
+            masks: torch.Tensor,
     ) -> torch.Tensor:
         """
         Args:
-            src (Tensor): Input sequence of pose vectors. Tensor of shape (N, T, C_in).
-            src_padding_mask (Tensor): Mask for padding tokens in src. Tensor of shape (N, T).
+            x (Tensor): Input sequence of pose vectors. Tensor of shape (N, T, C_in).
+            masks (Tensor): Boolean mask tensor of shape (N, T), where 1=included, and 0=excluded.
 
         Returns:
             output: Tensor of shape (N, n_classes)
         """
-        pos_encoded_src = src + self.pos_embed[:, : src.shape[1], :]
+        pos_encoded_src = x + self.pos_embed[:, : x.shape[1], :]
 
         # Repeat the class query for each item in the batch.
-        batch_size = src.shape[0]
+        batch_size = x.shape[0]
         query_embed = self.class_query.repeat(batch_size, 1, 1)
 
         # Pass data through the transformer. Output of shape (B, 1, C_h) as we only have 1 query token.
         h = self.transformer(
-            pos_encoded_src, query_embed, src_key_padding_mask=src_padding_mask
+            pos_encoded_src, query_embed, src_key_padding_mask=~masks
         )
         # Pass through the final classifier and remove the sequence dimension
         res = self.linear_class(h).squeeze(1)
