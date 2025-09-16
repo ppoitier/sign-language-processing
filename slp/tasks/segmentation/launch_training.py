@@ -37,6 +37,7 @@ def launch_segmentation_training(config_path):
     assert config.training is not None, "Missing training configuration."
     assert "training" in datasets, "Missing training dataset."
     assert "validation" in datasets, "Missing validation dataset."
+    assert "testing" in datasets, "Missing testing dataset."
     trainer = load_segmentation_trainer(datasets['training'], config.model, config.training)
     lightning_module, best_checkpoint_path = run_training(
         training_dataloader=dataloaders['training'],

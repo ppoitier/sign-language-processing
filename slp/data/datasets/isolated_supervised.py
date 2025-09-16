@@ -9,7 +9,12 @@ from slp.data.dataloader import PoseDataCollator
 
 
 def _get_wds_mapping_fn(
-    body_regions=("upper_pose", "left_hand", "right_hand", "lips"),
+    body_regions=(
+            "upper_pose",
+            "left_hand",
+            "right_hand",
+            # "lips",
+    ),
 ):
     def _map_wds_to_sample(wds_sample):
         return {
