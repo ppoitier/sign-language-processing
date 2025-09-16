@@ -55,6 +55,8 @@ def get_pose_pipeline(pipeline_name: str):
                 "right_hand": (44, 65),
             }
         )
+    elif pipeline_name == 'dropz':
+        return DropCoordinates('z')
     elif pipeline_name == "flatten":
         return Flatten()
     elif pipeline_name == "nfrts":

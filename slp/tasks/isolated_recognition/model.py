@@ -21,8 +21,6 @@ class ClassificationModel(nn.Module):
     def forward(self, x: Tensor, masks: Tensor) -> dict[str, Tensor]:
         x = x.permute(0, 2, 1).contiguous()
         masks = masks.squeeze(1).bool().contiguous()
-        print('X:', x.shape)
-        print('masks:', masks.shape)
         return {'classification': self.model(x, masks)}
 
 
