@@ -17,7 +17,9 @@ from sign_language_tools.pose.transform import (
     RandomTemporalScale,
     ToRGBImage,
     Resample,
-TemporalCrop
+    TemporalCrop,
+    FixedResolutionNormalization,
+    Padding,
 )
 
 
@@ -63,6 +65,16 @@ def get_pose_pipeline(pipeline_name: str):
         return random_nfrts()
     elif pipeline_name == "dilation":
         return random_time_dilation()
+    elif pipeline_name == "wlasl-pose":
+        n_samples = 50
+        return Compose([
+            Concatenate(['upper_pose', 'left_hand', 'right_hand']),
+            DropCoordinates('z'),
+            Padding(min_length=n_samples, mode='edge'),
+            TemporalCrop(size=n_samples, location='center'),
+            FixedResolutionNormalization(width=256, height=256),
+            Flatten('features'),
+        ])
     components = pipeline_name.split("+")
     if len(components) < 2:
         raise ValueError(f"Invalid pipeline: {pipeline_name}")

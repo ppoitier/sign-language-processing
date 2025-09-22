@@ -1,27 +1,30 @@
 from torch import nn, Tensor
-from torch.nn.functional import pad
 
 from slp.config.templates.model import ModelConfig
-from slp.nn.spoter import SPOTER
+from slp.nn.blocks.tgcn.original import GCN_muti_att
 
 class ClassificationModel(nn.Module):
     def __init__(self, **kwargs):
         super().__init__()
-        self.model = SPOTER(
-            n_classes=64,
-            c_in=130,
-            max_sequence_lengths=200,
-            n_heads=10,
-            n_encoder_layers=6,
-            n_decoder_layers=6,
-            dim_feedforward=2048,
-            dropout=0.1,
-        )
+        self.tgcn = GCN_muti_att(**kwargs)
+        # self.model = SPOTER(
+        #     n_classes=64,
+        #     c_in=130,
+        #     max_sequence_lengths=200,
+        #     n_heads=10,
+        #     n_encoder_layers=6,
+        #     n_decoder_layers=6,
+        #     dim_feedforward=2048,
+        #     dropout=0.1,
+        # )
 
     def forward(self, x: Tensor, masks: Tensor) -> dict[str, Tensor]:
         x = x.permute(0, 2, 1).contiguous()
-        masks = masks.squeeze(1).bool().contiguous()
-        return {'classification': self.model(x, masks)}
+        return {'classification': self.tgcn(x)}
+        # x = x.permute(0, 2, 1).contiguous()
+        # masks = masks.squeeze(1).bool().contiguous()
+        # return {'classification': self.model(x, masks)}
+        ...
 
 
 #
@@ -66,6 +69,8 @@ def load_model(config: ModelConfig) -> nn.Module:
         #         n_classes=config.heads['classification'].out_channels,
         #     )
         case 'spoter':
+            return ClassificationModel(**config.encoder)
+        case 'pose-tgcn':
             return ClassificationModel(**config.encoder)
         case _:
             raise ValueError(f"Unknown model: {config.name}")

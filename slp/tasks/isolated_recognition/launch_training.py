@@ -27,19 +27,25 @@ def launch_isolated_recognition_training(config_path):
     assert "validation" in datasets, "Missing validation dataset."
     assert "testing" in datasets, "Missing testing dataset."
 
-    trainer = load_isolated_recognition_trainer(
+    lightning_module = load_isolated_recognition_trainer(
         datasets["training"], config.model, config.training
     )
-    lightning_module, best_checkpoint_path = run_training(
-        training_dataloader=dataloaders["training"],
-        validation_dataloader=dataloaders["validation"],
-        lightning_module=trainer,
-        experiment_config=config.experiment,
-        training_config=config.training,
-        loggers=load_loggers(config.experiment, prefix="train/"),
-    )
+
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    checkpoint = torch.load("E:/weights/wlasl/pose-tgcn/asl100/ckpt.pth", map_location=device, weights_only=True)
+    lightning_module.model.tgcn.load_state_dict(checkpoint)
+
+    # lightning_module, best_checkpoint_path = run_training(
+    #     training_dataloader=dataloaders["training"],
+    #     validation_dataloader=dataloaders["validation"],
+    #     lightning_module=trainer,
+    #     experiment_config=config.experiment,
+    #     training_config=config.training,
+    #     loggers=load_loggers(config.experiment, prefix="train/"),
+    # )
     run_testing(
-        checkpoint_path=best_checkpoint_path,
+        # checkpoint_path=best_checkpoint_path,
+        checkpoint_path=None,
         testing_dataloader=dataloaders["testing"],
         lightning_module=lightning_module,
         experiment_config=config.experiment,

@@ -6,7 +6,7 @@ from slp.config.templates.experiment import ExperimentConfig
 
 
 def run_testing(
-    checkpoint_path: str,
+    checkpoint_path: str | None,
     testing_dataloader: DataLoader,
     lightning_module: pl.LightningModule,
     experiment_config: ExperimentConfig,

@@ -1,4 +1,6 @@
-from pydantic import BaseModel, Field
+import os
+
+from pydantic import BaseModel, Field, field_validator
 
 from slp.config.templates.codec import SegmentCodecConfig
 
@@ -40,5 +42,13 @@ class SegmentationDatasetConfig(DatasetConfig):
 
 
 class RecognitionDatasetConfig(DatasetConfig):
-    vocab_size: int | None = None
+    include_videos: bool = False
+    video_dir: str | None = None
     preprocessing: DataPreprocessing | None = None
+    split_filepath: str | None = None
+
+    @field_validator('split_filepath', mode='after')
+    def validate_label_file(cls, split_filepath: str | None):
+        if not os.path.exists(split_filepath):
+            raise FileNotFoundError(f'Split file [{split_filepath}] not found.')
+        return split_filepath

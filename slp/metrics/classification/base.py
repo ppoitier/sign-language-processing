@@ -1,5 +1,5 @@
 from torchmetrics import MetricCollection
-from torchmetrics.classification import Accuracy, Recall, Precision, F1Score
+from torchmetrics.classification import Accuracy, F1Score
 
 
 class ClassificationMetrics(MetricCollection):
@@ -12,8 +12,6 @@ class ClassificationMetrics(MetricCollection):
             "macro_accuracy/top10": Accuracy(top_k=10, average="macro", **acc_args),
             "micro_accuracy/top5": Accuracy(top_k=5, average="micro", **acc_args),
             "micro_accuracy/top10": Accuracy(top_k=10, average="micro", **acc_args),
-            # "recall": Recall(average=None, **acc_args),
-            # "precision": Precision(average=None, **acc_args),
             "f1": F1Score(average="macro", **acc_args),
         }
         super().__init__(metrics, **kwargs)

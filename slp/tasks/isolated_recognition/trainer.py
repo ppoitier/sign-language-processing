@@ -37,25 +37,24 @@ class IsolatedRecognitionTrainer(TrainerBase):
         self.save_hyperparameters(ignore=["model", "criterion", "test_logits"])
 
     def prediction_step(self, batch, mode):
-        features, masks, targets = batch["poses"], batch["masks"], batch["label"]
+        features, masks, targets = batch["poses"], batch["masks"], batch["label_id"].long()
         batch_size = features.size(0)
-        # features of shape (N, C_in, T)
-        # mask of shape (N, 1, T)
-        # classification target of shape N
-
         logits = self.model(features, masks)
         loss = self.criterion(logits, {'classification': logits['classification']})
 
         self.log(f"{mode}/loss", loss, on_step=True, on_epoch=True, batch_size=batch_size)
         cls_logits = logits["classification"]
         cls_logits = cls_logits[-1] if self.is_output_multilayer else cls_logits
-        per_frame_probs = cls_logits.softmax(dim=1)
+        probs = cls_logits.softmax(dim=1)
+        # print('targets:', targets.shape) # tensor of shape (batch_size)
+        # print('probs:', probs.shape) # tensor of shape (batch_size, n_classes)
+        # print("max label:", targets.max())
         if mode == "training":
-            metrics = self.training_metrics(per_frame_probs, targets)
+            metrics = self.training_metrics(probs, targets)
         elif mode == "validation":
-            metrics = self.validation_metrics(per_frame_probs, targets)
+            metrics = self.validation_metrics(probs, targets)
         elif mode == "testing":
-            metrics = self.testing_metrics(per_frame_probs, targets)
+            metrics = self.testing_metrics(probs, targets)
         else:
             raise ValueError(f"Unknown mode: {mode}")
         self.log_metrics(metrics, batch_size=batch_size)
@@ -73,18 +72,7 @@ class IsolatedRecognitionTrainer(TrainerBase):
         logits, loss, metrics = self.prediction_step(batch, "testing")
         if self.is_output_multilayer:
             logits = {k: v[-1] for k, v in logits.items()}
-
-        # batch_size = len(instance_ids)
-        # for idx in range(batch_size):
-        #     instance_id = instance_ids[idx]
-        #     self.test_logits[f"{instance_id}_{starts[idx]}_{ends[idx]}"] = {
-        #         head_name: head_logits[idx]
-        #         .detach()
-        #         .cpu()
-        #         .numpy()[..., : lengths[idx]]
-        #         .astype("float16")
-        #         for head_name, head_logits in logits.items()
-        #     }
+        # todo
 
     def configure_optimizers(self):
         optimizer = optim.Adam(self.parameters(), lr=self.learning_rate)
