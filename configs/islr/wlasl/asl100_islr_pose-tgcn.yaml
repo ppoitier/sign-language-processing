@@ -1,0 +1,61 @@
+datasets:
+  training:
+    shards_url: "/home/sign-language/datasets/wlasl/shards/train/shard_{000000..000004}.tar"
+    loader:
+      batch_size: 64
+      shuffle: true
+      num_workers: 23
+    preprocessing:
+      pose_transforms_pipeline: "wlasl-pose"
+    split_filepath: "/home/sign-language/datasets/wlasl/metadata/splits/asl100.json"
+  validation:
+    shards_url: "/home/sign-language/datasets/wlasl/shards/val/shard_000000.tar"
+    loader:
+      batch_size: 64
+      shuffle: false
+      num_workers: 23
+    preprocessing:
+      pose_transforms_pipeline: "wlasl-pose"
+    split_filepath: "/home/sign-language/datasets/wlasl/metadata/splits/asl100.json"
+  testing:
+    shards_url: "/home/sign-language/datasets/wlasl/shards/test/shard_000000.tar"
+    loader:
+      batch_size: 64
+      shuffle: false
+      num_workers: 23
+    preprocessing:
+      pose_transforms_pipeline: "wlasl-pose"
+    split_filepath: "/home/sign-language/datasets/wlasl/metadata/splits/asl100.json"
+
+model:
+  name: "pose-tgcn"
+  encoder:
+    input_feature: 100
+    hidden_feature: 64
+    num_class: 100
+    num_stage: 20
+    p_dropout: 0.3
+  heads:
+    classification:
+      in_channels: 100
+      out_channels: 100
+      layer: identity
+
+training:
+  criterion:
+    classification:
+      name: "cross-entropy"
+      use_weights: false
+  max_epochs: 500
+  early_stopping_patience: 30
+  learning_rate: 1e-3
+  is_output_multilayer: false
+
+experiment:
+  id: "islr"
+  suffix: "wlasl/asl10-posetgcn"
+  seed: 42
+  output_dir: "/home/sign-language/outputs/isolated-recognition"
+  mlflow_uri: "http://127.0.0.1:8142"
+  show_progress_bar: true
+  debug: false
