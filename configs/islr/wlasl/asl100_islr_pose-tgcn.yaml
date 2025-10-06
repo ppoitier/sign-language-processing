@@ -61,6 +61,6 @@ experiment:
   suffix: "wlasl/asl100-posetgcn"
   seed: 42
   output_dir: "/home/sign-language/outputs/isolated-recognition"
-  mlflow_uri: "http://127.0.0.1:8142"
+#  mlflow_uri: "http://127.0.0.1:8142"
   show_progress_bar: true
   debug: false
