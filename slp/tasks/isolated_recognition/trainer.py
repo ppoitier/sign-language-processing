@@ -75,6 +75,7 @@ class IsolatedRecognitionTrainer(TrainerBase):
 
     def configure_optimizers(self):
         optimizer = optim.Adam(self.parameters(), lr=self.learning_rate, eps=1e-3)
+        return optimizer
         # scheduler = create_warmup_plateau_cosine_scheduler(
         #     optimizer,
         #     n_warmup_steps=20,

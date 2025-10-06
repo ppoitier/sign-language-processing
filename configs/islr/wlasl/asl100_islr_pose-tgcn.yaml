@@ -2,7 +2,7 @@ datasets:
   training:
     shards_url: "/home/sign-language/datasets/wlasl/shards/train/shard_{000000..000004}.tar"
     split_filepath: "/home/sign-language/datasets/wlasl/metadata/splits/asl100.json"
-    label_mapping_filepath: "/home/sign-language/datasets/wlasl/metadata/label_mappings/asl2000.json"
+    label_mapping_filepath: "/home/sign-language/datasets/wlasl/metadata/label_mappings/asl100.json"
     loader:
       batch_size: 64
       shuffle: true
@@ -13,7 +13,7 @@ datasets:
   validation:
     shards_url: "/home/sign-language/datasets/wlasl/shards/val/shard_000000.tar"
     split_filepath: "/home/sign-language/datasets/wlasl/metadata/splits/asl100.json"
-    label_mapping_filepath: "/home/sign-language/datasets/wlasl/metadata/label_mappings/asl2000.json"
+    label_mapping_filepath: "/home/sign-language/datasets/wlasl/metadata/label_mappings/asl100.json"
     loader:
       batch_size: 64
       shuffle: false
@@ -24,7 +24,7 @@ datasets:
   testing:
     shards_url: "/home/sign-language/datasets/wlasl/shards/test/shard_000000.tar"
     split_filepath: "/home/sign-language/datasets/wlasl/metadata/splits/asl100.json"
-    label_mapping_filepath: "/home/sign-language/datasets/wlasl/metadata/label_mappings/asl2000.json"
+    label_mapping_filepath: "/home/sign-language/datasets/wlasl/metadata/label_mappings/asl100.json"
     loader:
       batch_size: 64
       shuffle: false
