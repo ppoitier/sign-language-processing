@@ -40,7 +40,7 @@ def _get_wds_mapping_fn(
 
 
 def _compute_label_occurrences(samples: list[dict]):
-    label_counter = Counter([int(s['label']) for s in samples])
+    label_counter = Counter([int(s['label_id']) for s in samples])
     occurrences = np.zeros(max(label_counter.keys())+1)
     for label, count in label_counter.items():
         occurrences[label] = count
