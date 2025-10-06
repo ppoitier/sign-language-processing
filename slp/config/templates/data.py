@@ -46,9 +46,10 @@ class RecognitionDatasetConfig(DatasetConfig):
     video_dir: str | None = None
     preprocessing: DataPreprocessing | None = None
     split_filepath: str | None = None
+    label_mapping_filepath: str | None = None
 
-    @field_validator('split_filepath', mode='after')
-    def validate_label_file(cls, split_filepath: str | None):
-        if not os.path.exists(split_filepath):
-            raise FileNotFoundError(f'Split file [{split_filepath}] not found.')
-        return split_filepath
+    @field_validator('split_filepath', 'label_mapping_filepath', mode='after')
+    def validate_filepaths(cls, filepath: str | None):
+        if not os.path.exists(filepath):
+            raise FileNotFoundError(f'File [{filepath}] not found.')
+        return filepath

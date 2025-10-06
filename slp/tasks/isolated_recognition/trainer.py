@@ -3,13 +3,12 @@ from torch import nn, optim
 
 from slp.config.templates.model import ModelConfig
 from slp.config.templates.training import TrainingConfig
-from slp.data.datasets.isolated_supervised import IsolatedSignsRecognitionDataset
+from slp.data.isolated_supervised import IsolatedSignsRecognitionDataset
 from slp.losses.loading import load_multihead_criterion
 from slp.metrics.classification.base import ClassificationMetrics
 from slp.tasks.isolated_recognition.model import load_model
 from slp.trainers.base import TrainerBase
 from slp.utils.model import count_parameters
-from slp.schedulers.cosine_annealing_with_linear_warmup import create_warmup_plateau_cosine_scheduler
 
 
 class IsolatedRecognitionTrainer(TrainerBase):
@@ -40,7 +39,7 @@ class IsolatedRecognitionTrainer(TrainerBase):
         features, masks, targets = batch["poses"], batch["masks"], batch["label_id"].long()
         batch_size = features.size(0)
         logits = self.model(features, masks)
-        loss = self.criterion(logits, {'classification': logits['classification']})
+        loss = self.criterion(logits, {'classification': targets})
 
         self.log(f"{mode}/loss", loss, on_step=True, on_epoch=True, batch_size=batch_size)
         cls_logits = logits["classification"]
@@ -94,6 +93,7 @@ def load_isolated_recognition_trainer(
     training_config: TrainingConfig,
 ):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
     criterion_weights = {}
     for name, config in training_config.criterion.items():
         if config.use_weights:

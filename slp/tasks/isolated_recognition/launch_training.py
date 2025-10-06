@@ -32,7 +32,7 @@ def launch_isolated_recognition_training(config_path):
     )
 
     # device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    # checkpoint = torch.load("E:/weights/wlasl/pose-tgcn/asl100/ckpt.pth", map_location=device, weights_only=True)
+    # checkpoint = torch.load("E:/weights/wlasl/pose-tgcn/asl2000/ckpt.pth", map_location=device, weights_only=True)
     # lightning_module.model.tgcn.load_state_dict(checkpoint)
 
     lightning_module, best_checkpoint_path = run_training(

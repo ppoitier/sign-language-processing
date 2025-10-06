@@ -1,6 +1,6 @@
 from torch.utils.data import DataLoader
 
-from slp.data.datasets.isolated_supervised import IsolatedSignsRecognitionDataset, load_pose_dataset
+from slp.data.isolated_supervised import IsolatedSignsRecognitionDataset, load_pose_dataset
 from slp.tasks.isolated_recognition.config import IsolatedRecognitionTaskConfig
 
 

@@ -11,6 +11,11 @@ from slp.data.dataloader import PoseDataCollator
 from slp.transforms.pose_pipelines import get_pose_pipeline
 
 
+def _read_json(filepath: str):
+    with open(filepath, 'rb') as f:
+        return orjson.loads(f.read())
+
+
 def _get_wds_mapping_fn(
     body_regions=(
             "upper_pose",
@@ -18,16 +23,18 @@ def _get_wds_mapping_fn(
             "right_hand",
             # "lips",
     ),
+    label_mapping=None,
 ):
     def _map_wds_to_sample(wds_sample):
+        label = str(wds_sample['label.txt'])
         return {
             'id': wds_sample['__key__'],
             'poses': {
                 body_region: wds_sample[f'pose.{body_region}.npy']
                 for body_region in body_regions
             },
-            'label_id': int(wds_sample['label.idx']),
-            'label': str(wds_sample['label.txt']),
+            'label': label,
+            'label_id': int(wds_sample['label.idx']) if label_mapping is None else label_mapping[label],
         }
     return _map_wds_to_sample
 
@@ -38,14 +45,6 @@ def _compute_label_occurrences(samples: list[dict]):
     for label, count in label_counter.items():
         occurrences[label] = count
     return occurrences
-
-
-def _recompute_label_ids(samples):
-    glosses = list(sorted(set([sample['label'] for sample in samples])))
-    label_to_idx = {label: idx for idx, label in enumerate(glosses)}
-    for sample in samples:
-        sample['label_id'] = label_to_idx[sample['label']]
-    return samples, label_to_idx
 
 
 class IsolatedSignsRecognitionDataset(Dataset):
@@ -60,6 +59,7 @@ class IsolatedSignsRecognitionDataset(Dataset):
             pose_transforms=None,
             video_transform=None,
             split_filepath: str | None = None,
+            label_mapping_filepath: str | None = None,
     ):
         super().__init__()
         self.include_poses = include_poses
@@ -72,22 +72,28 @@ class IsolatedSignsRecognitionDataset(Dataset):
         self.pose_transforms = pose_transforms
         self.video_transform = video_transform
 
+        external_label_mapping = None
+        if label_mapping_filepath is not None:
+            print(f"Loading external label mapping: [{label_mapping_filepath}]...")
+            external_label_mapping = _read_json(label_mapping_filepath)
+
+        split = None
+        if split_filepath is not None:
+            print(f"Keep only samples in split: [{split_filepath}]...")
+            split = set(_read_json(split_filepath))
+
         web_dataset = wds.DataPipeline(
             wds.SimpleShardList(url),
             wds.split_by_worker,
             wds.tarfile_to_samples(),
             wds.decode(),
-            wds.map(_get_wds_mapping_fn()),
+            wds.select(lambda sample: (sample['__key__'] in split) if split is not None else True),
+            wds.map(_get_wds_mapping_fn(label_mapping=external_label_mapping)),
         )
         print("Loading instances from shards:", url)
         self.samples = list(web_dataset)
-        if split_filepath is not None:
-            print(f"Filtering IDs in split: [{split_filepath}]...")
-            with open(split_filepath, 'rb') as f:
-                instance_ids = set(orjson.loads(f.read()))
-            self.samples = [sample for sample in self.samples if sample['id'] in instance_ids]
-        print("Recompute label ids...")
-        self.samples, self.label_to_idx = _recompute_label_ids(self.samples)
+
+        self.label_to_idx = {label: label_id for label, label_id in set((sample['label'], sample['label_id']) for sample in self.samples)}
         self.idx_to_label = {idx: label for label, idx in self.label_to_idx.items()}
         print(f"Dataset loaded: {len(self.samples)} instances.")
 
@@ -131,6 +137,7 @@ def load_pose_dataset(config: RecognitionDatasetConfig) -> tuple[IsolatedSignsRe
         url=config.shards_url,
         pose_transforms=pose_transforms,
         split_filepath=config.split_filepath,
+        label_mapping_filepath=config.label_mapping_filepath,
         include_videos=config.include_videos,
         video_dir=config.video_dir,
     )
