@@ -52,15 +52,15 @@ training:
       name: "cross-entropy"
       use_weights: false
   max_epochs: 500
-  early_stopping_patience: 30
+  early_stopping_patience: 100
   learning_rate: 1e-3
   is_output_multilayer: false
 
 experiment:
   id: "islr"
-  suffix: "wlasl/asl10-posetgcn"
+  suffix: "wlasl/asl100-posetgcn"
   seed: 42
   output_dir: "/home/sign-language/outputs/isolated-recognition"
-#  mlflow_uri: "http://127.0.0.1:8142"
+  mlflow_uri: "http://127.0.0.1:8142"
   show_progress_bar: true
   debug: false
