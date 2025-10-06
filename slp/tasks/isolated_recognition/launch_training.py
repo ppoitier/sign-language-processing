@@ -1,7 +1,7 @@
 import click
 
 import torch
-torch.set_float32_matmul_precision('medium')
+torch.set_float32_matmul_precision('high')
 
 from slp.config.parser import parse_config
 from slp.tasks.isolated_recognition.config import IsolatedRecognitionTaskConfig
