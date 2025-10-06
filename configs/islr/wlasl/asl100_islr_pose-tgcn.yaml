@@ -4,7 +4,7 @@ datasets:
     split_filepath: "/home/sign-language/datasets/wlasl/metadata/splits/asl100.json"
     label_mapping_filepath: "/home/sign-language/datasets/wlasl/metadata/label_mappings/asl100.json"
     loader:
-      batch_size: 32
+      batch_size: 128
       shuffle: true
       num_workers: 23
     preprocessing:
@@ -15,7 +15,7 @@ datasets:
     split_filepath: "/home/sign-language/datasets/wlasl/metadata/splits/asl100.json"
     label_mapping_filepath: "/home/sign-language/datasets/wlasl/metadata/label_mappings/asl100.json"
     loader:
-      batch_size: 32
+      batch_size: 128
       shuffle: false
       num_workers: 23
     preprocessing:
@@ -26,7 +26,7 @@ datasets:
     split_filepath: "/home/sign-language/datasets/wlasl/metadata/splits/asl100.json"
     label_mapping_filepath: "/home/sign-language/datasets/wlasl/metadata/label_mappings/asl100.json"
     loader:
-      batch_size: 32
+      batch_size: 128
       shuffle: false
       num_workers: 23
     preprocessing:
