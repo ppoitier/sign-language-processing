@@ -4,7 +4,7 @@ datasets:
     split_filepath: "/home/sign-language/datasets/wlasl/metadata/splits/asl100.json"
     label_mapping_filepath: "/home/sign-language/datasets/wlasl/metadata/label_mappings/asl100.json"
     loader:
-      batch_size: 128
+      batch_size: 64
       shuffle: true
       num_workers: 23
     preprocessing:
@@ -15,7 +15,7 @@ datasets:
     split_filepath: "/home/sign-language/datasets/wlasl/metadata/splits/asl100.json"
     label_mapping_filepath: "/home/sign-language/datasets/wlasl/metadata/label_mappings/asl100.json"
     loader:
-      batch_size: 128
+      batch_size: 64
       shuffle: false
       num_workers: 23
     preprocessing:
@@ -26,7 +26,7 @@ datasets:
     split_filepath: "/home/sign-language/datasets/wlasl/metadata/splits/asl100.json"
     label_mapping_filepath: "/home/sign-language/datasets/wlasl/metadata/label_mappings/asl100.json"
     loader:
-      batch_size: 128
+      batch_size: 64
       shuffle: false
       num_workers: 23
     preprocessing:
@@ -50,7 +50,7 @@ training:
   criterion:
     classification:
       name: "cross-entropy"
-      use_weights: false
+      use_weights: true
   max_epochs: 500
   early_stopping_patience: 50
   learning_rate: 1e-4
@@ -59,7 +59,7 @@ training:
 experiment:
   id: "islr"
   suffix: "wlasl/asl100-posetgcn"
-  seed: 125
+  seed: 246
   output_dir: "/home/sign-language/outputs/isolated-recognition"
 #  mlflow_uri: "http://127.0.0.1:8142"
   show_progress_bar: true
