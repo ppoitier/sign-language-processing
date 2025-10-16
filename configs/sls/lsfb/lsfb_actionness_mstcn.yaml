@@ -76,7 +76,7 @@ training:
 
 experiment:
   id: "segmentation"
-  suffix: "actionness/lsfb/mstcn/weights"
+  suffix: "actionness/lsfb/mstcn/noweight"
   seed: 'random'
   output_dir: "/home/sign-language/outputs/segmentation"
   mlflow_uri: "http://127.0.0.1:8142"
