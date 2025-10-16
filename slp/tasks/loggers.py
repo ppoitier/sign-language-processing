@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 
 from lightning.pytorch.loggers import Logger, TensorBoardLogger, CSVLogger, MLFlowLogger
 
@@ -6,7 +7,8 @@ from slp.config.templates.experiment import ExperimentConfig
 
 
 def load_loggers(experiment_config: ExperimentConfig, prefix: str = ''):
-    exp_name = f"{experiment_config.id}_{experiment_config.suffix}"
+    datetime_code = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    exp_name = f"{experiment_config.id}_{experiment_config.suffix}_{datetime_code}"
     logs_dir = f"{experiment_config.output_dir}/logs/{exp_name}"
     os.makedirs(logs_dir, exist_ok=True)
     loggers: list[Logger] = [

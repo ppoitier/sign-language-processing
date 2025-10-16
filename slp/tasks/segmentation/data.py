@@ -1,6 +1,6 @@
 from torch.utils.data import DataLoader
 
-from slp.data.datasets.densely_annotated import load_dataset, DenselyAnnotatedSLDataset
+from slp.data.densely_annotated import load_dataset, DenselyAnnotatedSLDataset
 from slp.tasks.segmentation.config import SegmentationTaskConfig
 
 

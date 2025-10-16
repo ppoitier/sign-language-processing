@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel
 
 from slp.config.templates.codec import SegmentCodecConfig
@@ -17,6 +19,8 @@ class TrainingConfig(BaseModel):
     is_output_multilayer: bool = False
     gradient_clipping: float = 0.0
     early_stopping_patience: int = 10
+    checkpoint_path: Optional[str] = None
+    n_classes: Optional[int] = None
 
 
 class SegmentationTrainingConfig(TrainingConfig):

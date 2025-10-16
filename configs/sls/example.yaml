@@ -43,18 +43,21 @@ datasets:
         - { name: 'actionness' }
 
 model:
-  name: "mstcn"
-  encoder:
-    in_channels: 130
-    out_channels: 2
-    hidden_channels: 64
-    n_stages: 4
-    n_layers: 10
+  type: 'multi-head'
+  args:
+    predict_on_all_stages: true
+  backbone:
+    type: 'mstcn'
+    args:
+      in_channels: 130
+      out_channels: 2
+      hidden_channels: 64
+      n_stages: 4
+      n_layers: 10
   heads:
     classification:
-      in_channels: 2
-      out_channels: 2
-      layer: identity
+      type: 'identity'
+      in_channels_range: [0, 2]
 
 training:
   heads_to_targets:
@@ -69,11 +72,12 @@ training:
   is_output_multilayer: true
   use_offsets: false
   segment_decoder: { name: 'actionness' }
+  n_classes: 2
 
 experiment:
   id: "example"
   suffix: "lsfb"
-  seed: 42
+  seed: random
   output_dir: "D:/data/sign-languages/outs/slp2/segmentation"
   show_progress_bar: true
   debug: true

@@ -1,17 +1,11 @@
-import torch
 from torch import nn, optim
 
-from slp.config.templates.model import ModelConfig
 from slp.config.templates.training import TrainingConfig
-from slp.data.datasets.densely_annotated import DenselyAnnotatedSLDataset
-from slp.losses.loading import load_multihead_criterion
 from slp.metrics.segmentation.frame_based_group import FrameBasedMetrics
 from slp.metrics.segmentation.segment_based_group import SegmentBasedMetrics
-from slp.tasks.segmentation.model import load_model
 from slp.trainers.base import TrainerBase
 from slp.utils.model import count_parameters
 from slp.codecs.annotations.base import AnnotationCodec
-from slp.codecs.annotations.offsets import OffsetsCodec
 from slp.codecs.annotations.loading import load_annotation_codec
 
 
@@ -138,35 +132,28 @@ class SegmentationTrainer(TrainerBase):
 
 
 def load_segmentation_trainer(
-    training_dataset: DenselyAnnotatedSLDataset,
-    model_config: ModelConfig,
+    model: nn.Module,
+    criterion: nn.Module,
     training_config: TrainingConfig,
 ):
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    criterion_weights = {}
-    for name, config in training_config.criterion.items():
-        if config.use_weights:
-            weights = training_dataset.get_label_weights()
-            print(f"Use weights for target:", weights)
-            criterion_weights[name] = torch.from_numpy(weights).float().to(device)
-    criterion = load_multihead_criterion(training_config.criterion, criterion_weights)
-    model = load_model(model_config)
     n_parameters = count_parameters(model)
     print(f"Total number of parameters in the model: {n_parameters:,}")
-    checkpoint_path = model_config.checkpoint_path
+
+    checkpoint_path = training_config.checkpoint_path
     if checkpoint_path is not None:
         print("Loading checkpoint:", checkpoint_path)
         return SegmentationTrainer.load_from_checkpoint(
             checkpoint_path, model=model, criterion=criterion
         )
-    cls_head = model_config.heads.get("classification")
-    if cls_head is None:
-        raise ValueError("A segmentation model must have a 'classification' head.")
+
+    n_classes = training_config.n_classes
+    if n_classes is None:
+        raise ValueError("The number of classes (n_classes) must be provided in the training configuration.")
     return SegmentationTrainer(
         model=model,
         criterion=criterion,
         learning_rate=training_config.learning_rate,
-        n_classes=cls_head.out_channels,
+        n_classes=n_classes,
         is_output_multilayer=training_config.is_output_multilayer,
         use_offsets=training_config.use_offsets,
         heads_to_targets=training_config.heads_to_targets,

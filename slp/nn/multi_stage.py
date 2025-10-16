@@ -14,20 +14,20 @@ class MultiStageModel(nn.Module):
         self.stages = nn.ModuleList(stages)
         self.activation = nn.Identity() if activation is None else activation
 
-    def forward(self, x: Tensor, mask: Tensor) -> Tensor:
+    def forward(self, x: Tensor, mask: Tensor) -> list[Tensor]:
         """
         Args:
             x: tensor of shape (N, C_in, T)
             mask: tensor of shape (N, 1, T)
 
         Returns:
-            logits: tuple containing N_layers tensors (N, C_in, T)
+            logits: list containing N_layers tensors (N, C_in, T_l)
         """
         out = x
-        outs: tuple[Tensor] = tuple()
+        outs: list[Tensor] = []
         for idx, stage in enumerate(self.stages):
             out = stage(self.activation(out) if idx > 0 else out, mask)
-            outs += (out,)
+            outs.append(out)
             if mask.size(-1) != out.size(-1):
                 mask = F.interpolate(mask.float(), out.shape[-1], mode="nearest").bool()
         return outs
