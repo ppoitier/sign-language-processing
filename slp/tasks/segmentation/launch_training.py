@@ -37,7 +37,7 @@ def launch_segmentation_training(config_path):
     print(config)
     set_seed(config.experiment.seed)
 
-    datasets, dataloaders = load_segmentation_datasets(config)
+    datasets, dataloaders = load_segmentation_datasets(config.datasets)
     assert config.training is not None, "Missing training configuration."
     assert "training" in datasets, "Missing training dataset."
     assert "validation" in datasets, "Missing validation dataset."
