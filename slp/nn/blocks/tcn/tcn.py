@@ -1,7 +1,7 @@
 from torch import nn
 
 from slp.nn.blocks.tcn.dilated_layers import DilatedResidualLayer
-from slp.nn.blocks.multi_stage import MultiStageModel
+from slp.nn.multi_stage import MultiStageModel
 
 
 class SingleStageTCN(nn.Module):
