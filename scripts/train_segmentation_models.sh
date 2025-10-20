@@ -1,10 +1,10 @@
 #!/bin/bash
 
-CONDA_ENV_NAME="your_pytorch_env"
-PYTHON_SCRIPT="train.py"
-LOG_DIR="logs"
+CONDA_ENV_NAME="slp"
+PYTHON_SCRIPT="slp/tasks/segmentation/launch_training.py"
+LOG_DIR="/home/sign-language/outputs/logs"
 MAX_CONCURRENT_JOBS=1
-TMUX_SESSION_PREFIX="exp"
+TMUX_SESSION_PREFIX="slp"
 CONFIG_FILES=(
     "configs/sls/dgs/dgs_actionness_mstcn.yaml"
 )
