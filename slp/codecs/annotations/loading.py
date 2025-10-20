@@ -7,10 +7,10 @@ from slp.codecs.annotations.offsets import OffsetsCodec
 def load_annotation_codec(config: SegmentCodecConfig):
     match config.name:
         case 'actionness':
-            return ActionnessCodec()
+            return ActionnessCodec(**config.args)
         case 'boundaries':
-            return BoundariesCodec()
+            return BoundariesCodec(**config.args)
         case 'offsets':
-            return OffsetsCodec()
+            return OffsetsCodec(**config.args)
         case _:
             raise ValueError(f'Unknown annotation codec: {config.name}.')

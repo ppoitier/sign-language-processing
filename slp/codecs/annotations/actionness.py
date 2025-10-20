@@ -1,3 +1,5 @@
+from typing import Union
+
 import numpy as np
 import torch
 from torch import Tensor
@@ -38,7 +40,7 @@ class ActionnessCodec(AnnotationCodec):
             'frame_labels': to_frame_labels(annotations).astype('int64'),
         }
 
-    def decode(self, logits: dict[str, Tensor], n_classes: int) -> Tensor:
+    def decode(self, logits: dict[str, Union[Tensor, np.ndarray]], n_classes: int) -> Tensor:
         """
         Args:
             logits: Dict containing an array (key=classification) of shape (N, C, T) containing the output of
@@ -48,6 +50,11 @@ class ActionnessCodec(AnnotationCodec):
         Returns:
             segments: Decoded segments from the logits.
         """
-        device = logits['classification'].device
-        preds = logits['classification'].detach().argmax(dim=1).cpu().numpy()
-        return torch.from_numpy(self.to_segments(preds)).long().to(device)
+        preds = logits['classification']
+        if isinstance(preds, np.ndarray):
+            device = 'cpu'
+            preds = torch.from_numpy(preds).argmax(0)
+        else:
+            device = preds.device
+            preds = preds.detach().argmax(0).cpu()
+        return torch.from_numpy(self.to_segments(preds.numpy())).long().to(device)

@@ -71,6 +71,7 @@ class DenselyAnnotatedSLDataset(Dataset):
         super().__init__()
         self.samples: list[dict] = []
         self.pose_transforms = pose_transforms
+        self.use_windows = use_windows
         web_dataset = wds.DataPipeline(
             wds.SimpleShardList(url),
             wds.split_by_worker,
@@ -115,6 +116,8 @@ class DenselyAnnotatedSLDataset(Dataset):
         sample = {**self.samples[index]}
         if self.pose_transforms is not None:
             sample["poses"] = self.pose_transforms(sample["poses"])
+        if self.use_windows:
+            sample['window_id'] = f"{sample['id']}_{sample['start']}_{sample['end']}"
         return sample
 
 

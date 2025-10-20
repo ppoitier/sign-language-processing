@@ -1,3 +1,5 @@
+from typing import Union
+
 import numpy as np
 import torch
 from torch import Tensor
@@ -29,7 +31,7 @@ class OffsetsCodec(AnnotationCodec):
             'offsets': np.stack([start_offsets, end_offsets], axis=-1).astype('float32'),
         }
 
-    def decode(self, logits: dict[str, Tensor], n_classes: int) -> Tensor:
+    def decode(self, logits: dict[str, Union[Tensor, np.ndarray]], n_classes: int) -> Tensor:
         """
 
         Args:
@@ -49,6 +51,11 @@ class OffsetsCodec(AnnotationCodec):
             proposals: predicted segments from the combination of the predicted offsets with a Soft-NMS algorithm using
             the classification scores.
         """
+        logits = {
+            k: v if isinstance(v, Tensor) else torch.from_numpy(v)
+            for k, v in logits.items()
+        }
+
         device = logits['regression'].device
         start_offsets, end_offsets = logits['regression'].detach().cpu().unbind(dim=0)
         start_offsets, end_offsets = start_offsets.numpy(), end_offsets.numpy()
