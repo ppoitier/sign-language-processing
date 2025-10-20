@@ -25,11 +25,10 @@ for config_file in "${CONFIG_FILES[@]}"; do
 
     echo "Preparing to launch: $session_name (Config: $config_file)"
     CMD="set -o pipefail; \
-             conda run -n \"$CONDA_ENV_NAME\" python \"$PYTHON_SCRIPT\" --config \"$config_file\" 2>&1 \
+             conda run -n \"$CONDA_ENV_NAME\" python \"$PYTHON_SCRIPT\" --config-path \"$config_file\" 2>&1 \
              | tee \"$LOG_FILE\"; \
              (exit \${PIPESTATUS[0]}); \
-             echo ''; echo '---'; echo 'Script finished. Log saved to $LOG_FILE'; \
-             echo 'Press [Enter] to close.'; read -r"
+             echo ''; echo '---'; echo 'Script finished. Log saved to $LOG_FILE';"
 
     tmux new-session -d -s "$session_name" "$CMD" &
     job_count=$(jobs -r -p | wc -l)
