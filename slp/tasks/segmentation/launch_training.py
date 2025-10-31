@@ -14,8 +14,8 @@ from slp.tasks.training import run_training
 from slp.tasks.testing import run_testing
 from slp.utils.random import set_seed
 
-from slp.tasks.segmentation.model import load_model_architecture
-from slp.tasks.segmentation.criterion import load_segmentation_criterion
+from slp.nn.loading import load_model_architecture
+from slp.losses.loading import load_criterion
 
 
 def save_logits(lightning_module, config: SegmentationTaskConfig):
@@ -44,7 +44,7 @@ def launch_segmentation_training(config_path):
     assert "testing" in datasets, "Missing testing dataset."
 
     model = load_model_architecture(config.model)
-    criterion = load_segmentation_criterion(datasets['training'], config.training)
+    criterion = load_criterion(datasets['training'], config.training)
     trainer = load_segmentation_trainer(model, criterion, config.training)
 
     lightning_module, best_checkpoint_path = run_training(

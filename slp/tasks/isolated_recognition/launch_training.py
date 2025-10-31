@@ -1,7 +1,7 @@
 import click
 
 import torch
-torch.set_float32_matmul_precision('highest')
+torch.set_float32_matmul_precision('high')
 
 from slp.config.parser import parse_config
 from slp.tasks.isolated_recognition.config import IsolatedRecognitionTaskConfig
@@ -11,6 +11,9 @@ from slp.tasks.training import run_training
 from slp.tasks.testing import run_testing
 from slp.tasks.loggers import load_loggers
 from slp.utils.random import set_seed
+
+from slp.nn.loading import load_model_architecture
+from slp.losses.loading import load_criterion
 
 
 @click.command()
@@ -27,14 +30,9 @@ def launch_isolated_recognition_training(config_path):
     assert "validation" in datasets, "Missing validation dataset."
     assert "testing" in datasets, "Missing testing dataset."
 
-    lightning_module = load_isolated_recognition_trainer(
-        datasets["training"], config.model, config.training
-    )
-
-    # device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    # checkpoint = torch.load("E:/weights/wlasl/pose-tgcn/asl2000/ckpt.pth", map_location=device, weights_only=True)
-    # lightning_module.model.tgcn.load_state_dict(checkpoint)
-
+    model = load_model_architecture(config.model)
+    criterion = load_criterion(datasets["training"], config.training)
+    lightning_module = load_isolated_recognition_trainer(model, criterion, config.training)
     lightning_module, best_checkpoint_path = run_training(
         training_dataloader=dataloaders["training"],
         validation_dataloader=dataloaders["validation"],
@@ -45,7 +43,6 @@ def launch_isolated_recognition_training(config_path):
     )
     run_testing(
         checkpoint_path=best_checkpoint_path,
-        # checkpoint_path=None,
         testing_dataloader=dataloaders["testing"],
         lightning_module=lightning_module,
         experiment_config=config.experiment,

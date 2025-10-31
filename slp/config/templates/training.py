@@ -21,6 +21,7 @@ class TrainingConfig(BaseModel):
     early_stopping_patience: int = 10
     checkpoint_path: Optional[str] = None
     n_classes: Optional[int] = None
+    overfit_one_batch: bool = False
 
 
 class SegmentationTrainingConfig(TrainingConfig):

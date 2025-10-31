@@ -43,7 +43,9 @@ def get_pose_pipeline(pipeline_name: str):
     elif pipeline_name == "resample":
         return Resample(new_length=64, method='nearest')
     elif pipeline_name == "temporal-crop":
-        return TemporalCrop(size=200, location='start')
+        return TemporalCrop(size=64, location='center')
+    elif pipeline_name == "padding":
+        return Padding(min_length=64, location='end', mode='edge', return_mask=False)
     elif pipeline_name == "img":
         return Compose([
             ToRGBImage(),
@@ -66,15 +68,24 @@ def get_pose_pipeline(pipeline_name: str):
     elif pipeline_name == "dilation":
         return random_time_dilation()
     elif pipeline_name == "wlasl-pose":
-        n_samples = 50
-        return Compose([
-            Concatenate(['upper_pose', 'left_hand', 'right_hand']),
-            DropCoordinates('z'),
-            Padding(min_length=n_samples, mode='edge'),
-            TemporalCrop(size=n_samples, location='center'),
-            FixedResolutionNormalization(width=256, height=256),
-            Flatten('features'),
-        ])
+        return Compose(
+            [
+                Concatenate(["upper_pose", "left_hand", "right_hand"]),
+                DropCoordinates("z"),
+                TemporalCrop(size=100, location="center"),
+                # Padding(min_length=100, mode="repeat"),
+                # Split(
+                #     {
+                #         "upper_pose": (0, 12),
+                #         "left_hand": (12, 33),
+                #         "right_hand": (33, 54),
+                #     }
+                # ),
+                # Padding(min_length=200, mode="edge"),
+                # FixedResolutionNormalization(width=256, height=256),
+                # Flatten("features"),
+            ]
+        )
     components = pipeline_name.split("+")
     if len(components) < 2:
         raise ValueError(f"Invalid pipeline: {pipeline_name}")

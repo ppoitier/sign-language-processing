@@ -19,7 +19,7 @@ class PositionalEncoding(nn.Module):
         Args:
             x: Tensor of shape (N, L, C_in)
         """
-        return x + self.pe[:, : x.size(2)]
+        return x + self.pe[:, : x.size(1)]
 
 
 if __name__ == "__main__":

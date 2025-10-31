@@ -1,3 +1,4 @@
+import torch
 from torch import nn, optim
 
 from slp.config.templates.training import TrainingConfig
@@ -49,7 +50,6 @@ class SegmentationTrainer(TrainerBase):
         # mask of shape (N, 1, T)
         # classification target of shape (N, T)
         # offsets target of shape (N, 2, T)
-
         logits = self.model(features, masks)
         loss = self.criterion(
             logits,
@@ -106,22 +106,6 @@ class SegmentationTrainer(TrainerBase):
                 .astype("float16")
                 for head_name, head_logits in logits.items()
             }
-            # results.append(
-            #     {
-            #         "id": instance_ids[idx],
-            #         "length": lengths[idx].item(),
-            #         "segments": gt_segments[idx].detach().cpu().numpy().astype("int32"),
-            #         "logits": {
-            #             head_name: head_logits[idx]
-            #             .detach()
-            #             .cpu()
-            #             .numpy()[..., : lengths[idx]]
-            #             .astype("float16")
-            #             for head_name, head_logits in logits.items()
-            #         },
-            #     }
-            # )
-        # self.test_results += results
 
         pred_segments = self.segment_decoder.decode_batch(logits, self.n_classes, batch_size)
         segment_metrics = self.segment_metrics_test(pred_segments, gt_segments)

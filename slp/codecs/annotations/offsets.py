@@ -1,4 +1,5 @@
-from typing import Union
+from typing import Union, Optional, Callable, Tuple
+from scipy.stats import rv_continuous
 
 import numpy as np
 import torch
@@ -10,17 +11,41 @@ from slp.utils.nms import soft_nms
 from slp.utils.proposals import generate_proposals
 
 
+class ActionScoring:
+    def __call__(self, logits: dict[str, Tensor], proposal_indices: np.ndarray) -> np.ndarray:
+        cls_probs = logits['classification'].softmax(dim=0).detach().cpu().numpy()
+        proposal_scores = 1 - cls_probs[0, proposal_indices]
+        return proposal_scores
+
+
+class ActionWithDurationScoring:
+    def __init__(self, duration_distribution: rv_continuous, coef: float = 1.0):
+        self.duration_distribution = duration_distribution
+        self.coef = coef
+
+
+    def __call__(self, logits: dict[str, Tensor], proposal_indices: np.ndarray) -> np.ndarray:
+        cls_probs = logits['classification'].softmax(dim=0).detach().cpu().numpy()
+        proposal_scores = 1 - cls_probs[0, proposal_indices]
+        offsets = logits['regression'].detach().cpu().numpy()[:, proposal_indices]
+        durations = offsets[1, :] - offsets[0, :] + 1
+        duration_likelihoods = self.duration_distribution.pdf(durations)
+        return proposal_scores + self.coef * duration_likelihoods
+
+
 class OffsetsCodec(AnnotationCodec):
     def __init__(
         self,
         soft_nms_method: str = "gaussian",
         soft_nms_sigma: float = 0.2,
         soft_nms_threshold: float = 0.5,
+        scoring_function: Optional[Callable] = None,
     ):
         super().__init__()
         self.soft_nms_method = soft_nms_method
         self.soft_nms_sigma = soft_nms_sigma
         self.soft_nms_threshold = soft_nms_threshold
+        self.scoring_function = ActionScoring() if scoring_function is None else scoring_function
 
     def encode(self, annotations: np.ndarray, n_frames: int):
         to_start_offset = LinearBoundaryOffset(n_frames, ref_location="start", background_class=-1)
@@ -31,7 +56,7 @@ class OffsetsCodec(AnnotationCodec):
             'offsets': np.stack([start_offsets, end_offsets], axis=-1).astype('float32'),
         }
 
-    def decode(self, logits: dict[str, Union[Tensor, np.ndarray]], n_classes: int) -> Tensor:
+    def decode(self, logits: dict[str, Union[Tensor, np.ndarray]], n_classes: int, return_proposal_indices: bool = False) -> Union[Tensor, Tuple[Tensor, Tensor]]:
         """
 
         Args:
@@ -41,6 +66,7 @@ class OffsetsCodec(AnnotationCodec):
                     The key 'regression' must contain logits of shape (N, 2, T) for, respectively, the start and
                     end offsets predictions.
             n_classes: The number of classes for the classification task.
+            return_proposal_indices: If true, also returns the proposals indices.
 
         Shapes:
             classification: (N, C, T)
@@ -59,12 +85,13 @@ class OffsetsCodec(AnnotationCodec):
         device = logits['regression'].device
         start_offsets, end_offsets = logits['regression'].detach().cpu().unbind(dim=0)
         start_offsets, end_offsets = start_offsets.numpy(), end_offsets.numpy()
-        cls_probs = logits['classification'].softmax(dim=0).detach().cpu().numpy()
+        # cls_probs = logits['classification'].softmax(dim=0).detach().cpu().numpy()
 
         proposals, proposal_indices = generate_proposals(start_offsets, end_offsets, return_indices=True)
+        proposal_scores = self.scoring_function(logits, proposal_indices)
 
-        proposal_scores = 1 - cls_probs[0, proposal_indices]
-        proposals, _ = soft_nms(
+        # proposal_scores = 1 - cls_probs[0, proposal_indices]
+        proposals, proposal_indices = soft_nms(
             proposals,
             scores=proposal_scores,
             method=self.soft_nms_method,
@@ -75,4 +102,6 @@ class OffsetsCodec(AnnotationCodec):
         proposals = proposals.round().astype("int32")
         proposals = proposals[proposals[:, 0].argsort()]
         proposals = torch.from_numpy(proposals).long().to(device)
+        if return_proposal_indices:
+            return proposals, proposal_indices
         return proposals

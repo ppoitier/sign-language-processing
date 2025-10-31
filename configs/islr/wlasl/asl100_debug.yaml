@@ -1,0 +1,76 @@
+datasets:
+  training:
+    shards_url: "file:E:/datasets/sign-language/wlasl/simple_shards/asl100_train.tar"
+#    shards_url: "file:E:/datasets/sign-language/wlasl/shards/train/shard_{000000..000004}.tar"
+#    split_filepath: "E:/datasets/sign-language/wlasl/metadata/splits/asl100.json"
+#    label_mapping_filepath: "E:/datasets/sign-language/wlasl/metadata/label_mappings/asl100.json"
+    loader:
+      batch_size: 32
+      shuffle: true
+      num_workers: 0
+    preprocessing:
+      pose_transforms_pipeline: "wlasl-pose+flatten"
+
+  validation:
+    shards_url: "file:E:/datasets/sign-language/wlasl/simple_shards/asl100_val.tar"
+#    shards_url: "file:E:/datasets/sign-language/wlasl/shards/val/shard_000000.tar"
+#    split_filepath: "E:/datasets/sign-language/wlasl/metadata/splits/asl100.json"
+#    label_mapping_filepath: "E:/datasets/sign-language/wlasl/metadata/label_mappings/asl100.json"
+    loader:
+      batch_size: 32
+      shuffle: False
+      num_workers: 0
+    preprocessing:
+      pose_transforms_pipeline: "wlasl-pose+flatten"
+
+  testing:
+    shards_url: "file:E:/datasets/sign-language/wlasl/simple_shards/asl100_test.tar"
+#    shards_url: "file:E:/datasets/sign-language/wlasl/shards/test/shard_000000.tar"
+#    split_filepath: "E:/datasets/sign-language/wlasl/metadata/splits/asl100.json"
+#    label_mapping_filepath: "E:/datasets/sign-language/wlasl/metadata/label_mappings/asl100.json"
+    loader:
+      batch_size: 32
+      shuffle: false
+      num_workers: 0
+    preprocessing:
+      pose_transforms_pipeline: "wlasl-pose+flatten"
+
+model:
+  type: 'multi-head'
+  backbone:
+    type: 'spoter'
+    args:
+      n_classes: 100
+      c_in: 108
+      c_hidden: 128
+      max_sequence_lengths: 100
+      n_heads: 8
+      n_encoder_layers: 6
+      n_decoder_layers: 6
+      dim_feedforward: 2048
+      dropout: 0.1
+  heads:
+    classification:
+      type: 'identity'
+      in_channels: 100
+      out_channels: 100
+
+training:
+  criterion:
+    classification:
+      name: "cross-entropy"
+      use_weights: false
+  max_epochs: 500
+  early_stopping_patience: 30
+  learning_rate: 1e-3
+  is_output_multilayer: false
+  n_classes: 100
+
+experiment:
+  id: "islr"
+  suffix: "wlasl/asl100/spoter_debug"
+  seed: 'random'
+  output_dir: "D:/data/sign-languages/outs/slp2/isolated-recognition"
+  mlflow_uri: "http://127.0.0.1:8142"
+  show_progress_bar: true
+  debug: false

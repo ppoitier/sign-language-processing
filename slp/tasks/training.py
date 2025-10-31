@@ -51,6 +51,7 @@ def run_training(
         logger=loggers,
         callbacks=callbacks,
         enable_progress_bar=experiment_config.show_progress_bar,
+        overfit_batches=1 if training_config.overfit_one_batch else 0,
     )
     lightning_trainer.fit(
         lightning_module,

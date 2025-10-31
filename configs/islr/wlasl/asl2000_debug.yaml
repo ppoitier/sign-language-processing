@@ -1,8 +1,8 @@
 datasets:
   training:
     shards_url: "file:E:/datasets/sign-language/wlasl/shards/train/shard_{000000..000004}.tar"
-    split_filepath: "E:/datasets/sign-language/wlasl/metadata/splits/asl100.json"
-    label_mapping_filepath: "E:/datasets/sign-language/wlasl/metadata/label_mappings/asl100.json"
+    split_filepath: "E:/datasets/sign-language/wlasl/metadata/splits/asl2000.json"
+    label_mapping_filepath: "E:/datasets/sign-language/wlasl/metadata/label_mappings/asl2000.json"
     loader:
       batch_size: 64
       shuffle: true
@@ -12,8 +12,8 @@ datasets:
 
   validation:
     shards_url: "file:E:/datasets/sign-language/wlasl/shards/val/shard_000000.tar"
-    split_filepath: "E:/datasets/sign-language/wlasl/metadata/splits/asl100.json"
-    label_mapping_filepath: "E:/datasets/sign-language/wlasl/metadata/label_mappings/asl100.json"
+    split_filepath: "E:/datasets/sign-language/wlasl/metadata/splits/asl2000.json"
+    label_mapping_filepath: "E:/datasets/sign-language/wlasl/metadata/label_mappings/asl2000.json"
     loader:
       batch_size: 64
       shuffle: False
@@ -23,8 +23,8 @@ datasets:
 
   testing:
     shards_url: "file:E:/datasets/sign-language/wlasl/shards/test/shard_000000.tar"
-    split_filepath: "E:/datasets/sign-language/wlasl/metadata/splits/asl100.json"
-    label_mapping_filepath: "E:/datasets/sign-language/wlasl/metadata/label_mappings/asl100.json"
+    split_filepath: "E:/datasets/sign-language/wlasl/metadata/splits/asl2000.json"
+    label_mapping_filepath: "E:/datasets/sign-language/wlasl/metadata/label_mappings/asl2000.json"
     loader:
       batch_size: 64
       shuffle: false
@@ -36,14 +36,14 @@ model:
   name: "pose-tgcn"
   encoder:
     input_feature: 100
-    hidden_feature: 64
-    num_class: 100
-    num_stage: 20
+    hidden_feature: 256
+    num_class: 2000
+    num_stage: 24
     p_dropout: 0.3
   heads:
     classification:
-      in_channels: 100
-      out_channels: 100
+      in_channels: 2000
+      out_channels: 2000
       layer: identity
 
 training:

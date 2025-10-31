@@ -13,7 +13,7 @@ class HeadConfig(ModelConfig):
     in_channels_range: Union[tuple[int, Optional[int]], list[tuple[int, Optional[int]]]] = (0, None)
 
 
-class MultiHeadConfig(ModelConfig):
+class MultiHeadModelConfig(ModelConfig):
     backbone: ModelConfig
     neck: Optional[ModelConfig] = None
     heads: dict[str, HeadConfig]

@@ -59,7 +59,7 @@ class MultiHeadModel(nn.Module):
         backbone: nn.Module,
         heads: nn.ModuleDict,
         neck: Optional[nn.Module] = None,
-        predict_on_all_stages: bool = True,
+        predict_on_all_stages: bool = False,
     ):
         super().__init__()
         self.backbone = backbone

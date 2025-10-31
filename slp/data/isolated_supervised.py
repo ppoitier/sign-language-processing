@@ -26,7 +26,8 @@ def _get_wds_mapping_fn(
     label_mapping=None,
 ):
     def _map_wds_to_sample(wds_sample):
-        label = str(wds_sample['label.txt'])
+        label = wds_sample.get('label.txt')
+        label = str(label) if label is not None else 'unknown'
         return {
             'id': wds_sample['__key__'],
             'poses': {
