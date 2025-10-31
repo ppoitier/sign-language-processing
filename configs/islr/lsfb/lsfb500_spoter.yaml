@@ -2,27 +2,27 @@ datasets:
   training:
     shards_url: "/home/sign-language/datasets/lsfb-isol/shards/500/shard_{000000..000003}.tar"
     loader:
-      batch_size: 64
+      batch_size: 128
       shuffle: true
-      num_workers: 0
+      num_workers: 23
     preprocessing:
       pose_transforms_pipeline: "concat+norm+temporal-crop+padding+flatten"
 
   validation:
     shards_url: "/home/sign-language/datasets/lsfb-isol/shards/500/shard_000004.tar"
     loader:
-      batch_size: 64
+      batch_size: 128
       shuffle: False
-      num_workers: 0
+      num_workers: 23
     preprocessing:
       pose_transforms_pipeline: "concat+norm+temporal-crop+padding+flatten"
 
   testing:
     shards_url: "/home/sign-language/datasets/lsfb-isol/shards/500/shard_000004.tar"
     loader:
-      batch_size: 64
+      batch_size: 128
       shuffle: false
-      num_workers: 0
+      num_workers: 23
     preprocessing:
       pose_transforms_pipeline: "concat+norm+temporal-crop+padding+flatten"
 
