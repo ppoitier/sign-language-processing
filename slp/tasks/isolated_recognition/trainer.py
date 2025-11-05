@@ -18,10 +18,8 @@ class IsolatedRecognitionTrainer(TrainerBase):
         is_output_multilayer: bool,
     ):
         super().__init__()
-        # self.model = model
-        self.model = PoseTransformer()
-        # self.criterion = criterion
-        self.criterion = nn.CrossEntropyLoss()
+        self.model = model
+        self.criterion = criterion
 
         self.learning_rate = learning_rate
         self.n_classes = n_classes
@@ -36,20 +34,20 @@ class IsolatedRecognitionTrainer(TrainerBase):
 
     def prediction_step(self, batch, mode):
         features, masks, targets = batch["poses"].float(), batch["masks"].bool(), batch["label_id"].long()
+        # features, masks, targets = batch["video"].float(), batch["masks"].bool(), batch["label_id"].long()
         # features of shape (N, C_in, T)
         # masks of shape (N, 1, T)
         # targets of shape N
         batch_size = features.size(0)
         logits = self.model(features, masks)
-        # loss = self.criterion(logits, {'classification': targets})
-        loss = self.criterion(logits, targets)
+        loss = self.criterion(logits, {'classification': targets})
 
         self.log(f"{mode}/loss", loss, on_step=True, on_epoch=True, batch_size=batch_size)
-        # cls_logits = logits["classification"]
+        cls_logits = logits["classification"]
+        # cls_logits = logits["classification"].max(dim=2)[0]
         # classification logits of shape (N, C_out)
-        # cls_logits = cls_logits[-1] if self.is_output_multilayer else cls_logits
-        # probs = cls_logits.softmax(dim=-1)
-        probs = logits.softmax(dim=-1)
+        cls_logits = cls_logits[-1] if self.is_output_multilayer else cls_logits
+        probs = cls_logits.softmax(dim=-1)
         # probabilities of shape (N, C_out)
         if mode == "training":
             metrics = self.training_metrics(probs, targets)

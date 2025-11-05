@@ -3,6 +3,7 @@ from torch import nn
 from slp.config.templates.model import MultiHeadModelConfig, HeadConfig, ModelConfig
 from slp.nn.blocks.tcn.tcn import MultiStageTCN
 from slp.nn.spoter import SPOTER
+from slp.nn.blocks.i3d.original import InceptionI3d
 from slp.nn.model_with_heads import MultiHeadModel, Head
 
 
@@ -12,6 +13,8 @@ def load_backbone(config: ModelConfig):
             return MultiStageTCN(**config.args)
         case 'spoter':
             return SPOTER(**config.args)
+        case 'inception-i3d':
+            return InceptionI3d(**config.args)
         case _:
             raise ValueError(f"Unknown backbone: {config.type}")
 

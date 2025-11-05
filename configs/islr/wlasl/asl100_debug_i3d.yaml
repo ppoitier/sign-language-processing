@@ -3,49 +3,62 @@ datasets:
     shards_url: "file:E:/datasets/sign-language/wlasl/shards/train/shard_{000000..000004}.tar"
     split_filepath: "E:/datasets/sign-language/wlasl/metadata/splits/asl100.json"
     label_mapping_filepath: "E:/datasets/sign-language/wlasl/metadata/label_mappings/asl100.json"
+    video_dir: "E:/datasets/sign-language/wlasl/videos"
     loader:
       batch_size: 4
       shuffle: true
       num_workers: 0
     preprocessing:
       pose_transforms_pipeline: "wlasl-pose+flatten"
+      video_transform_pipeline: "wlasl-testing"
+      include_videos: true
 
   validation:
     shards_url: "file:E:/datasets/sign-language/wlasl/shards/val/shard_000000.tar"
     split_filepath: "E:/datasets/sign-language/wlasl/metadata/splits/asl100.json"
     label_mapping_filepath: "E:/datasets/sign-language/wlasl/metadata/label_mappings/asl100.json"
+    video_dir: "E:/datasets/sign-language/wlasl/videos"
     loader:
       batch_size: 4
       shuffle: False
       num_workers: 0
     preprocessing:
       pose_transforms_pipeline: "wlasl-pose+flatten"
+      video_transform_pipeline: "wlasl-testing"
+      include_videos: true
 
   testing:
     shards_url: "file:E:/datasets/sign-language/wlasl/shards/test/shard_000000.tar"
     split_filepath: "E:/datasets/sign-language/wlasl/metadata/splits/asl100.json"
     label_mapping_filepath: "E:/datasets/sign-language/wlasl/metadata/label_mappings/asl100.json"
+    video_dir: "E:/datasets/sign-language/wlasl/videos"
     loader:
       batch_size: 4
       shuffle: false
       num_workers: 0
     preprocessing:
       pose_transforms_pipeline: "wlasl-pose+flatten"
+      video_transform_pipeline: "wlasl-testing"
+      include_videos: true
 
 model:
   type: 'multi-head'
   backbone:
-    type: 'spoter'
+    type: 'inception-i3d'
     args:
-      n_classes: 100
-      c_in: 110
-      c_hidden: 128
-      max_sequence_lengths: 64
-      n_heads: 8
-      n_encoder_layers: 6
-      n_decoder_layers: 6
-      dim_feedforward: 2048
-      dropout: 0.1
+      num_classes: 100
+      upsample_logits: true
+#    type: 'spoter'
+#    args:
+#      n_classes: 100
+#      c_in: 108
+#      c_hidden: 128
+#      max_sequence_lengths: 100
+#      n_heads: 8
+#      n_encoder_layers: 6
+#      n_decoder_layers: 6
+#      dim_feedforward: 2048
+#      dropout: 0.1
   heads:
     classification:
       type: 'identity'
@@ -55,14 +68,14 @@ model:
 training:
   criterion:
     classification:
-      name: "cross-entropy"
+      name: "repeated+cross-entropy"
       use_weights: false
   max_epochs: 500
   early_stopping_patience: 30
   learning_rate: 1e-3
   is_output_multilayer: false
   n_classes: 100
-  overfit_one_batch: false
+  overfit_one_batch: true
 
 experiment:
   id: "islr"

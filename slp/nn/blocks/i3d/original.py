@@ -1,7 +1,7 @@
 import numpy as np
 import torch
 import torch.nn.functional as F
-from torch import nn
+from torch import nn, Tensor
 
 
 class MaxPool3dSamePadding(nn.MaxPool3d):
@@ -219,6 +219,7 @@ class InceptionI3d(nn.Module):
         name="inception_i3d",
         in_channels=3,
         dropout_keep_prob=0.5,
+        upsample_logits=False,
     ):
         """Initializes I3D model instance.
         Args:
@@ -245,6 +246,7 @@ class InceptionI3d(nn.Module):
         self._spatial_squeeze = spatial_squeeze
         self._final_endpoint = final_endpoint
         self.logits = None
+        self.upsample_logits = upsample_logits
 
         if self._final_endpoint not in self.VALID_ENDPOINTS:
             raise ValueError("Unknown final endpoint %s" % self._final_endpoint)
@@ -408,7 +410,10 @@ class InceptionI3d(nn.Module):
         for k in self.end_points.keys():
             self.add_module(k, self.end_points[k])
 
-    def forward(self, x, pretrained=False, n_tune_layers=-1):
+    def forward(self, x: Tensor, pretrained=False, n_tune_layers=-1, mask=None):
+        # x of shape (N, T, C_in, H, W) -> (N, C_in, T, H, W)
+        x = x.transpose(1, 2).contiguous()
+        T_in = x.shape[2]
         if pretrained:
             assert n_tune_layers >= 0
 
@@ -437,7 +442,9 @@ class InceptionI3d(nn.Module):
         x = self.logits(self.dropout(self.avg_pool(x)))
         if self._spatial_squeeze:
             logits = x.squeeze(3).squeeze(3)
-        # logits is batch X time X classes, which is what we want to work with
+        # logits of shape (N, C_out, T)
+        if self.upsample_logits:
+            logits = F.interpolate(logits, size=T_in, mode='linear', align_corners=False)
         return logits
 
     def extract_features(self, x):
@@ -445,3 +452,20 @@ class InceptionI3d(nn.Module):
             if end_point in self.end_points:
                 x = self._modules[end_point](x)
         return self.avg_pool(x)
+
+
+if __name__ == "__main__":
+    _model = InceptionI3d(num_classes=400, upsample_logits=True)
+    _criterion = nn.CrossEntropyLoss()
+    N, C_in, T, H, W = 2, 3, 64, 224, 224
+    _x = torch.randn(N, T, C_in, H, W)
+    _logits = _model(_x)
+    print('logits:', _logits.shape)
+
+    _targets = torch.tensor([45, 354]).long()
+    _targets = _targets.unsqueeze(1).expand(-1, T)
+    loss = _criterion(_logits, _targets)
+    print('loss:', loss)
+
+
+

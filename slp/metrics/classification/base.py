@@ -8,10 +8,10 @@ class ClassificationMetrics(MetricCollection):
         metrics = {
             "macro_accuracy": Accuracy(average="macro", **acc_args),
             "micro_accuracy": Accuracy(average="micro", **acc_args),
-            # "macro_accuracy/top5": Accuracy(top_k=5, average="macro", **acc_args),
-            # "macro_accuracy/top10": Accuracy(top_k=10, average="macro", **acc_args),
+            "macro_accuracy/top5": Accuracy(top_k=5, average="macro", **acc_args),
+            "macro_accuracy/top10": Accuracy(top_k=10, average="macro", **acc_args),
             "micro_accuracy_top5": Accuracy(top_k=5, average="micro", **acc_args),
             "micro_accuracy_top10": Accuracy(top_k=10, average="micro", **acc_args),
-            # "f1": F1Score(average="macro", **acc_args),
+            "f1": F1Score(average="macro", **acc_args),
         }
         super().__init__(metrics, **kwargs)

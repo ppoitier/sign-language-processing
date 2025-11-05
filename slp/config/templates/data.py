@@ -15,7 +15,9 @@ class DataLoaderConfig(BaseModel):
 
 class DataPreprocessing(BaseModel):
     pose_transforms_pipeline: str = 'none'
+    video_transform_pipeline: str = 'none'
     input_type: str = 'poses'
+    include_videos: bool = False
 
 
 class ContinuousDataPreprocessing(DataPreprocessing):
@@ -42,7 +44,6 @@ class SegmentationDatasetConfig(DatasetConfig):
 
 
 class RecognitionDatasetConfig(DatasetConfig):
-    include_videos: bool = False
     video_dir: str | None = None
     preprocessing: DataPreprocessing | None = None
     split_filepath: str | None = None

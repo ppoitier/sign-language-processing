@@ -72,8 +72,8 @@ def get_pose_pipeline(pipeline_name: str):
             [
                 Concatenate(["upper_pose", "left_hand", "right_hand"]),
                 DropCoordinates("z"),
-                TemporalCrop(size=100, location="center"),
-                # Padding(min_length=100, mode="repeat"),
+                TemporalCrop(size=64, location="center"),
+                Padding(min_length=64, mode="repeat"),
                 # Split(
                 #     {
                 #         "upper_pose": (0, 12),

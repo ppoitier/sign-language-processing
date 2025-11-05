@@ -32,6 +32,7 @@ def launch_isolated_recognition_training(config_path):
 
     model = load_model_architecture(config.model)
     criterion = load_criterion(datasets["training"], config.training)
+
     lightning_module = load_isolated_recognition_trainer(model, criterion, config.training)
     lightning_module, best_checkpoint_path = run_training(
         training_dataloader=dataloaders["training"],

@@ -9,6 +9,7 @@ from torchcodec.decoders import VideoDecoder
 from slp.config.templates.data import RecognitionDatasetConfig
 from slp.data.dataloader import PoseDataCollator
 from slp.transforms.pose_pipelines import get_pose_pipeline
+from slp.transforms.video_pipelines import get_video_transform_pipeline
 
 
 def _read_json(filepath: str):
@@ -28,14 +29,15 @@ def _get_wds_mapping_fn(
     def _map_wds_to_sample(wds_sample):
         label = wds_sample.get('label.txt')
         label = str(label) if label is not None else 'unknown'
+        sample_id = wds_sample['__key__']
         return {
-            'id': wds_sample['__key__'],
+            'id': sample_id,
             'poses': {
                 body_region: wds_sample[f'pose.{body_region}.npy']
                 for body_region in body_regions
             },
             'label': label,
-            'label_id': int(wds_sample['label.idx']) if label_mapping is None else label_mapping[label],
+            'label_id': int(wds_sample['label.idx']) if label_mapping is None else label_mapping[sample_id],
         }
     return _map_wds_to_sample
 
@@ -121,25 +123,27 @@ class IsolatedSignsRecognitionDataset(Dataset):
         if self.include_videos:
             decoder = VideoDecoder(f"{self.video_dir}/{sample['id']}.{self.video_ext}", device='cuda' if self.video_gpu_decoding else 'cpu')
             sample['video'] = decoder.get_frames_in_range(start=0, stop=decoder.metadata.num_frames, step=1).data
-
-        if self.video_transform is not None:
-            sample['video'] = self.video_transform(sample['video'])
+            if self.video_transform is not None:
+                sample['video'] = self.video_transform(sample['video'])
 
         return sample
 
 
-def load_pose_dataset(config: RecognitionDatasetConfig) -> tuple[IsolatedSignsRecognitionDataset, DataLoader | None]:
+def load_dataset(config: RecognitionDatasetConfig) -> tuple[IsolatedSignsRecognitionDataset, DataLoader | None]:
     pose_transforms = None
+    video_transform = None
+    include_videos = False
     if config.preprocessing is not None:
-        pose_transforms = get_pose_pipeline(
-            config.preprocessing.pose_transforms_pipeline
-        )
+        pose_transforms = get_pose_pipeline(config.preprocessing.pose_transforms_pipeline)
+        video_transform = get_video_transform_pipeline(config.preprocessing.video_transform_pipeline)
+        include_videos = config.preprocessing.include_videos
     dataset = IsolatedSignsRecognitionDataset(
         url=config.shards_url,
+        include_videos=include_videos,
         pose_transforms=pose_transforms,
+        video_transform=video_transform,
         split_filepath=config.split_filepath,
         label_mapping_filepath=config.label_mapping_filepath,
-        include_videos=config.include_videos,
         video_dir=config.video_dir,
     )
     if config.loader is None:
