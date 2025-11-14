@@ -1,4 +1,5 @@
 import os
+from typing import Optional
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -14,7 +15,7 @@ class DataLoaderConfig(BaseModel):
 
 
 class DataPreprocessing(BaseModel):
-    pose_transforms_pipeline: str = 'none'
+    pose_transform_pipeline: str = 'none'
     video_transform_pipeline: str = 'none'
     input_type: str = 'poses'
     include_videos: bool = False
@@ -44,13 +45,16 @@ class SegmentationDatasetConfig(DatasetConfig):
 
 
 class RecognitionDatasetConfig(DatasetConfig):
-    video_dir: str | None = None
     preprocessing: DataPreprocessing | None = None
-    split_filepath: str | None = None
-    label_mapping_filepath: str | None = None
+    split_filepath: Optional[str] = None
+    label_mapping_filepath: Optional[str] = None
+    video_tar_path: Optional[str] = None
+    video_tar_index_path: Optional[str] = None
+    video_gpu_decoding: bool = False
 
-    @field_validator('split_filepath', 'label_mapping_filepath', mode='after')
-    def validate_filepaths(cls, filepath: str | None):
+
+    @field_validator('split_filepath', 'label_mapping_filepath', 'video_tar_path', 'video_tar_index_path', mode='after')
+    def validate_filepaths(cls, filepath: Optional[str]):
         if not os.path.exists(filepath):
             raise FileNotFoundError(f'File [{filepath}] not found.')
         return filepath

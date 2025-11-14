@@ -1,4 +1,3 @@
-import torch
 from torch import nn, Tensor, BoolTensor
 
 from slp.nn.blocks.positional_encoding.original import PositionalEncoding
@@ -9,7 +8,6 @@ class PoseTransformer(nn.Module):
             self,
             c_in: int = 130,
             c_hidden: int = 128,
-            c_out: int = 500,
             max_length: int = 64,
             n_heads: int = 4,
             n_encoder_layers: int = 6,
@@ -28,7 +26,6 @@ class PoseTransformer(nn.Module):
             dim_feedforward=dim_feedforward,
             batch_first=True,
         )
-        self.fc_out = nn.Linear(c_hidden, c_out)
 
     def forward(self, x: Tensor, mask: BoolTensor) -> Tensor:
         """
@@ -59,5 +56,19 @@ class PoseTransformer(nn.Module):
             memory_key_padding_mask=padding_mask,
         )
         # from (N, 1, C_hidden) to (N, C_out)
-        out = self.fc_out(out).squeeze(1)
+        out = out.squeeze(1)
         return out
+
+
+if __name__ == "__main__":
+    import torch
+    N, C_in, T = 3, 130, 256
+    _x = torch.randn(N, C_in, T)
+    _mask = torch.ones(N, 1, T).bool()
+    _model = PoseTransformer(
+        c_in=C_in,
+        c_hidden=128,
+        max_length=256,
+    )
+    _logits = _model(_x, _mask)
+    print(_logits.shape)

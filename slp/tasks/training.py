@@ -8,6 +8,7 @@ from lightning.pytorch.callbacks import (
     EarlyStopping,
 )
 from lightning.pytorch.loggers import Logger, TensorBoardLogger, CSVLogger, MLFlowLogger
+from lightning.pytorch.plugins import BitsandbytesPrecision
 from torch.utils.data import DataLoader
 
 from slp.config.templates.experiment import ExperimentConfig
@@ -21,6 +22,7 @@ def run_training(
     experiment_config: ExperimentConfig,
     training_config: TrainingConfig,
     loggers: list[Logger],
+    monitor_loss: str = 'validation/loss',
 ) -> tuple[lightning.LightningModule, str]:
     exp_name = f"{experiment_config.id}_{experiment_config.suffix}"
     checkpoints_dir = f"{experiment_config.output_dir}/checkpoints/{exp_name}"
@@ -29,7 +31,7 @@ def run_training(
         dirpath=checkpoints_dir,
         save_top_k=1,
         save_last=True,
-        monitor="validation/loss",
+        monitor=monitor_loss,
     )
     callbacks = [
         checkpoint_callback,
@@ -39,11 +41,10 @@ def run_training(
             log_weight_decay=True,
         ),
         EarlyStopping(
-            monitor="validation/loss",
+            monitor=monitor_loss,
             patience=training_config.early_stopping_patience,
         ),
     ]
-
     lightning_trainer = pl.Trainer(
         fast_dev_run=experiment_config.debug,
         gradient_clip_val=training_config.gradient_clipping,
@@ -52,6 +53,7 @@ def run_training(
         callbacks=callbacks,
         enable_progress_bar=experiment_config.show_progress_bar,
         overfit_batches=1 if training_config.overfit_one_batch else 0,
+        plugins=BitsandbytesPrecision('nf4-dq'),
     )
     lightning_trainer.fit(
         lightning_module,

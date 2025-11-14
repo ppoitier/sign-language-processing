@@ -5,6 +5,9 @@ from slp.nn.blocks.tcn.tcn import MultiStageTCN
 from slp.nn.spoter import SPOTER
 from slp.nn.blocks.i3d.original import InceptionI3d
 from slp.nn.model_with_heads import MultiHeadModel, Head
+from slp.nn.projectors.mlp_block import ProjectionHead
+from slp.nn.pose_transformer import PoseTransformer
+from slp.nn.backbones.resnet_3d import ResNet_3d
 
 
 def load_backbone(config: ModelConfig):
@@ -13,10 +16,22 @@ def load_backbone(config: ModelConfig):
             return MultiStageTCN(**config.args)
         case 'spoter':
             return SPOTER(**config.args)
+        case 'pose-vit':
+            return PoseTransformer(**config.args)
         case 'inception-i3d':
             return InceptionI3d(**config.args)
+        case 'resnet50-i3d':
+            return ResNet_3d(**config.args)
         case _:
             raise ValueError(f"Unknown backbone: {config.type}")
+
+
+def load_projector(config: ModelConfig):
+    match config.type:
+        case 'mlp':
+            return ProjectionHead(**config.args)
+        case _:
+            raise ValueError(f"Unknown projector: {config.type}")
 
 
 def load_head(config: HeadConfig):
@@ -24,6 +39,11 @@ def load_head(config: HeadConfig):
         case 'identity':
             return Head(
                 model=nn.Identity(),
+                in_channels_range=config.in_channels_range,
+            )
+        case 'linear':
+            return Head(
+                model=nn.Linear(**config.args),
                 in_channels_range=config.in_channels_range,
             )
         case _:

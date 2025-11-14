@@ -1,0 +1,80 @@
+datasets:
+  training:
+    shards_url: "/home/sign-language/datasets/lsfb-isol/shards/500/shard_{000000..000003}.tar"
+    loader:
+      batch_size: 4
+      shuffle: true
+      num_workers: 23
+      flatten_pose: true
+    preprocessing:
+      include_videos: true
+      pose_transform_pipeline: "wlasl-pose+flatten"
+      video_transform_pipeline: "wlasl-training"
+    video_tar_path: "/home/sign-language/datasets/lsfb-isol/videos.tar"
+    video_tar_index_path: "/home/sign-language/datasets/lsfb-isol/videos.tar.index.json"
+    video_gpu_decoding: true
+
+  validation:
+    shards_url: "/home/sign-language/datasets/lsfb-isol/shards/500/shard_000004.tar"
+    loader:
+      batch_size: 4
+      shuffle: False
+      num_workers: 23
+      flatten_pose: true
+    preprocessing:
+      include_videos: true
+      pose_transform_pipeline: "wlasl-pose+flatten"
+      video_transform_pipeline: "wlasl-testing"
+    video_tar_path: "/home/sign-language/datasets/lsfb-isol/videos.tar"
+    video_tar_index_path: "/home/sign-language/datasets/lsfb-isol/videos.tar.index.json"
+    video_gpu_decoding: true
+
+  testing:
+    shards_url: "/home/sign-language/datasets/lsfb-isol/shards/500/shard_000004.tar"
+    loader:
+      batch_size: 4
+      shuffle: false
+      num_workers: 23
+      flatten_pose: true
+    preprocessing:
+      include_videos: true
+      pose_transform_pipeline: "wlasl-pose+flatten"
+      video_transform_pipeline: "wlasl-testing"
+    video_tar_path: "/home/sign-language/datasets/lsfb-isol/videos.tar"
+    video_tar_index_path: "/home/sign-language/datasets/lsfb-isol/videos.tar.index.json"
+    video_gpu_decoding: true
+
+model:
+  type: 'multi-head'
+  backbone:
+    type: 'resnet50-i3d'
+    args:
+      checkpoint_path: "/home/sign-language/weights/kinetic400/I3D_8x8_R50.pyth"
+  heads:
+    classification:
+      type: 'linear'
+      args:
+        in_features: 2048
+        out_features: 500
+
+training:
+  input_features: 'video'
+  criterion:
+    classification:
+      name: "cross-entropy"
+      use_weights: false
+  max_epochs: 1000
+  early_stopping_patience: 50
+  learning_rate: 1e-3
+  is_output_multilayer: false
+  n_classes: 500
+  overfit_one_batch: true
+
+experiment:
+  id: "islr"
+  suffix: "lsfb/lsfb500/resnet50_i3d"
+  seed: 'random'
+  output_dir: "/home/sign-language/outputs/isolated-recognition/r50-i3d"
+  mlflow_uri: "http://127.0.0.1:8142"
+  show_progress_bar: true
+  debug: false

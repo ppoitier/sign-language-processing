@@ -13,8 +13,10 @@ class CriterionConfig(BaseModel):
 
 
 class TrainingConfig(BaseModel):
+    input_features: str = 'poses'
     criterion: dict[str, CriterionConfig]
     max_epochs: int
+    n_warmup_epochs: Optional[int] = None
     learning_rate: float
     is_output_multilayer: bool = False
     gradient_clipping: float = 0.0

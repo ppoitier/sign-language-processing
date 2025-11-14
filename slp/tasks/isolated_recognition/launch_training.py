@@ -24,7 +24,7 @@ def launch_isolated_recognition_training(config_path):
     config: IsolatedRecognitionTaskConfig = parse_config(config_path, IsolatedRecognitionTaskConfig)
     print(config)
     set_seed(config.experiment.seed)
-    datasets, dataloaders = load_isolated_recognition_datasets(config)
+    datasets, dataloaders = load_isolated_recognition_datasets(config.datasets)
     assert config.training is not None, "Missing training configuration."
     assert "training" in datasets, "Missing training dataset."
     assert "validation" in datasets, "Missing validation dataset."
@@ -32,6 +32,8 @@ def launch_isolated_recognition_training(config_path):
 
     model = load_model_architecture(config.model)
     criterion = load_criterion(datasets["training"], config.training)
+    print("Model architecture:")
+    print(model)
 
     lightning_module = load_isolated_recognition_trainer(model, criterion, config.training)
     lightning_module, best_checkpoint_path = run_training(

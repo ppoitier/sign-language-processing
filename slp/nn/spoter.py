@@ -67,7 +67,6 @@ class SPOTER(nn.Module):
 
     def __init__(
         self,
-        n_classes: int,
         c_in: int = 108,
         c_hidden: int = 128,
         max_sequence_lengths=200,
@@ -109,7 +108,7 @@ class SPOTER(nn.Module):
         # self.transformer.decoder.layers = _get_clones(
         #     custom_decoder_layer, n_decoder_layers
         # )
-        self.linear_class = nn.Linear(c_hidden, n_classes)
+        # self.linear_class = nn.Linear(c_hidden, n_classes)
 
     def forward(
         self,
@@ -122,7 +121,7 @@ class SPOTER(nn.Module):
             mask (Tensor): Boolean mask tensor of shape (N, 1, T), where 1=included, and 0=excluded.
 
         Returns:
-            output: Tensor of shape (N, n_classes)
+            output: Tensor of shape (N, C_out)
         """
         # (N, C_in, T) -> (N, T, C_in)
         x = x.transpose(1, 2).contiguous()
@@ -137,15 +136,16 @@ class SPOTER(nn.Module):
         h = self.transformer(
             pos_encoded_src, query_embed, src_key_padding_mask=~mask[:, 0]
         )
+        # Remove the temporal dimension
+        h = h.squeeze(1)
         # Pass through the final classifier and remove the sequence dimension
-        res = self.linear_class(h).squeeze(1)
-
-        return res
+        # res = self.linear_class(h).squeeze(1)
+        return h
 
 
 if __name__ == "__main__":
     # Example usage:
-    model = SPOTER(n_classes=20, c_in=100, c_hidden=128, n_heads=8)
+    model = SPOTER(c_in=100, c_hidden=128, n_heads=8)
     # (N, C_in, T) -> Batch of 4, 50 frames, 100 features per frame
     video_frames = torch.rand(4, 100, 50)
     masks = torch.ones(4, 1, 50).bool()
