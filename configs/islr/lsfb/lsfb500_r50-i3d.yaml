@@ -68,13 +68,13 @@ training:
   learning_rate: 1e-3
   is_output_multilayer: false
   n_classes: 500
-  overfit_one_batch: true
+  overfit_one_batch: false
 
 experiment:
   id: "islr"
   suffix: "lsfb/lsfb500/resnet50_i3d"
   seed: 'random'
   output_dir: "/home/sign-language/outputs/isolated-recognition/r50-i3d"
-  mlflow_uri: "http://127.0.0.1:8142"
+#  mlflow_uri: "http://127.0.0.1:8142"
   show_progress_bar: true
   debug: false
