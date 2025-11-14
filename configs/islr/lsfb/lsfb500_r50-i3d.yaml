@@ -12,7 +12,7 @@ datasets:
       video_transform_pipeline: "wlasl-training"
     video_tar_path: "/home/sign-language/datasets/lsfb-isol/videos.tar"
     video_tar_index_path: "/home/sign-language/datasets/lsfb-isol/videos.tar.index.json"
-    video_gpu_decoding: true
+    video_gpu_decoding: false
 
   validation:
     shards_url: "/home/sign-language/datasets/lsfb-isol/shards/500/shard_000004.tar"
@@ -27,7 +27,7 @@ datasets:
       video_transform_pipeline: "wlasl-testing"
     video_tar_path: "/home/sign-language/datasets/lsfb-isol/videos.tar"
     video_tar_index_path: "/home/sign-language/datasets/lsfb-isol/videos.tar.index.json"
-    video_gpu_decoding: true
+    video_gpu_decoding: false
 
   testing:
     shards_url: "/home/sign-language/datasets/lsfb-isol/shards/500/shard_000004.tar"
@@ -42,7 +42,7 @@ datasets:
       video_transform_pipeline: "wlasl-testing"
     video_tar_path: "/home/sign-language/datasets/lsfb-isol/videos.tar"
     video_tar_index_path: "/home/sign-language/datasets/lsfb-isol/videos.tar.index.json"
-    video_gpu_decoding: true
+    video_gpu_decoding: false
 
 model:
   type: 'multi-head'

@@ -1,9 +1,12 @@
+bitsandbytes
 click
 einops
 lightning
+mlflow
 numpy
 pydantic
 opencv-python
+orjson
 pytorch-metric-learning
 pyyaml
 scikit-learn
