@@ -20,6 +20,7 @@
 module purge
 module load EasyBuild/2024a
 module load Python/3.12.3-GCCcore-13.3.0
+module load FFmpeg/7.0.2-GCCcore-13.3.0
 
 # Activate Python virtual env
 source /gpfs/home/acad/unamur-fac_info/ppoitier/envs/slp/bin/activate
