@@ -18,14 +18,14 @@
 #SBATCH --output=./out/slp_%A_%a.out
 
 module purge
-module load EasyBuild/2022a
-module load Python/3.10.4-GCCcore-11.3.0
+module load EasyBuild/2024a
+module load Python/3.12.3-GCCcore-13.3.0
 
 # Activate Python virtual env
-source /gpfs/home/acad/unamur-fac_info/ppoitier/envs/dl/bin/activate
+source /gpfs/home/acad/unamur-fac_info/ppoitier/envs/slp/bin/activate
 
 config_files=(
-  "../../configs/recognition/resnet_islr.yaml"
+  "../../configs/islr/lsfb/pose2rgb/lsfb500_r50_base.yaml"
 )
 
 config_file=${config_files[$SLURM_ARRAY_TASK_ID]}

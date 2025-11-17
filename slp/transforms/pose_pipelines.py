@@ -18,7 +18,7 @@ from sign_language_tools.pose.transform import (
     ToRGBImage,
     Resample,
     TemporalCrop,
-    FixedResolutionNormalization,
+    # FixedResolutionNormalization,
     Padding,
 )
 
@@ -42,11 +42,15 @@ def get_pose_pipeline(pipeline_name: str):
         return Concatenate(['upper_pose', 'left_hand', 'right_hand'])
     elif pipeline_name == "resample":
         return Resample(new_length=64, method='nearest')
+    elif pipeline_name == "resample-linear":
+        return Resample(new_length=64, method='linear')
+    elif pipeline_name == "resample-nearest":
+        return Resample(new_length=64, method='nearest')
     elif pipeline_name == "temporal-crop":
         return TemporalCrop(size=64, location='center')
     elif pipeline_name == "padding":
         return Padding(min_length=64, location='end', mode='edge', return_mask=False)
-    elif pipeline_name == "img":
+    elif pipeline_name == "rgb-img":
         return Compose([
             ToRGBImage(),
             ToTensor(),
@@ -86,6 +90,10 @@ def get_pose_pipeline(pipeline_name: str):
                 # Flatten("features"),
             ]
         )
+    elif pipeline_name == "pose-to-img":
+        return Compose([
+
+        ])
     components = pipeline_name.split("+")
     if len(components) < 2:
         raise ValueError(f"Invalid pipeline: {pipeline_name}")

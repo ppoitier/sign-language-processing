@@ -7,24 +7,29 @@ from slp.nn.blocks.positional_encoding.original import PositionalEncoding
 
 
 class InputEmbedding(nn.Module):
+
     def __init__(
-        self, in_channels: int, max_length: int, out_channels: int, dropout: float = 0.2
+        self,
+        c_in: int,
+        c_out: int,
+        max_length: int,
+        dropout: float = 0.2,
     ):
         super().__init__()
-        self.input_projection = nn.Linear(in_channels, out_channels)
-        self.positional_encoder = PositionalEncoding(out_channels, max_length + 1)
-        self.cls_token = nn.Parameter(torch.randn(1, 1, out_channels))
+        self.input_projection = nn.Linear(c_in, c_out)
+        self.positional_encoder = PositionalEncoding(c_out, max_length + 1)
+        self.cls_token = nn.Parameter(torch.randn(1, 1, c_out))
         self.dropout = nn.Dropout(p=dropout)
 
     def forward(self, x: Tensor, mask: Tensor) -> tuple[Tensor, Tensor]:
         """
         Args:
-            x: Tensor of shape (N, L, C_in)
-            mask: Tensor of shape (N, L)
+            x: Tensor of shape (N, T, C_in)
+            mask: Tensor of shape (N, T)
 
         Returns:
-            out: Tensor of shape (N, L+1, C_out)
-            mask: Tensor of shape (N, L+1)
+            out: Tensor of shape (N, T+1, C_out)
+            mask: Tensor of shape (N, T+1)
         """
         x = self.input_projection(x)
         cls_tokens = repeat(self.cls_token, "() l c -> b l c", b=x.size(0))
@@ -37,18 +42,18 @@ class ViT(nn.Module):
 
     def __init__(
         self,
-        in_channels: int,
-        out_channels: int,
+        c_in: int,
+        c_out: int,
         max_length: int,
         n_heads: int,
         n_layers: int,
         pool: str | None = "cls_token",
     ):
         super().__init__()
-        self.input_embedding = InputEmbedding(in_channels, max_length, out_channels)
+        self.input_embedding = InputEmbedding(c_in, max_length, c_out)
 
         encoder_layer = nn.TransformerEncoderLayer(
-            d_model=out_channels,
+            d_model=c_out,
             nhead=n_heads,
             batch_first=True,
         )
@@ -60,12 +65,14 @@ class ViT(nn.Module):
     def forward(self, x: Tensor, mask: Tensor) -> Tensor:
         """
         Args:
-            x: Tensor of shape (N, L, C_in) containing the input features.
-            mask: Tensor of shape (N, L) where 1's are included and 0's excluded.
+            x: Tensor of shape (N, C_in, T) containing the input features.
+            mask: Tensor of shape (N, 1, T) where 1's are included and 0's excluded.
 
         Returns:
             out: Tensor of shape (N, C_out) if pool is 'cls_token' or 'mean', else (N, L+1, C_out)
         """
+        # from x: (N, C_in, T), mask: (N, 1, T) to x: (N, T, C_in), mask: (N, T)
+        x, mask = x.transpose(1, 2).contiguous(), mask.squeeze(1)
         x, mask = self.input_embedding(x, mask)
         # `src_mask` should be inverted for transformer layers.
         # See https://pytorch.org/docs/stable/generated/torch.nn.Transformer.html

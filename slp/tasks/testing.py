@@ -19,7 +19,7 @@ def run_testing(
         fast_dev_run=experiment_config.debug,
         logger=loggers,
         enable_progress_bar=experiment_config.show_progress_bar,
-        plugins=BitsandbytesPrecision("nf4-dq"),
+        # plugins=BitsandbytesPrecision("nf4-dq"),
     )
     lightning_trainer.test(
         lightning_module,

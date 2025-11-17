@@ -9,7 +9,7 @@ from torch.utils.data import Dataset, DataLoader
 from torchcodec.decoders import VideoDecoder
 
 from slp.config.templates.data import RecognitionDatasetConfig
-from slp.data.dataloader import PoseDataCollator
+from slp.data.dataloader import SignLanguageDataCollator
 from slp.transforms.pose_pipelines import get_pose_pipeline
 from slp.transforms.video_pipelines import get_video_transform_pipeline
 from slp.utils.tar import load_tar_index, load_bytes_from_tar
@@ -199,6 +199,7 @@ def load_dataset(
         num_workers=loader_config.num_workers,
         persistent_workers=True if loader_config.num_workers > 0 else False,
         pin_memory=loader_config.pin_memory,
-        collate_fn=PoseDataCollator(flatten_poses=loader_config.flatten_pose),
+        # collate_fn=PoseDataCollator(flatten_poses=loader_config.flatten_pose),
+        collate_fn=SignLanguageDataCollator(includes_poses=True, pad_poses=False),
     )
     return dataset, loader

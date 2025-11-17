@@ -53,7 +53,7 @@ def run_training(
         callbacks=callbacks,
         enable_progress_bar=experiment_config.show_progress_bar,
         overfit_batches=1 if training_config.overfit_one_batch else 0,
-        plugins=BitsandbytesPrecision('nf4-dq'),
+        # plugins=BitsandbytesPrecision('nf4-dq'),
     )
     lightning_trainer.fit(
         lightning_module,
