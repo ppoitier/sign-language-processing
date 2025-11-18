@@ -1,0 +1,10 @@
+from: "lsfb500_posevit_base.yaml"
+
+training:
+  criterion:
+    classification:
+      name: "cross-entropy"
+      use_weights: false
+
+experiment:
+  suffix: "lsfb/lsfb500/posevit/no-weights"
