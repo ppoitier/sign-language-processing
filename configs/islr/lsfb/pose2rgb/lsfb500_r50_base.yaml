@@ -35,7 +35,7 @@ model:
     type: 'resnet50-2d'
     args:
       c_out: 500
-      dropout: 0.1
+      dropout: 0.5
   heads:
     classification:
       type: 'identity'
@@ -46,7 +46,7 @@ training:
   criterion:
     classification:
       name: "cross-entropy"
-      use_weights: false
+      use_weights: true
   max_epochs: 500
   early_stopping_patience: 30
   learning_rate: 1e-3

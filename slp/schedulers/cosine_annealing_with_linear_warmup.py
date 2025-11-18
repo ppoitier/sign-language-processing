@@ -1,45 +1,32 @@
 from torch.optim import Optimizer
 from torch.optim.lr_scheduler import (
-    LRScheduler,
     CosineAnnealingLR,
     LinearLR,
     SequentialLR,
     ConstantLR,
+    ReduceLROnPlateau,
 )
 
 
-class CosineAnnealingWithLinearWarmup(LRScheduler):
-    def __init__(
-            self,
-            optimizer,
-            n_warmup_steps: int,
-            max_steps: int,
-            lr: float,
-            start_lr: float,
-            end_lr: float,
-            last_epoch=-1,
-    ):
-        self.n_warmup_steps = n_warmup_steps
-        self.max_steps = max_steps
-        self.start_lr = start_lr
-        self.end_lr = end_lr
-        self.scheduler = SequentialLR(
-            optimizer,
-            [
-                LinearLR(optimizer, start_factor=start_lr / lr, total_iters=self.n_warmup_steps),
-                CosineAnnealingLR(optimizer, T_max=self.max_steps - self.n_warmup_steps, eta_min=self.end_lr),
-            ],
-            last_epoch=last_epoch,
-            milestones=[n_warmup_steps],
-        )
-        super().__init__(optimizer, last_epoch)
-
-    def step(self):
-        self.scheduler.step()
-        super().step()
-
-    def get_lr(self):
-        return self.scheduler.get_last_lr()
+def create_warmup_reduce_on_plateau(
+        optimizer: Optimizer,
+        n_warmup_steps: int,
+        lr: float,
+        start_lr: float,
+        reduce_factor: float,
+        reduce_patience: int,
+):
+    warmup_scheduler = LinearLR(
+        optimizer,
+        start_factor=start_lr / lr if lr > 0 else 0,
+        total_iters=n_warmup_steps,
+    )
+    reduce_on_plateau = ReduceLROnPlateau(optimizer, factor=reduce_factor, patience=reduce_patience)
+    return SequentialLR(
+        optimizer,
+        schedulers=[warmup_scheduler, reduce_on_plateau],
+        milestones=[n_warmup_steps],
+    )
 
 
 def create_warmup_plateau_cosine_scheduler(

@@ -2,7 +2,7 @@ datasets:
   training:
     shards_url: "file:E:/datasets/sign-language/lsfb-isol/shards/500/shard_{000000..000003}.tar"
     loader:
-      batch_size: 64
+      batch_size: 32
       shuffle: true
       flatten_pose: true
     preprocessing:
@@ -13,7 +13,7 @@ datasets:
   validation:
     shards_url: "file:E:/datasets/sign-language/lsfb-isol/shards/500/shard_000004.tar"
     loader:
-      batch_size: 64
+      batch_size: 32
       shuffle: False
       flatten_pose: true
     preprocessing:
@@ -23,7 +23,7 @@ datasets:
   testing:
     shards_url: "file:E:/datasets/sign-language/lsfb-isol/shards/500/shard_000004.tar"
     loader:
-      batch_size: 64
+      batch_size: 32
       shuffle: false
       flatten_pose: true
     preprocessing:
@@ -62,4 +62,4 @@ experiment:
   output_dir: "D:/data/sign-languages/outs/slp2/isolated-recognition"
 #  mlflow_uri: "http://127.0.0.1:8142"
   show_progress_bar: true
-  debug: true
+  debug: false

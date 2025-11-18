@@ -3,41 +3,50 @@ from torch.optim.lr_scheduler import ReduceLROnPlateau, LinearLR
 
 
 class WarmupReduceLROnPlateau(ReduceLROnPlateau):
-    def __init__(self, optimizer, warmup_epochs, **plateau_kwargs):
-        """
-        Args:
-            optimizer: The optimizer from the LightningModule.
-            warmup_epochs: The number of epochs for the linear warmup phase.
-            **plateau_kwargs: Keyword arguments for the underlying ReduceLROnPlateau scheduler
-                              (e.g., mode, factor, patience).
-        """
+    def __init__(
+        self,
+        optimizer,
+        warmup_epochs,
+        start_lr,
+        base_lr,
+        **plateau_kwargs,
+    ):
         self.warmup_scheduler = LinearLR(
             optimizer,
-            start_factor=1e-4,
+            start_factor=start_lr / base_lr if base_lr > 0 else 0,
             end_factor=1.0,
             total_iters=warmup_epochs,
         )
         self.warmup_epochs = warmup_epochs
+        self.warmup_done = False
+
         super().__init__(optimizer, **plateau_kwargs)
 
     def step(self, metrics=None, epoch=None):
-        """
-        The step function that PyTorch Lightning calls at the end of each epoch.
-        It delegates to the appropriate scheduler based on the current epoch.
-        """
-        # self.warmup_scheduler.last_epoch starts at -1 and is incremented with each step.
-        # Warmup phase is for epochs 0 to (warmup_epochs - 1).
-        if self.warmup_scheduler.last_epoch < self.warmup_epochs - 1:
-            # During warmup, step the warmup scheduler
+        if self.warmup_scheduler.last_epoch < self.warmup_epochs:
             self.warmup_scheduler.step()
+            if self.warmup_scheduler.last_epoch >= self.warmup_epochs:
+                self.warmup_done = True
+                # Sync ReduceLROnPlateau's internal tracking of LR
+                self._last_lr = [group["lr"] for group in self.optimizer.param_groups]
         else:
-            # After warmup, step the parent ReduceLROnPlateau scheduler
             if metrics is None:
-                # This should not happen with a correctly configured Lightning Trainer
                 warnings.warn(
-                    "The `WarmupReduceLROnPlateau` scheduler expects a metric to be passed to `step()` after the warmup phase.",
+                    "WarmupReduceLROnPlateau expects metrics (e.g. val_loss) after warmup.",
                     UserWarning,
                 )
-
-            # The 'step' method of the parent class (ReduceLROnPlateau) requires the metric.
+            # Standard ReduceLROnPlateau behavior
             super().step(metrics)
+
+    def state_dict(self):
+        """Return state of both schedulers."""
+        state = super().state_dict()
+        state["warmup_scheduler"] = self.warmup_scheduler.state_dict()
+        state["warmup_done"] = self.warmup_done
+        return state
+
+    def load_state_dict(self, state_dict):
+        """Load state for both schedulers."""
+        self.warmup_scheduler.load_state_dict(state_dict.pop("warmup_scheduler"))
+        self.warmup_done = state_dict.pop("warmup_done")
+        super().load_state_dict(state_dict)

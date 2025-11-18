@@ -4,7 +4,7 @@ training:
   criterion:
     classification:
       name: "cross-entropy"
-      use_weights: true
+      use_weights: false
 
 experiment:
-  suffix: "lsfb/lsfb500/weights"
+  suffix: "lsfb/lsfb500/no-weights"

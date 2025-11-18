@@ -5,6 +5,8 @@ from slp.metrics.classification.base import ClassificationMetrics
 from slp.trainers.base import TrainerBase
 from slp.utils.model import count_parameters
 
+from slp.schedulers.warmup_on_plateau import WarmupReduceLROnPlateau
+
 
 class IsolatedRecognitionTrainer(TrainerBase):
 
@@ -73,8 +75,8 @@ class IsolatedRecognitionTrainer(TrainerBase):
         ...  # todo
 
     def configure_optimizers(self):
-        optimizer = optim.AdamW(self.model.parameters(), lr=self.learning_rate)
-        scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, factor=0.1, patience=5)
+        optimizer = optim.Adam(self.model.parameters(), lr=self.learning_rate, weight_decay=0.0005)
+        scheduler = WarmupReduceLROnPlateau(optimizer, warmup_epochs=5, start_lr=1e-6, base_lr=self.learning_rate, factor=0.1, patience=5)
         return {
             "optimizer": optimizer,
             "lr_scheduler": {
