@@ -4,7 +4,6 @@ from slp.config.templates.training import TrainingConfig
 from slp.metrics.classification.base import ClassificationMetrics
 from slp.trainers.base import TrainerBase
 from slp.utils.model import count_parameters
-from slp.nn.pose_transformer import PoseTransformer
 
 
 class IsolatedRecognitionTrainer(TrainerBase):
@@ -21,7 +20,6 @@ class IsolatedRecognitionTrainer(TrainerBase):
         super().__init__()
         self.model = model
         self.criterion = criterion
-
 
         self.input_features = input_features
         self.learning_rate = learning_rate
@@ -76,7 +74,14 @@ class IsolatedRecognitionTrainer(TrainerBase):
 
     def configure_optimizers(self):
         optimizer = optim.AdamW(self.model.parameters(), lr=self.learning_rate)
-        return optimizer
+        scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, factor=0.1, patience=5)
+        return {
+            "optimizer": optimizer,
+            "lr_scheduler": {
+                "scheduler": scheduler,
+                "interval": "epoch",
+            },
+        }
 
 
 def load_isolated_recognition_trainer(

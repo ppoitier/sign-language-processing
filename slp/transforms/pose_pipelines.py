@@ -55,6 +55,11 @@ def get_pose_pipeline(pipeline_name: str):
             ToRGBImage(),
             ToTensor(),
         ])
+    elif pipeline_name == "non-norm-img":
+        return Compose([
+            ToRGBImage(normalize=False),
+            ToTensor(),
+        ])
     elif pipeline_name == "split":
         return Split(
             {

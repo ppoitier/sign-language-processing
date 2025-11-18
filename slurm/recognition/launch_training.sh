@@ -8,7 +8,7 @@
 #SBATCH --gres="gpu:1"
 #SBATCH --mem-per-cpu=16384
 #SBATCH --partition=gpu
-#SBATCH --array=0-0
+#SBATCH --array=0-6
 #
 #SBATCH --mail-user=pierre.poitier@unamur.be
 #SBATCH --mail-type=ALL
@@ -19,6 +19,7 @@
 
 module purge
 module load EasyBuild/2024a
+module load CUDA/12.6.0
 module load Python/3.12.3-GCCcore-13.3.0
 module load FFmpeg/7.0.2-GCCcore-13.3.0
 
@@ -27,6 +28,12 @@ source /gpfs/home/acad/unamur-fac_info/ppoitier/envs/slp/bin/activate
 
 config_files=(
   "../../configs/islr/lsfb/pose2rgb/lsfb500_r50_base.yaml"
+  "../../configs/islr/lsfb/pose2rgb/lsfb500_r50_no-minmax.yaml"
+  "../../configs/islr/lsfb/pose2rgb/lsfb500_r50_no-minmax_norm.yaml"
+  "../../configs/islr/lsfb/pose2rgb/lsfb500_r50_no-pretrained.yaml"
+  "../../configs/islr/lsfb/pose2rgb/lsfb500_r50_norm.yaml"
+  "../../configs/islr/lsfb/pose2rgb/lsfb500_r50_focal.yaml"
+  "../../configs/islr/lsfb/pose2rgb/lsfb500_r50_weights.yaml"
 )
 
 config_file=${config_files[$SLURM_ARRAY_TASK_ID]}

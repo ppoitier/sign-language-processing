@@ -46,7 +46,7 @@ model:
 training:
   criterion:
     classification:
-      name: "cross-entropy"
+      name: "focal"
       use_weights: false
   max_epochs: 500
   early_stopping_patience: 30

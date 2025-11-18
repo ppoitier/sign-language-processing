@@ -8,6 +8,7 @@ from slp.losses.multihead import MultiHeadLoss
 from slp.losses.smoothing import WithSmoothingLoss
 from slp.losses.generalized_iou import GeneralizedIoU
 from slp.losses.repeated_per_frame import RepeatedPerFrameLoss
+from slp.losses.focal_loss import FocalLoss
 
 
 def load_criterion_by_id(criterion_id: str, kwargs, weights: None | Tensor = None):
@@ -23,6 +24,8 @@ def load_criterion_by_id(criterion_id: str, kwargs, weights: None | Tensor = Non
             )
         case "cross-entropy":
             return CrossEntropyLoss(weight=weights, ignore_index=-1)
+        case "focal":
+            return FocalLoss(weight=weights, ignore_index=-1)
         case "repeated":
             return RepeatedPerFrameLoss(
                 load_criterion_by_id(sub_criterion, kwargs, weights)

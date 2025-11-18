@@ -1,0 +1,9 @@
+from: "lsfb500_r50_base.yaml"
+
+model:
+  backbone:
+    args:
+      pretrained: false
+
+experiment:
+  suffix: "lsfb/lsfb500/no-pretrained"
