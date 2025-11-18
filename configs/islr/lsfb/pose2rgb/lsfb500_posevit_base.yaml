@@ -1,0 +1,68 @@
+datasets:
+  training:
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/lsfb-isol/shards/500/shard_{000000..000003}.tar"
+    loader:
+      batch_size: 128
+      shuffle: true
+      flatten_pose: true
+    preprocessing:
+      pose_transform_pipeline: "concat+resample-linear+flatten"
+      input_type: 'rgb'
+
+  validation:
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/lsfb-isol/shards/500/shard_000004.tar"
+    loader:
+      batch_size: 128
+      shuffle: false
+      flatten_pose: true
+    preprocessing:
+      pose_transform_pipeline: "concat+resample-linear+flatten"
+      input_type: 'rgb'
+
+  testing:
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/lsfb-isol/shards/500/shard_000004.tar"
+    loader:
+      batch_size: 128
+      shuffle: false
+      flatten_pose: true
+    preprocessing:
+      pose_transform_pipeline: "concat+resample-linear+flatten"
+      input_type: 'rgb'
+
+model:
+  type: 'multi-head'
+  backbone:
+    type: 'pose-vit'
+    args:
+      c_in: 130
+      c_out: 128
+      max_length: 64
+      n_heads: 4
+      n_layers: 6
+      dim_feedforward: 2048
+  heads:
+    classification:
+      type: 'linear'
+      args:
+        in_features: 128
+        out_features: 500
+
+training:
+  criterion:
+    classification:
+      name: "cross-entropy"
+      use_weights: true
+  max_epochs: 500
+  early_stopping_patience: 30
+  learning_rate: 1e-3
+  is_output_multilayer: false
+  n_classes: 500
+  overfit_one_batch: false
+
+experiment:
+  id: "islr-posevit"
+  suffix: "lsfb/lsfb500/posevit/base"
+  seed: 'random'
+  output_dir: "/gpfs/scratch/acad/lsfb/outputs/slp"
+  show_progress_bar: false
+  debug: false

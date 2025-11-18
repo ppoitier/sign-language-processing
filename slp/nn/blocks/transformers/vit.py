@@ -38,7 +38,7 @@ class InputEmbedding(nn.Module):
         return self.dropout(x), pad(mask, (1, 0), value=1)
 
 
-class ViT(nn.Module):
+class PoseViT(nn.Module):
 
     def __init__(
         self,
@@ -47,14 +47,16 @@ class ViT(nn.Module):
         max_length: int,
         n_heads: int,
         n_layers: int,
+        dim_feedforward: int = 2048,
         pool: str | None = "cls_token",
     ):
         super().__init__()
-        self.input_embedding = InputEmbedding(c_in, max_length, c_out)
+        self.input_embedding = InputEmbedding(c_in, c_out, max_length)
 
         encoder_layer = nn.TransformerEncoderLayer(
             d_model=c_out,
             nhead=n_heads,
+            dim_feedforward=dim_feedforward,
             batch_first=True,
         )
         self.encoder = nn.TransformerEncoder(encoder_layer, num_layers=n_layers)
@@ -65,14 +67,14 @@ class ViT(nn.Module):
     def forward(self, x: Tensor, mask: Tensor) -> Tensor:
         """
         Args:
-            x: Tensor of shape (N, C_in, T) containing the input features.
-            mask: Tensor of shape (N, 1, T) where 1's are included and 0's excluded.
+            x: Tensor of shape (N, T, C_in) containing the input features.
+            mask: Tensor of shape (N, T) where 1's are included and 0's excluded.
 
         Returns:
             out: Tensor of shape (N, C_out) if pool is 'cls_token' or 'mean', else (N, L+1, C_out)
         """
         # from x: (N, C_in, T), mask: (N, 1, T) to x: (N, T, C_in), mask: (N, T)
-        x, mask = x.transpose(1, 2).contiguous(), mask.squeeze(1)
+        # x, mask = x.transpose(1, 2).contiguous(), mask.squeeze(1)
         x, mask = self.input_embedding(x, mask)
         # `src_mask` should be inverted for transformer layers.
         # See https://pytorch.org/docs/stable/generated/torch.nn.Transformer.html

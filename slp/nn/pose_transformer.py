@@ -1,3 +1,4 @@
+import torch
 from torch import nn, Tensor, BoolTensor
 
 from slp.nn.blocks.positional_encoding.original import PositionalEncoding
@@ -30,8 +31,8 @@ class PoseTransformer(nn.Module):
     def forward(self, x: Tensor, mask: BoolTensor) -> Tensor:
         """
         Args:
-            x: tensor of shape (N, C_in, T)
-            mask: bool tensor of shape (N, 1, T) where:
+            x: tensor of shape (N, T, C_in)
+            mask: bool tensor of shape (N, T) where:
                 - true: use the element of the sequence
                 - false: don't use the element
 
@@ -39,7 +40,7 @@ class PoseTransformer(nn.Module):
             # logits: tensor of shape (N, C_out)
         """
         # from (N, C_in, T) to (N, T, C_in)
-        x = x.permute(0, 2, 1).contiguous()
+        # x = x.permute(0, 2, 1).contiguous()
         x = self.fc_in(x)
         x = self.pe(x)
 
@@ -48,20 +49,20 @@ class PoseTransformer(nn.Module):
         query_embed = self.class_query.repeat(batch_size, 1, 1)
 
         # output of shape (N, 1, C_hidden)
-        padding_mask = ~mask[:, 0]  # Shape (N, T)
+        # padding_mask = ~mask[:, 0]  # Shape (N, T)
+        padding_mask = ~mask  # Shape (N, T)
         out = self.transformer(
             x,
             query_embed,
             src_key_padding_mask=padding_mask,
             memory_key_padding_mask=padding_mask,
         )
-        # from (N, 1, C_hidden) to (N, C_out)
+        # from (N, 1, C_hidden) to (N, C_hidden)
         out = out.squeeze(1)
         return out
 
 
 if __name__ == "__main__":
-    import torch
     N, C_in, T = 3, 130, 256
     _x = torch.randn(N, C_in, T)
     _mask = torch.ones(N, 1, T).bool()

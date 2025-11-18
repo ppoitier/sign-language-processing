@@ -2,14 +2,13 @@ from torch import nn
 
 from slp.config.templates.model import MultiHeadModelConfig, HeadConfig, ModelConfig
 from slp.nn.blocks.tcn.tcn import MultiStageTCN
-from slp.nn.spoter import SPOTER
 from slp.nn.blocks.i3d.original import InceptionI3d
 from slp.nn.model_with_heads import MultiHeadModel, Head
 from slp.nn.projectors.mlp_block import ProjectionHead
 from slp.nn.pose_transformer import PoseTransformer
 from slp.nn.backbones.resnet_3d import ResNet_3d
 from slp.nn.backbones.resnet_2d import ResNet_2d
-from slp.nn.backbones.vit import ViT
+from slp.nn.blocks.transformers.vit import PoseViT
 
 
 def load_backbone(config: ModelConfig):
@@ -17,11 +16,9 @@ def load_backbone(config: ModelConfig):
         case 'mstcn':
             return MultiStageTCN(**config.args)
         case 'spoter':
-            return SPOTER(**config.args)
-        case 'pose-vit':
             return PoseTransformer(**config.args)
-        case 'vit':
-            return ViT(**config.args)
+        case 'pose-vit':
+            return PoseViT(**config.args)
         case 'inception-i3d':
             return InceptionI3d(**config.args)
         case 'resnet50-i3d':
