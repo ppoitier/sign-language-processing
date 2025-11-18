@@ -6,7 +6,7 @@ datasets:
       shuffle: true
       flatten_pose: true
     preprocessing:
-      pose_transform_pipeline: "concat+resample-linear+norm+rgb-img"
+      pose_transform_pipeline: "concat+resample-linear+augment01+rgb-img"
 #      pose_transform_pipeline: "concat+resample-nearest+rgb-img"
       input_type: 'rgb'
 
@@ -60,6 +60,6 @@ experiment:
   suffix: "lsfb/lsfb500/debug"
   seed: 'random'
   output_dir: "D:/data/sign-languages/outs/slp2/isolated-recognition"
-  mlflow_uri: "http://127.0.0.1:8142"
+#  mlflow_uri: "http://127.0.0.1:8142"
   show_progress_bar: true
   debug: true

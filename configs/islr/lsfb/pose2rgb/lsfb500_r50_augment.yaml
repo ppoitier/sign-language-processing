@@ -1,0 +1,17 @@
+from: "lsfb500_r50_base.yaml"
+
+datasets:
+  training:
+    preprocessing:
+      pose_transform_pipeline: "concat+resample-linear+augment01+rgb-img"
+
+  validation:
+    preprocessing:
+      pose_transform_pipeline: "concat+resample-linear+augment01+rgb-img"
+
+  testing:
+    preprocessing:
+      pose_transform_pipeline: "concat+resample-linear+augment01+rgb-img"
+
+experiment:
+  suffix: "lsfb/lsfb500/augment"

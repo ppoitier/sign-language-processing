@@ -95,10 +95,20 @@ def get_pose_pipeline(pipeline_name: str):
                 # Flatten("features"),
             ]
         )
-    elif pipeline_name == "pose-to-img":
-        return Compose([
-
-        ])
+    elif pipeline_name == "augment01":
+        return Compose(
+            [
+                Randomize(transform=RandomRotation2D(angle_range=(-3.14 / 10, 3.14 / 10)), probability=0.7),
+                Randomize(transform=GaussianNoise(scale=0.02), probability=0.7),
+                Randomize(transform=HorizontalFlip(), probability=0.5),
+                Randomize(
+                    transform=RandomTranslation(
+                        dx_range=(-0.2, 0.2), dy_range=(-0.2, 0.2)
+                    ),
+                    probability=0.7,
+                ),
+            ]
+        )
     components = pipeline_name.split("+")
     if len(components) < 2:
         raise ValueError(f"Invalid pipeline: {pipeline_name}")
