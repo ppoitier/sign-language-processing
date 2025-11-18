@@ -79,6 +79,7 @@ class IsolatedRecognitionTrainer(TrainerBase):
             "optimizer": optimizer,
             "lr_scheduler": {
                 "scheduler": scheduler,
+                "monitor": "validation/loss",
                 "interval": "epoch",
             },
         }
