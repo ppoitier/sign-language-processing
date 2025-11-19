@@ -37,8 +37,10 @@ config_files=(
 #  "../../configs/islr/lsfb/pose2rgb/lsfb500_r50_no-weights.yaml"
 #  "../../configs/islr/lsfb/pose2rgb/lsfb500_spoter_base.yaml"
 #  "../../configs/islr/lsfb/pose2rgb/lsfb500_posevit_base.yaml"
-  "../../configs/islr/lsfb/pose2rgb/lsfb500_spoter_no-weights.yaml"
-  "../../configs/islr/lsfb/pose2rgb/lsfb500_posevit_no-weights.yaml"
+#  "../../configs/islr/lsfb/pose2rgb/lsfb500_spoter_no-weights.yaml"
+#  "../../configs/islr/lsfb/pose2rgb/lsfb500_posevit_no-weights.yaml"
+  "../../configs/islr/lsfb/pose2rgb/lsfb500_spoter_jerome.yaml"
+  "../../configs/islr/lsfb/pose2rgb/lsfb500_posevit_jerome.yaml"
 )
 
 config_file=${config_files[$SLURM_ARRAY_TASK_ID]}
