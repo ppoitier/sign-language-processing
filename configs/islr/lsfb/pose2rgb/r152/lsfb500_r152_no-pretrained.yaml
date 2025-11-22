@@ -1,0 +1,9 @@
+from: "lsfb500_r152_base.yaml"
+
+model:
+  backbone:
+    args:
+      pretrained: false
+
+experiment:
+  suffix: "lsfb500/r152/no-pretrained"

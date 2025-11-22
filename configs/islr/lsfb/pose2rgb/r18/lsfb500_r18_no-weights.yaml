@@ -1,0 +1,10 @@
+from: "lsfb500_r18_base.yaml"
+
+training:
+  criterion:
+    classification:
+      name: "cross-entropy"
+      use_weights: false
+
+experiment:
+  suffix: "lsfb500/r18/no-weights"

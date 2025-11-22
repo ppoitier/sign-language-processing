@@ -1,0 +1,29 @@
+from: "lsfb500_spoter_base.yaml"
+
+model:
+  type: 'multi-head'
+  backbone:
+    type: 'spoter'
+    args:
+      c_in: 130
+      c_hidden: 80
+      max_length: 64
+      n_heads: 4
+      n_encoder_layers: 2
+      n_decoder_layers: 2
+      dim_feedforward: 2048
+  heads:
+    classification:
+      type: 'linear'
+      args:
+        in_features: 80
+        out_features: 500
+
+training:
+  criterion:
+    classification:
+      name: "cross-entropy"
+      use_weights: false
+
+experiment:
+  suffix: "lsfb500/spoter/jerome"

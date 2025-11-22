@@ -133,7 +133,7 @@ class IsolatedSignsRecognitionDataset(Dataset):
         occurrences = self.get_label_occurrences()
         return occurrences / occurrences.sum()
 
-    def get_label_weights(self, dampening=0.5):
+    def get_label_weights(self, dampening=1.0):
         label_frequencies = self.get_label_frequencies()
         weights = 1.0 / (label_frequencies + 1e-6)
         # Apply power scaling (dampening)
