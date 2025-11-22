@@ -8,7 +8,7 @@
 #SBATCH --gres="gpu:1"
 #SBATCH --mem-per-cpu=16384
 #SBATCH --partition=gpu
-#SBATCH --array=0-14
+#SBATCH --array=0-2
 #
 #SBATCH --mail-user=pierre.poitier@unamur.be
 #SBATCH --mail-type=ALL
@@ -31,21 +31,21 @@ config_files=(
   "../../configs/islr/lsfb/pose2rgb/r18/lsfb500_r18_no-pretrained.yaml"
   "../../configs/islr/lsfb/pose2rgb/r18/lsfb500_r18_no-weights.yaml"
 
-  "../../configs/islr/lsfb/pose2rgb/r50/lsfb500_r50_base.yaml"
-  "../../configs/islr/lsfb/pose2rgb/r50/lsfb500_r50_no-pretrained.yaml"
-  "../../configs/islr/lsfb/pose2rgb/r50/lsfb500_r50_no-weights.yaml"
-
-  "../../configs/islr/lsfb/pose2rgb/r152/lsfb500_r152_base.yaml"
-  "../../configs/islr/lsfb/pose2rgb/r152/lsfb500_r152_no-pretrained.yaml"
-  "../../configs/islr/lsfb/pose2rgb/r152/lsfb500_r152_no-weights.yaml"
-
-  "../../configs/islr/lsfb/pose2rgb/pose-vit/lsfb500_posevit_base.yaml"
-  "../../configs/islr/lsfb/pose2rgb/pose-vit/lsfb500_posevit_jerome.yaml"
-  "../../configs/islr/lsfb/pose2rgb/pose-vit/lsfb500_posevit_no-weights.yaml"
-
-  "../../configs/islr/lsfb/pose2rgb/spoter/lsfb500_spoter_base.yaml"
-  "../../configs/islr/lsfb/pose2rgb/spoter/lsfb500_spoter_jerome.yaml"
-  "../../configs/islr/lsfb/pose2rgb/spoter/lsfb500_spoter_no-weights.yaml"
+#  "../../configs/islr/lsfb/pose2rgb/r50/lsfb500_r50_base.yaml"
+#  "../../configs/islr/lsfb/pose2rgb/r50/lsfb500_r50_no-pretrained.yaml"
+#  "../../configs/islr/lsfb/pose2rgb/r50/lsfb500_r50_no-weights.yaml"
+#
+#  "../../configs/islr/lsfb/pose2rgb/r152/lsfb500_r152_base.yaml"
+#  "../../configs/islr/lsfb/pose2rgb/r152/lsfb500_r152_no-pretrained.yaml"
+#  "../../configs/islr/lsfb/pose2rgb/r152/lsfb500_r152_no-weights.yaml"
+#
+#  "../../configs/islr/lsfb/pose2rgb/pose-vit/lsfb500_posevit_base.yaml"
+#  "../../configs/islr/lsfb/pose2rgb/pose-vit/lsfb500_posevit_jerome.yaml"
+#  "../../configs/islr/lsfb/pose2rgb/pose-vit/lsfb500_posevit_no-weights.yaml"
+#
+#  "../../configs/islr/lsfb/pose2rgb/spoter/lsfb500_spoter_base.yaml"
+#  "../../configs/islr/lsfb/pose2rgb/spoter/lsfb500_spoter_jerome.yaml"
+#  "../../configs/islr/lsfb/pose2rgb/spoter/lsfb500_spoter_no-weights.yaml"
 )
 
 config_file=${config_files[$SLURM_ARRAY_TASK_ID]}
