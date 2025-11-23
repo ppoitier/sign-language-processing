@@ -1,3 +1,5 @@
+from typing import Optional
+
 from torch import nn, Tensor
 from torchvision.models import (
     resnet50,
@@ -33,7 +35,7 @@ class ResNet_2d(nn.Module):
         self.dropout = nn.Dropout(dropout)
         self.fc_out = nn.Linear(embed_dim, c_out)
 
-    def forward(self, x: Tensor, mask: Tensor) -> Tensor:
+    def forward(self, x: Tensor, mask: Optional[Tensor] = None) -> Tensor:
         x = self.resnet(x)
         x = self.dropout(x)
         x = self.fc_out(x)

@@ -142,6 +142,9 @@ class IsolatedSignsRecognitionDataset(Dataset):
         weights = weights / weights.sum() * len(weights)
         return weights
 
+    def get_sample_indices_for_class(self, class_id: int):
+        return [idx for idx, sample in enumerate(self.samples) if sample['label_id'] == class_id]
+
     def load_video(self, sample_id: str) -> Tensor:
         offset, size = self.video_tar_index[f"{sample_id}.{self.video_ext}"]
         decoder = VideoDecoder(

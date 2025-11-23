@@ -1,0 +1,28 @@
+from: "lsfb2000_posevit_base.yaml"
+
+model:
+  type: 'multi-head'
+  backbone:
+    type: 'pose-vit'
+    args:
+      c_in: 130
+      c_out: 80
+      max_length: 64
+      n_heads: 4
+      n_layers: 2
+      dim_feedforward: 2048
+  heads:
+    classification:
+      type: 'linear'
+      args:
+        in_features: 80
+        out_features: 2000
+
+training:
+  criterion:
+    classification:
+      name: "cross-entropy"
+      use_weights: false
+
+experiment:
+  suffix: "lsfb2000/posevit/jerome"

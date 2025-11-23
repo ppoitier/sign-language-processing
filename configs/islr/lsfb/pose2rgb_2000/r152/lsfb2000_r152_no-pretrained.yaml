@@ -1,0 +1,9 @@
+from: "lsfb2000_r152_base.yaml"
+
+model:
+  backbone:
+    args:
+      pretrained: false
+
+experiment:
+  suffix: "lsfb2000/r152/no-pretrained"

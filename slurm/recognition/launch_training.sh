@@ -27,25 +27,25 @@ module load FFmpeg/7.0.2-GCCcore-13.3.0
 source /gpfs/home/acad/unamur-fac_info/ppoitier/envs/slp/bin/activate
 
 config_files=(
-  "../../configs/islr/lsfb/pose2rgb/r18/lsfb500_r18_base.yaml"
-  "../../configs/islr/lsfb/pose2rgb/r18/lsfb500_r18_no-pretrained.yaml"
-  "../../configs/islr/lsfb/pose2rgb/r18/lsfb500_r18_no-weights.yaml"
+  "../../configs/islr/lsfb/pose2rgb_2000/r18/lsfb2000_r18_base.yaml"
+  "../../configs/islr/lsfb/pose2rgb_2000/r18/lsfb2000_r18_no-pretrained.yaml"
+  "../../configs/islr/lsfb/pose2rgb_2000/r18/lsfb2000_r18_no-weights.yaml"
 
-#  "../../configs/islr/lsfb/pose2rgb/r50/lsfb500_r50_base.yaml"
-#  "../../configs/islr/lsfb/pose2rgb/r50/lsfb500_r50_no-pretrained.yaml"
-#  "../../configs/islr/lsfb/pose2rgb/r50/lsfb500_r50_no-weights.yaml"
-#
-#  "../../configs/islr/lsfb/pose2rgb/r152/lsfb500_r152_base.yaml"
-#  "../../configs/islr/lsfb/pose2rgb/r152/lsfb500_r152_no-pretrained.yaml"
-#  "../../configs/islr/lsfb/pose2rgb/r152/lsfb500_r152_no-weights.yaml"
-#
-#  "../../configs/islr/lsfb/pose2rgb/pose-vit/lsfb500_posevit_base.yaml"
-#  "../../configs/islr/lsfb/pose2rgb/pose-vit/lsfb500_posevit_jerome.yaml"
-#  "../../configs/islr/lsfb/pose2rgb/pose-vit/lsfb500_posevit_no-weights.yaml"
-#
-#  "../../configs/islr/lsfb/pose2rgb/spoter/lsfb500_spoter_base.yaml"
-#  "../../configs/islr/lsfb/pose2rgb/spoter/lsfb500_spoter_jerome.yaml"
-#  "../../configs/islr/lsfb/pose2rgb/spoter/lsfb500_spoter_no-weights.yaml"
+  "../../configs/islr/lsfb/pose2rgb_2000/r50/lsfb2000_r50_base.yaml"
+  "../../configs/islr/lsfb/pose2rgb_2000/r50/lsfb2000_r50_no-pretrained.yaml"
+  "../../configs/islr/lsfb/pose2rgb_2000/r50/lsfb2000_r50_no-weights.yaml"
+
+  "../../configs/islr/lsfb/pose2rgb_2000/r152/lsfb2000_r152_base.yaml"
+  "../../configs/islr/lsfb/pose2rgb_2000/r152/lsfb2000_r152_no-pretrained.yaml"
+  "../../configs/islr/lsfb/pose2rgb_2000/r152/lsfb2000_r152_no-weights.yaml"
+
+  "../../configs/islr/lsfb/pose2rgb_2000/pose-vit/lsfb2000_posevit_base.yaml"
+  "../../configs/islr/lsfb/pose2rgb_2000/pose-vit/lsfb2000_posevit_jerome.yaml"
+  "../../configs/islr/lsfb/pose2rgb_2000/pose-vit/lsfb2000_posevit_no-weights.yaml"
+
+  "../../configs/islr/lsfb/pose2rgb_2000/spoter/lsfb2000_spoter_base.yaml"
+  "../../configs/islr/lsfb/pose2rgb_2000/spoter/lsfb2000_spoter_jerome.yaml"
+  "../../configs/islr/lsfb/pose2rgb_2000/spoter/lsfb2000_spoter_no-weights.yaml"
 )
 
 config_file=${config_files[$SLURM_ARRAY_TASK_ID]}
