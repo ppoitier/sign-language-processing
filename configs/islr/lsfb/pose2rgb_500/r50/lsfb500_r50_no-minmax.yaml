@@ -1,0 +1,17 @@
+from: "lsfb500_r50_base.yaml"
+
+datasets:
+  training:
+    preprocessing:
+      pose_transform_pipeline: "concat+resample-linear+non-norm-img"
+
+  validation:
+    preprocessing:
+      pose_transform_pipeline: "concat+resample-linear+non-norm-img"
+
+  testing:
+    preprocessing:
+      pose_transform_pipeline: "concat+resample-linear+non-norm-img"
+
+experiment:
+  suffix: "lsfb500/no-minmax"

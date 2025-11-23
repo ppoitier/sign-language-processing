@@ -8,7 +8,7 @@
 #SBATCH --gres="gpu:1"
 #SBATCH --mem-per-cpu=16384
 #SBATCH --partition=gpu
-#SBATCH --array=0-14
+#SBATCH --array=0-1
 #
 #SBATCH --mail-user=pierre.poitier@unamur.be
 #SBATCH --mail-type=ALL
@@ -27,25 +27,28 @@ module load FFmpeg/7.0.2-GCCcore-13.3.0
 source /gpfs/home/acad/unamur-fac_info/ppoitier/envs/slp/bin/activate
 
 config_files=(
-  "../../configs/islr/lsfb/pose2rgb_2000/r18/lsfb2000_r18_base.yaml"
-  "../../configs/islr/lsfb/pose2rgb_2000/r18/lsfb2000_r18_no-pretrained.yaml"
-  "../../configs/islr/lsfb/pose2rgb_2000/r18/lsfb2000_r18_no-weights.yaml"
+#  "../../configs/islr/lsfb/pose2rgb_2000/r18/lsfb2000_r18_base.yaml"
+#  "../../configs/islr/lsfb/pose2rgb_2000/r18/lsfb2000_r18_no-pretrained.yaml"
+#  "../../configs/islr/lsfb/pose2rgb_2000/r18/lsfb2000_r18_no-weights.yaml"
+#
+#  "../../configs/islr/lsfb/pose2rgb_2000/r50/lsfb2000_r50_base.yaml"
+#  "../../configs/islr/lsfb/pose2rgb_2000/r50/lsfb2000_r50_no-pretrained.yaml"
+#  "../../configs/islr/lsfb/pose2rgb_2000/r50/lsfb2000_r50_no-weights.yaml"
+#
+#  "../../configs/islr/lsfb/pose2rgb_2000/r152/lsfb2000_r152_base.yaml"
+#  "../../configs/islr/lsfb/pose2rgb_2000/r152/lsfb2000_r152_no-pretrained.yaml"
+#  "../../configs/islr/lsfb/pose2rgb_2000/r152/lsfb2000_r152_no-weights.yaml"
+#
+#  "../../configs/islr/lsfb/pose2rgb_2000/pose-vit/lsfb2000_posevit_base.yaml"
+#  "../../configs/islr/lsfb/pose2rgb_2000/pose-vit/lsfb2000_posevit_jerome.yaml"
+#  "../../configs/islr/lsfb/pose2rgb_2000/pose-vit/lsfb2000_posevit_no-weights.yaml"
+#
+#  "../../configs/islr/lsfb/pose2rgb_2000/spoter/lsfb2000_spoter_base.yaml"
+#  "../../configs/islr/lsfb/pose2rgb_2000/spoter/lsfb2000_spoter_jerome.yaml"
+#  "../../configs/islr/lsfb/pose2rgb_2000/spoter/lsfb2000_spoter_no-weights.yaml"
 
-  "../../configs/islr/lsfb/pose2rgb_2000/r50/lsfb2000_r50_base.yaml"
-  "../../configs/islr/lsfb/pose2rgb_2000/r50/lsfb2000_r50_no-pretrained.yaml"
-  "../../configs/islr/lsfb/pose2rgb_2000/r50/lsfb2000_r50_no-weights.yaml"
-
-  "../../configs/islr/lsfb/pose2rgb_2000/r152/lsfb2000_r152_base.yaml"
-  "../../configs/islr/lsfb/pose2rgb_2000/r152/lsfb2000_r152_no-pretrained.yaml"
-  "../../configs/islr/lsfb/pose2rgb_2000/r152/lsfb2000_r152_no-weights.yaml"
-
-  "../../configs/islr/lsfb/pose2rgb_2000/pose-vit/lsfb2000_posevit_base.yaml"
-  "../../configs/islr/lsfb/pose2rgb_2000/pose-vit/lsfb2000_posevit_jerome.yaml"
-  "../../configs/islr/lsfb/pose2rgb_2000/pose-vit/lsfb2000_posevit_no-weights.yaml"
-
-  "../../configs/islr/lsfb/pose2rgb_2000/spoter/lsfb2000_spoter_base.yaml"
-  "../../configs/islr/lsfb/pose2rgb_2000/spoter/lsfb2000_spoter_jerome.yaml"
-  "../../configs/islr/lsfb/pose2rgb_2000/spoter/lsfb2000_spoter_no-weights.yaml"
+  "../../configs/islr/lsfb/pose2rgb_500/r50/lsfb500_r50_no-minmax.yaml"
+  "../../configs/islr/lsfb/pose2rgb_500/r50/lsfb500_r50_no-linear-interp.yaml"
 )
 
 config_file=${config_files[$SLURM_ARRAY_TASK_ID]}
