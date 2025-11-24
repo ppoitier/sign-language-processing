@@ -52,7 +52,7 @@ training:
   criterion:
     classification:
       name: "cross-entropy"
-      use_weights: true
+      use_weights: false
   max_epochs: 500
   early_stopping_patience: 30
   learning_rate: 1e-3
