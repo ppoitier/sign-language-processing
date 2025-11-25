@@ -35,6 +35,7 @@ def _get_wds_mapping_fn(
         sample_id = wds_sample["__key__"]
         return {
             "id": sample_id,
+            "signer_id": wds_sample["signer.id"],
             "poses": {
                 body_region: wds_sample[f"pose.{body_region}.npy"]
                 for body_region in body_regions
@@ -117,6 +118,10 @@ class IsolatedSignsRecognitionDataset(Dataset):
         print("Loading instances from shards:", url)
         self.samples = list(web_dataset)
 
+        # TODO: replace this with a better alternative
+        print("Filtering out empty poses...")
+        self.samples = [s for s in self.samples if s['poses']['upper_pose'].shape[0] > 0]
+
         self.label_to_idx = {
             label: label_id
             for label, label_id in set(
@@ -144,6 +149,9 @@ class IsolatedSignsRecognitionDataset(Dataset):
 
     def get_sample_indices_for_class(self, class_id: int):
         return [idx for idx, sample in enumerate(self.samples) if sample['label_id'] == class_id]
+
+    def get_sample_indices_for_signer(self, signer_id: int):
+        return [idx for idx, sample in enumerate(self.samples) if sample['signer_id'] == signer_id]
 
     def load_video(self, sample_id: str) -> Tensor:
         offset, size = self.video_tar_index[f"{sample_id}.{self.video_ext}"]
