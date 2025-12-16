@@ -1,6 +1,6 @@
 from torch import nn
 
-from slp.config.templates.model import MultiHeadModelConfig, HeadConfig, ModelConfig
+from slp.config.model import MultiHeadModelConfig, HeadConfig, ModelConfig
 from slp.nn.blocks.tcn.tcn import MultiStageTCN
 from slp.nn.blocks.i3d.original import InceptionI3d
 from slp.nn.model_with_heads import MultiHeadModel, Head

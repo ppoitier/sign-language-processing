@@ -2,13 +2,13 @@ import click
 
 import torch
 from torch import nn
-torch.set_float32_matmul_precision('medium')
+torch.set_float32_matmul_precision('high')
 
 from pytorch_metric_learning.losses import SupConLoss
 
 from slp.config.parser import parse_config
-from slp.tasks.isolated_recognition.config import ContrastiveIsolatedRecognitionTaskConfig
-from slp.tasks.isolated_recognition.data import load_isolated_recognition_datasets
+from slp.config.islr import ContrastiveIsolatedRecognitionTaskConfig
+from slp.datasets.isolated_supervised import load_datasets
 from slp.trainers.contrastive import load_contrastive_isolated_recognition_trainer, ContrastiveIsolatedRecognitionTrainer
 from slp.trainers.linear_evaluation import load_linear_evaluation_trainer
 from slp.tasks.training import run_training
@@ -27,7 +27,7 @@ def launch_contrastive_isolated_recognition_training(config_path):
     config: ContrastiveIsolatedRecognitionTaskConfig = parse_config(config_path, ContrastiveIsolatedRecognitionTaskConfig)
     print(config)
     set_seed(config.experiment.seed)
-    datasets, dataloaders = load_isolated_recognition_datasets(config.datasets)
+    datasets, dataloaders = load_datasets(config.datasets)
     assert "training" in datasets, "Missing training dataset."
     assert "validation" in datasets, "Missing validation dataset."
     assert "testing" in datasets, "Missing testing dataset."

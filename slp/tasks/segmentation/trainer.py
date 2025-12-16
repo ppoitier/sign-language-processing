@@ -1,7 +1,6 @@
-import torch
 from torch import nn, optim
 
-from slp.config.templates.training import TrainingConfig
+from slp.config.training import TrainingConfig
 from slp.metrics.segmentation.frame_based_group import FrameBasedMetrics
 from slp.metrics.segmentation.segment_based_group import SegmentBasedMetrics
 from slp.trainers.base import TrainerBase

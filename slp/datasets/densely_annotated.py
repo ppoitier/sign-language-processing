@@ -7,7 +7,7 @@ from tqdm import tqdm
 
 from slp.codecs.annotations.base import AnnotationCodec
 from slp.codecs.annotations.loading import load_annotation_codec
-from slp.config.templates.data import SegmentationDatasetConfig
+from slp.config.data import SegmentationDatasetConfig
 from slp.data.dataloader import DenselyAnnotatedPoseDataCollator
 from slp.transforms.pose_pipelines import get_pose_pipeline
 from slp.utils.windows import (

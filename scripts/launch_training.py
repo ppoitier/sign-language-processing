@@ -4,9 +4,9 @@ import torch
 torch.set_float32_matmul_precision('high')
 
 from slp.config.parser import parse_config
-from slp.tasks.isolated_recognition.config import IsolatedRecognitionTaskConfig
-from slp.tasks.isolated_recognition.data import load_isolated_recognition_datasets
-from slp.tasks.isolated_recognition.trainer import load_isolated_recognition_trainer
+from slp.config.islr import IsolatedRecognitionTaskConfig
+from slp.data.isolated_supervised import load_isolated_recognition_datasets
+from slp.trainers.islr_trainer import load_isolated_recognition_trainer
 from slp.tasks.training import run_training
 from slp.tasks.testing import run_testing
 from slp.tasks.loggers import load_loggers

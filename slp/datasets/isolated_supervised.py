@@ -8,8 +8,8 @@ from torch import Tensor
 from torch.utils.data import Dataset, DataLoader
 from torchcodec.decoders import VideoDecoder
 
-from slp.config.templates.data import RecognitionDatasetConfig
-from slp.data.dataloader import SignLanguageDataCollator
+from slp.config.data import RecognitionDatasetConfig
+from slp.datasets.dataloader import SignLanguageDataCollator
 from slp.transforms.pose_pipelines import get_pose_pipeline
 from slp.transforms.video_pipelines import get_video_transform_pipeline
 from slp.utils.tar import load_tar_index, load_bytes_from_tar
@@ -183,7 +183,7 @@ class IsolatedSignsRecognitionDataset(Dataset):
 
 def load_dataset(
     config: RecognitionDatasetConfig,
-) -> tuple[IsolatedSignsRecognitionDataset, DataLoader | None]:
+) -> tuple[IsolatedSignsRecognitionDataset, DataLoader | None] | IsolatedSignsRecognitionDataset:
     pose_transforms = None
     video_transform = None
     include_videos = False
@@ -207,7 +207,7 @@ def load_dataset(
         video_gpu_decoding=config.video_gpu_decoding,
     )
     if config.loader is None:
-        return dataset, None
+        return dataset
     loader_config = config.loader
     loader = DataLoader(
         dataset,
@@ -220,3 +220,13 @@ def load_dataset(
         collate_fn=SignLanguageDataCollator(includes_poses=True, pad_poses=False),
     )
     return dataset, loader
+
+
+def load_datasets(dataset_configs: dict[str, RecognitionDatasetConfig]) -> tuple[dict[str, IsolatedSignsRecognitionDataset], dict[str, DataLoader]]:
+    datasets = {}
+    dataloaders = {}
+    for dataset_name, dataset_config in dataset_configs.items():
+        dataset, loader = load_dataset(dataset_config)
+        datasets[dataset_name] = dataset
+        dataloaders[dataset_name] = loader
+    return datasets, dataloaders

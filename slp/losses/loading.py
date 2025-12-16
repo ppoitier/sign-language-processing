@@ -2,7 +2,7 @@ import torch
 from torch import Tensor
 from torch.nn import CrossEntropyLoss
 
-from slp.config.templates.training import TrainingConfig, CriterionConfig
+from slp.config.training import TrainingConfig, CriterionConfig
 from slp.losses.multi_layer_loss import MultiLayerLoss
 from slp.losses.multihead import MultiHeadLoss
 from slp.losses.smoothing import WithSmoothingLoss

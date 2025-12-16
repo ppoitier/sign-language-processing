@@ -1,6 +1,6 @@
 from torch import nn, optim
 
-from slp.config.templates.training import TrainingConfig
+from slp.config.training import TrainingConfig
 from slp.metrics.classification.base import ClassificationMetrics
 from slp.trainers.base import TrainerBase
 from slp.utils.model import count_parameters

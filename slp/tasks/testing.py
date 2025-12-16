@@ -1,9 +1,8 @@
 from torch.utils.data import DataLoader
 import lightning as pl
 from lightning.pytorch.loggers import Logger
-from lightning.pytorch.plugins import BitsandbytesPrecision
 
-from slp.config.templates.experiment import ExperimentConfig
+from slp.config.experiment import ExperimentConfig
 
 
 def run_testing(

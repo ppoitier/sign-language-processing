@@ -3,7 +3,7 @@ from typing import Optional
 
 from pydantic import BaseModel, Field, field_validator
 
-from slp.config.templates.codec import SegmentCodecConfig
+from slp.config.codec import SegmentCodecConfig
 
 
 class DataLoaderConfig(BaseModel):
@@ -35,7 +35,6 @@ class SegmentationDataPreprocessing(ContinuousDataPreprocessing):
 
 class DatasetConfig(BaseModel):
     shards_url: str
-    mode: str = 'test'
     loader: DataLoaderConfig | None = None
     verbose: bool = False
 

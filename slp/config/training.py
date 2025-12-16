@@ -2,7 +2,7 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from slp.config.templates.codec import SegmentCodecConfig
+from slp.config.codec import SegmentCodecConfig
 
 
 class CriterionConfig(BaseModel):

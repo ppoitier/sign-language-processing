@@ -1,10 +1,10 @@
 from typing import Optional
 
 from pydantic import BaseModel
-from slp.config.templates.data import RecognitionDatasetConfig
-from slp.config.templates.experiment import ExperimentConfig
-from slp.config.templates.model import MultiHeadModelConfig, ContrastiveModelConfig
-from slp.config.templates.training import TrainingConfig
+from slp.config.data import RecognitionDatasetConfig
+from slp.config.experiment import ExperimentConfig
+from slp.config.model import MultiHeadModelConfig, ContrastiveModelConfig
+from slp.config.training import TrainingConfig
 
 
 class IsolatedRecognitionTaskConfig(BaseModel):

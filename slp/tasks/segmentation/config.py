@@ -1,10 +1,10 @@
 from typing import Optional
 
-from slp.config.templates.model import MultiHeadModelConfig
-from slp.config.templates.task import TaskConfig
-from slp.config.templates.experiment import ExperimentConfig
-from slp.config.templates.data import SegmentationDatasetConfig
-from slp.config.templates.training import SegmentationTrainingConfig
+from slp.config.model import MultiHeadModelConfig
+from slp.config.task import TaskConfig
+from slp.config.experiment import ExperimentConfig
+from slp.config.data import SegmentationDatasetConfig
+from slp.config.training import SegmentationTrainingConfig
 
 
 class SegmentationTaskConfig(TaskConfig):

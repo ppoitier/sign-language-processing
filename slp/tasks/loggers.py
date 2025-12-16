@@ -3,7 +3,7 @@ from datetime import datetime
 
 from lightning.pytorch.loggers import Logger, TensorBoardLogger, CSVLogger, MLFlowLogger
 
-from slp.config.templates.experiment import ExperimentConfig
+from slp.config.experiment import ExperimentConfig
 
 
 def load_loggers(experiment_config: ExperimentConfig, prefix: str = ''):

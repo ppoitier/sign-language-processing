@@ -7,12 +7,11 @@ from lightning.pytorch.callbacks import (
     LearningRateMonitor,
     EarlyStopping,
 )
-from lightning.pytorch.loggers import Logger, TensorBoardLogger, CSVLogger, MLFlowLogger
-from lightning.pytorch.plugins import BitsandbytesPrecision
+from lightning.pytorch.loggers import Logger
 from torch.utils.data import DataLoader
 
-from slp.config.templates.experiment import ExperimentConfig
-from slp.config.templates.training import TrainingConfig
+from slp.config.experiment import ExperimentConfig
+from slp.config.training import TrainingConfig
 
 
 def run_training(

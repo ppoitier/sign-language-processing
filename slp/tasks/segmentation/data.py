@@ -1,7 +1,7 @@
 from torch.utils.data import DataLoader
 
 from slp.data.densely_annotated import load_dataset, DenselyAnnotatedSLDataset
-from slp.config.templates.data import SegmentationDatasetConfig
+from slp.config.data import SegmentationDatasetConfig
 
 
 def load_segmentation_datasets(configs: dict[str, SegmentationDatasetConfig]) -> tuple[dict[str, DenselyAnnotatedSLDataset], dict[str, DataLoader]]:
