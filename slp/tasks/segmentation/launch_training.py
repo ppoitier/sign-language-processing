@@ -3,7 +3,8 @@ import click
 
 import torch
 import numpy as np
-torch.set_float32_matmul_precision('medium')
+
+torch.set_float32_matmul_precision("medium")
 
 from slp.tasks.loggers import load_loggers
 from slp.core.parser import parse_config
@@ -15,7 +16,7 @@ from slp.tasks.testing import run_testing
 from slp.utils.random import set_seed
 
 from slp.nn.loading import load_model_architecture
-from slp.nn.losses.loading import load_criterion
+from slp.nn.losses.old.loading import load_criterion
 
 
 def save_logits(lightning_module, config: SegmentationTaskConfig):
@@ -44,23 +45,23 @@ def launch_segmentation_training(config_path):
     assert "testing" in datasets, "Missing testing dataset."
 
     model = load_model_architecture(config.model)
-    criterion = load_criterion(datasets['training'], config.training)
+    criterion = load_criterion(datasets["training"], config.training)
     trainer = load_segmentation_trainer(model, criterion, config.training)
 
     lightning_module, best_checkpoint_path = run_training(
-        training_dataloader=dataloaders['training'],
-        validation_dataloader=dataloaders['validation'],
+        training_dataloader=dataloaders["training"],
+        validation_dataloader=dataloaders["validation"],
         lightning_module=trainer,
         experiment_config=config.experiment,
         training_config=config.training,
-        loggers=load_loggers(config.experiment, prefix='train/'),
+        loggers=load_loggers(config.experiment, prefix="train/"),
     )
     run_testing(
         checkpoint_path=best_checkpoint_path,
-        testing_dataloader=dataloaders['testing'],
+        testing_dataloader=dataloaders["testing"],
         lightning_module=lightning_module,
         experiment_config=config.experiment,
-        loggers=load_loggers(config.experiment, 'test/'),
+        loggers=load_loggers(config.experiment, "test/"),
     )
     save_logits(lightning_module, config)
 

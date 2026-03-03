@@ -30,8 +30,6 @@ class Registry:
             )
         return self._obj_map[name]
 
-TARGET_REGISTRY = Registry("target")
-
 BACKBONE_REGISTRY = Registry("backbone")
 NECK_REGISTRY = Registry("neck")
 HEAD_REGISTRY = Registry("head")

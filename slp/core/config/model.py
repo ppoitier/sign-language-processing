@@ -1,25 +1,27 @@
-from typing import Optional, Union
+from typing import Any, Optional, OrderedDict
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class ModelConfig(BaseModel):
     name: str
-    kwargs: dict = dict()
+    kwargs: dict[str, Any] = Field(default_factory=dict)
     checkpoint_path: Optional[str] = None
 
 
 class HeadConfig(ModelConfig):
-    in_channels_range: Union[tuple[int, Optional[int]], list[tuple[int, Optional[int]]]] = (0, None)
+    n_channels: int
+
+
+class HydraConfig(ModelConfig):
+    backbone: ModelConfig
+    neck: Optional[ModelConfig] = None
+    heads: OrderedDict[str, HeadConfig]
+    multi_layer: bool = True
+    loss_on_all_stages: bool = True
 
 
 class ContrastiveModelConfig(BaseModel):
     backbone: ModelConfig
     projector: ModelConfig
     linear_evaluation_head: HeadConfig
-
-
-class HydraConfig(ModelConfig):
-    backbone: ModelConfig
-    neck: Optional[ModelConfig] = None
-    heads: dict[str, HeadConfig]

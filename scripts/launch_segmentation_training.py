@@ -1,13 +1,24 @@
 from pprint import pprint
+from tqdm import tqdm
 
 from slp.core.parser import parse_config
 from slp.core.config.experiment import SegmentationTaskConfig
+from slp.datasets.loading import load_continuous_datasets_and_loaders
+from slp.nn.model_builder import build_hydra_model
+from slp.utils.random import set_seed
+
 
 def launch_segmentation_training(config_path):
     config: SegmentationTaskConfig = parse_config(config_path, SegmentationTaskConfig)
     pprint(config)
 
-    # set_seed(config.experiment.seed)
+    selected_seed = set_seed(config.experiment.seed)
+    print("Using seed: ", selected_seed)
+
+    datasets, dataloaders = load_continuous_datasets_and_loaders(config.datasets)
+    print(datasets.keys())
+
+    build_hydra_model(config.model)
 
     # datasets, dataloaders = load_segmentation_datasets(config.datasets)
     # assert config.training is not None, "Missing training configuration."
