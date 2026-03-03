@@ -6,7 +6,7 @@ import numpy as np
 torch.set_float32_matmul_precision('medium')
 
 from slp.tasks.loggers import load_loggers
-from slp.config.parser import parse_config
+from slp.core.parser import parse_config
 from slp.tasks.segmentation.config import SegmentationTaskConfig
 from slp.tasks.segmentation.data import load_segmentation_datasets
 from slp.tasks.segmentation.trainer import load_segmentation_trainer
@@ -15,7 +15,7 @@ from slp.tasks.testing import run_testing
 from slp.utils.random import set_seed
 
 from slp.nn.loading import load_model_architecture
-from slp.losses.loading import load_criterion
+from slp.nn.losses.loading import load_criterion
 
 
 def save_logits(lightning_module, config: SegmentationTaskConfig):

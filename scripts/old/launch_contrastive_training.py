@@ -6,10 +6,10 @@ torch.set_float32_matmul_precision('high')
 
 from pytorch_metric_learning.losses import SupConLoss
 
-from slp.config.parser import parse_config
-from slp.config.islr import ContrastiveIsolatedRecognitionTaskConfig
+from slp.core.parser import parse_config
+from slp.core.config.islr import ContrastiveIsolatedRecognitionTaskConfig
 from slp.datasets.isolated_supervised import load_datasets
-from slp.trainers.contrastive import load_contrastive_isolated_recognition_trainer, ContrastiveIsolatedRecognitionTrainer
+from slp.trainers.contrastive import load_contrastive_isolated_recognition_trainer
 from slp.trainers.linear_evaluation import load_linear_evaluation_trainer
 from slp.tasks.training import run_training
 from slp.tasks.testing import run_testing

@@ -20,5 +20,5 @@ def _parse_config_to_dict(yaml_filepath: str | Path) -> dict:
 
 def parse_config(yaml_filepath: str | Path, pydantic_class):
     config_dict = _parse_config_to_dict(yaml_filepath)
-    return pydantic_class.model_validate(config_dict)
+    return pydantic_class.model_validate(config_dict, extra='forbid')
 

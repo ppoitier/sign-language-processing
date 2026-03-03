@@ -1,7 +1,10 @@
 import torch
 from torch import nn, Tensor
 
+from slp.core.registry import CRITERION_REGISTRY
 
+
+@CRITERION_REGISTRY.register()
 class GeneralizedIoU(nn.Module):
     def __init__(
         self,

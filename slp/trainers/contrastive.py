@@ -2,7 +2,7 @@ from torch import nn, optim
 
 from slp.trainers.base import TrainerBase
 from slp.schedulers.cosine_annealing_with_linear_warmup import create_warmup_plateau_cosine_scheduler
-from slp.config.training import TrainingConfig
+from slp.core.config.training import TrainingConfig
 from slp.utils.model import count_parameters
 
 

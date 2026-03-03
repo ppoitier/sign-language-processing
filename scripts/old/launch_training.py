@@ -3,8 +3,8 @@ import click
 import torch
 torch.set_float32_matmul_precision('high')
 
-from slp.config.parser import parse_config
-from slp.config.islr import IsolatedRecognitionTaskConfig
+from slp.core.parser import parse_config
+from slp.core.config.islr import IsolatedRecognitionTaskConfig
 from slp.data.isolated_supervised import load_isolated_recognition_datasets
 from slp.trainers.islr_trainer import load_isolated_recognition_trainer
 from slp.tasks.training import run_training
@@ -13,7 +13,7 @@ from slp.tasks.loggers import load_loggers
 from slp.utils.random import set_seed
 
 from slp.nn.loading import load_model_architecture
-from slp.losses.loading import load_criterion
+from slp.nn.losses.loading import load_criterion
 
 
 @click.command()

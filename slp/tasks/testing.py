@@ -2,7 +2,7 @@ from torch.utils.data import DataLoader
 import lightning as pl
 from lightning.pytorch.loggers import Logger
 
-from slp.config.experiment import ExperimentConfig
+from slp.core.config.experiment import ExperimentConfig
 
 
 def run_testing(

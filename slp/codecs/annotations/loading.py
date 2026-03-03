@@ -1,4 +1,4 @@
-from slp.config.data import SegmentCodecConfig
+from slp.core.config.data import SegmentCodecConfig
 from slp.codecs.annotations.actionness import ActionnessCodec
 from slp.codecs.annotations.boundaries import BoundariesCodec
 from slp.codecs.annotations.offsets import OffsetsCodec

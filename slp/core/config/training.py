@@ -2,28 +2,29 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from slp.config.codec import SegmentCodecConfig
+from slp.core.config.codec import SegmentCodecConfig
 
 
 class CriterionConfig(BaseModel):
     name: str
     kwargs: dict = {}
-    n_classes: int = 2
+    n_classes: Optional[int] = None
     use_weights: bool = False
 
 
 class TrainingConfig(BaseModel):
-    input_features: str = 'poses'
-    criterion: dict[str, CriterionConfig]
     max_epochs: int
     n_warmup_epochs: Optional[int] = None
+
+    criterion: dict[str, CriterionConfig]
     learning_rate: float
-    is_output_multilayer: bool = False
-    gradient_clipping: float = 0.0
     early_stopping_patience: int = 10
+    gradient_clipping: float = 0.0
+    overfit_one_batch: bool = False
+
     checkpoint_path: Optional[str] = None
     n_classes: Optional[int] = None
-    overfit_one_batch: bool = False
+    is_output_multilayer: bool = False
 
 
 class SegmentationTrainingConfig(TrainingConfig):

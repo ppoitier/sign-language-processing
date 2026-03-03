@@ -2,13 +2,13 @@ import torch
 from torch import Tensor
 from torch.nn import CrossEntropyLoss
 
-from slp.config.training import TrainingConfig, CriterionConfig
-from slp.losses.multi_layer_loss import MultiLayerLoss
-from slp.losses.multihead import MultiHeadLoss
-from slp.losses.smoothing import WithSmoothingLoss
-from slp.losses.generalized_iou import GeneralizedIoU
-from slp.losses.repeated_per_frame import RepeatedPerFrameLoss
-from slp.losses.focal_loss import FocalLoss
+from slp.core.config.training import TrainingConfig, CriterionConfig
+from slp.nn.losses.multi_layer_loss import MultiLayerLoss
+from slp.nn.losses.multihead import MultiHeadLoss
+from slp.nn.losses.smoothing import WithSmoothingLoss
+from slp.nn.losses.generalized_iou import GeneralizedIoU
+from slp.nn.losses.repeated_per_frame import RepeatedPerFrameLoss
+from slp.nn.losses.focal_loss import FocalLoss
 
 
 def load_criterion_by_id(criterion_id: str, kwargs, weights: None | Tensor = None):

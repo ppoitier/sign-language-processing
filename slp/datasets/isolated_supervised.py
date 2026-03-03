@@ -8,7 +8,7 @@ from torch import Tensor
 from torch.utils.data import Dataset, DataLoader
 from torchcodec.decoders import VideoDecoder
 
-from slp.config.data import RecognitionDatasetConfig
+from slp.core.config.data import RecognitionDatasetConfig
 from slp.datasets.dataloader import SignLanguageDataCollator
 from slp.transforms.pose_pipelines import get_pose_pipeline
 from slp.transforms.video_pipelines import get_video_transform_pipeline

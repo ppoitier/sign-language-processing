@@ -10,8 +10,8 @@ from lightning.pytorch.callbacks import (
 from lightning.pytorch.loggers import Logger
 from torch.utils.data import DataLoader
 
-from slp.config.experiment import ExperimentConfig
-from slp.config.training import TrainingConfig
+from slp.core.config.experiment import ExperimentConfig
+from slp.core.config.training import TrainingConfig
 
 
 def run_training(

@@ -1,13 +1,13 @@
 from torch import nn
 
-from slp.config.model import MultiHeadModelConfig, HeadConfig, ModelConfig
-from slp.nn.blocks.tcn.tcn import MultiStageTCN
+from slp.core.config.model import MultiHeadModelConfig, HeadConfig, ModelConfig
+from slp.nn.backbones.tcn import MultiStageTCN
 from slp.nn.blocks.i3d.original import InceptionI3d
 from slp.nn.model_with_heads import MultiHeadModel, Head
 from slp.nn.projectors.mlp_block import ProjectionHead
 from slp.nn.pose_transformer import PoseTransformer
-from slp.nn.backbones.resnet_3d import ResNet_3d
-from slp.nn.backbones.resnet_2d import ResNet_2d
+from slp.nn.backbones.old.resnet_3d import ResNet_3d
+from slp.nn.backbones.old.resnet_2d import ResNet_2d
 from slp.nn.blocks.transformers.vit import PoseViT
 
 
