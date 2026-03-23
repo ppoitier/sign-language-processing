@@ -1,10 +1,12 @@
 from pprint import pprint
+import torch
 from tqdm import tqdm
 
 from slp.core.parser import parse_config
 from slp.core.config.experiment import SegmentationTaskConfig
 from slp.datasets.loading import load_continuous_datasets_and_loaders
 from slp.nn.model_builder import build_hydra_model
+from slp.nn.losses.loading import build_multi_layer_loss
 from slp.utils.random import set_seed
 
 
@@ -18,7 +20,20 @@ def launch_segmentation_training(config_path):
     datasets, dataloaders = load_continuous_datasets_and_loaders(config.datasets)
     print(datasets.keys())
 
-    build_hydra_model(config.model)
+    model = build_hydra_model(config.model)
+    print(model)
+
+    criterion = build_multi_layer_loss(config.training)
+    print(criterion)
+
+    x = torch.randn(16, 130, 3500)
+    y = torch.zeros(16, 3500).long()
+    mask = torch.ones(16, 1, 3500)
+    logits = model(x, mask)
+    print(logits.keys(), len(logits['classification']), logits['classification'][0].shape)
+
+    loss = criterion['classification'](logits['classification'], y)
+    print(loss)
 
     # datasets, dataloaders = load_segmentation_datasets(config.datasets)
     # assert config.training is not None, "Missing training configuration."
