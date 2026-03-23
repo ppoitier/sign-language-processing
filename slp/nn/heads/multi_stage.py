@@ -3,6 +3,15 @@ from typing import Iterable
 from torch import nn, Tensor
 
 
+class SingleStageHead(nn.Module):
+    def __init__(self, module):
+        super().__init__()
+        self.module = module
+
+    def forward(self, feats):
+        return [self.module(feats[-1])]
+
+
 class SharedMultiStageHead(nn.Module):
     """
     A multi-stage head wrapper where weights are shared across all stages.

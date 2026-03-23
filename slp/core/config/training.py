@@ -10,13 +10,14 @@ class CriterionConfig(BaseModel):
     kwargs: dict = {}
     n_classes: Optional[int] = None
     use_weights: bool = False
+    multi_layer: bool = False
 
 
 class TrainingConfig(BaseModel):
     max_epochs: int
     n_warmup_epochs: Optional[int] = None
 
-    criterion: dict[str, CriterionConfig]
+    loss_functions: dict[str, CriterionConfig]
     learning_rate: float
     early_stopping_patience: int = 10
     gradient_clipping: float = 0.0
