@@ -30,8 +30,12 @@ class Registry:
             )
         return self._obj_map[name]
 
+
 BACKBONE_REGISTRY = Registry("backbone")
 NECK_REGISTRY = Registry("neck")
 HEAD_REGISTRY = Registry("head")
 
 CRITERION_REGISTRY = Registry("criterion")
+
+POSE_TRANSFORM_REGISTRY = Registry("pose-transform")
+VIDEO_TRANSFORM_REGISTRY = Registry("video-transform")

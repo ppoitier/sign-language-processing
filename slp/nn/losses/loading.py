@@ -7,7 +7,7 @@ from slp.nn.losses.multi_layer import MultiLayerLoss
 from slp.nn.losses.multi_task import MultiTaskLoss
 
 
-def build_multi_layer_loss(
+def build_multi_layer_criterion(
     config: TrainingConfig, weights: dict[str, Tensor] | None = None
 ) -> MultiTaskLoss:
     """

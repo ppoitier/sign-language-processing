@@ -1,13 +1,15 @@
 from pprint import pprint
-import torch
-from tqdm import tqdm
 
 from slp.core.parser import parse_config
 from slp.core.config.experiment import SegmentationTaskConfig
 from slp.datasets.loading import load_continuous_datasets_and_loaders
 from slp.nn.model_builder import build_hydra_model
-from slp.nn.losses.loading import build_multi_layer_loss
+from slp.nn.losses.loading import build_multi_layer_criterion
 from slp.utils.random import set_seed
+from slp.trainers.segmentation import load_segmentation_trainer
+from slp.decoders.argmax import ArgmaxDecoder
+from slp.training import run_training
+from slp.testing import run_testing
 
 
 def launch_segmentation_training(config_path):
@@ -17,50 +19,42 @@ def launch_segmentation_training(config_path):
     selected_seed = set_seed(config.experiment.seed)
     print("Using seed: ", selected_seed)
 
+    print("Loading datasets...")
     datasets, dataloaders = load_continuous_datasets_and_loaders(config.datasets)
     print(datasets.keys())
 
+    print("Building model...")
     model = build_hydra_model(config.model)
     print(model)
 
-    criterion = build_multi_layer_loss(config.training)
+    print("Building criterion...")
+    criterion = build_multi_layer_criterion(config.training)
     print(criterion)
 
-    x = torch.randn(16, 130, 3500)
-    y = torch.zeros(16, 3500).long()
-    mask = torch.ones(16, 1, 3500)
-    logits = model(x, mask)
-    print(logits.keys(), len(logits['classification']), logits['classification'][0].shape)
+    print("Loading segmentation trainer...")
+    lightning_module = load_segmentation_trainer(
+        model=model,
+        criterion=criterion,
+        training_config=config.training,
+        segment_decoder=ArgmaxDecoder(),
+    )
 
-    loss = criterion['classification'](logits['classification'], y)
-    print(loss)
+    lightning_module, best_checkpoint_path = run_training(
+        training_dataloader=dataloaders['training'],
+        validation_dataloader=dataloaders['validation'],
+        lightning_module=lightning_module,
+        experiment_config=config.experiment,
+        training_config=config.training,
+        monitor_loss='validation/loss',
+    )
 
-    # datasets, dataloaders = load_segmentation_datasets(config.datasets)
-    # assert config.training is not None, "Missing training configuration."
-    # assert "training" in datasets, "Missing training dataset."
-    # assert "validation" in datasets, "Missing validation dataset."
-    # assert "testing" in datasets, "Missing testing dataset."
-    #
-    # model = load_model_architecture(config.model)
-    # criterion = load_criterion(datasets['training'], config.training)
-    # trainer = load_segmentation_trainer(model, criterion, config.training)
-    #
-    # lightning_module, best_checkpoint_path = run_training(
-    #     training_dataloader=dataloaders['training'],
-    #     validation_dataloader=dataloaders['validation'],
-    #     lightning_module=trainer,
-    #     experiment_config=config.experiment,
-    #     training_config=config.training,
-    #     loggers=load_loggers(config.experiment, prefix='train/'),
-    # )
-    # run_testing(
-    #     checkpoint_path=best_checkpoint_path,
-    #     testing_dataloader=dataloaders['testing'],
-    #     lightning_module=lightning_module,
-    #     experiment_config=config.experiment,
-    #     loggers=load_loggers(config.experiment, 'test/'),
-    # )
-    # save_logits(lightning_module, config)
+    run_testing(
+        checkpoint_path=best_checkpoint_path,
+        testing_dataloader=dataloaders['testing'],
+        lightning_module=lightning_module,
+        experiment_config=config.experiment,
+        # loggers=load_loggers(config.experiment, 'test/'),
+    )
 
 
 if __name__ == "__main__":

@@ -2,21 +2,50 @@ experiment:
   id: "actionness_with_weights"
   task: "segmentation"
   variant: "lsfb"
-  output_dir: "/gpfs/scratch/acad/lsfb/out/slp"
+  output_dir: "E:/outputs/tmp"
   seed: 42
-  debug: true
+  debug: false
+  show_progress_bar: true
 
 
 datasets:
-  example:
-    shards_url: "file:E:/datasets/sign-language/lsfb-cont/shards/shard_000000.tar"
+  training:
+    shards_url: "file:E:/datasets/sign-language/lsfb-cont/shards/annotated/shard_000000.tar"
     dataloader:
       batch_size: 16
       shuffle: true
       n_workers: 0
     preprocessing:
-      targets: ['temporal-segmentation', 'temporal-offsets']
-      pose_transform_pipeline: 'none'
+      targets: [ 'temporal-segmentation', 'temporal-offsets', 'segments' ]
+      pose_transforms: [ { name: 'flatten2d' } ]
+      use_windows: true
+      window_size: 3500
+      window_stride: 2800
+      max_empty_windows: 0
+
+  validation:
+    shards_url: "file:E:/datasets/sign-language/lsfb-cont/shards/annotated/shard_000000.tar"
+    dataloader:
+      batch_size: 16
+      shuffle: false
+      n_workers: 0
+    preprocessing:
+      targets: [ 'temporal-segmentation', 'temporal-offsets', 'segments' ]
+      pose_transforms: [ { name: 'flatten2d' } ]
+      use_windows: true
+      window_size: 3500
+      window_stride: 2800
+      max_empty_windows: 0
+
+  testing:
+    shards_url: "file:E:/datasets/sign-language/lsfb-cont/shards/annotated/shard_000000.tar"
+    dataloader:
+      batch_size: 16
+      shuffle: false
+      n_workers: 0
+    preprocessing:
+      targets: [ 'temporal-segmentation', 'temporal-offsets', 'segments' ]
+      pose_transforms: [ { name: 'flatten2d' } ]
       use_windows: true
       window_size: 3500
       window_stride: 2800
@@ -88,8 +117,8 @@ training:
 
   loss_functions:
     classification:
-      name: "multi-layer+ce+smoothing"
-      use_weights: true
+      name: "cross-entropy"
+      use_weights: false
       multi_layer: true
   learning_rate: 1e-4
   early_stopping_patience: 10
@@ -97,8 +126,9 @@ training:
   n_classes: 2
 
   is_output_multilayer: true
+  overfit_one_batch: true
   use_offsets: false
 
   heads_to_targets:
-    classification: frame_labels
+    classification: temporal-segmentation
   segment_decoder: { name: 'actionness' }

@@ -1,6 +1,9 @@
 from pydantic import BaseModel, Field
 
 
+from slp.core.config.transform import TransformConfig
+
+
 class DataLoaderConfig(BaseModel):
     batch_size: int = 16
     shuffle: bool = True
@@ -10,8 +13,8 @@ class DataLoaderConfig(BaseModel):
 
 class DataPreprocessing(BaseModel):
     targets: list[str] = Field(default_factory=list)
-    pose_transform_pipeline: str = 'none'
-    video_transform_pipeline: str = 'none'
+    pose_transforms: list[TransformConfig] | None = None
+    video_transforms: list[TransformConfig] | None = None
 
 
 class DatasetConfig(BaseModel):

@@ -17,7 +17,7 @@ class MultiTaskLoss(nn.Module):
 
         for task_name, criterion in self.criteria.items():
             if task_name in predictions:
-                losses[task_name] = criterion(predictions[task_name], targets)
+                losses[task_name] = criterion(predictions[task_name], targets[task_name])
 
         losses["total_loss"] = sum(losses.values())
         return losses

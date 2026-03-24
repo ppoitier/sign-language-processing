@@ -1,4 +1,4 @@
-from torch import nn, optim
+from torch import nn, optim, Tensor
 
 from slp.trainers.base import TrainerBase
 
@@ -36,26 +36,30 @@ class GenericTrainer(TrainerBase):
         self.test_logits: dict = {}
         self.save_hyperparameters(ignore=["model", "criterion"])
 
-    def forward_step(self, batch: dict) -> tuple[dict, nn.Module, int]:
+    def forward_step(self, batch: dict) -> tuple[dict, Tensor, dict, int]:
         """Run model forward and compute loss.
 
         Returns:
             raw_logits: dict of head_name -> logits (possibly multi-layer).
-            loss: scalar loss.
+            loss: scalar total loss.
+            task_losses: dict of task_name -> individual task loss.
             batch_size: int.
         """
         features, masks, targets = batch["poses"], batch["masks"], batch["targets"]
         batch_size = features.size(0)
+        features = features.permute(0, 2, 1).float().contiguous()
+        masks = masks.unsqueeze(1).bool().contiguous()
 
         raw_logits = self.model(features, masks)
-        loss = self.criterion(
+        losses = self.criterion(
             raw_logits,
             {
                 head_name: targets[target_name]
                 for head_name, target_name in self.heads_to_targets.items()
             },
         )
-        return raw_logits, loss, batch_size
+        loss = losses["total_loss"]
+        return raw_logits, loss, losses, batch_size
 
     def extract_eval_logits(self, raw_logits: dict) -> dict:
         """Take the last layer from each head if the model is multi-layer."""
@@ -90,7 +94,7 @@ class GenericTrainer(TrainerBase):
         instance_ids = batch["id"]
         starts = batch["start"]
         ends = batch["end"]
-        lengths = batch["length"]
+        lengths = batch["lengths"]
 
         for idx in range(len(instance_ids)):
             key = f"{instance_ids[idx]}_{starts[idx]}_{ends[idx]}"
@@ -104,8 +108,18 @@ class GenericTrainer(TrainerBase):
             }
 
     def prediction_step(self, batch: dict, mode: str):
-        raw_logits, loss, batch_size = self.forward_step(batch)
-        self.log(f"{mode}/loss", loss, on_step=True, on_epoch=True, batch_size=batch_size)
+        raw_logits, loss, task_losses, batch_size = self.forward_step(batch)
+        self.log(
+            f"{mode}/loss", loss, on_step=True, on_epoch=True, batch_size=batch_size
+        )
+        for task_name, task_loss in task_losses.items():
+            self.log(
+                f"{mode}/{task_name}_loss",
+                task_loss,
+                on_step=True,
+                on_epoch=True,
+                batch_size=batch_size,
+            )
 
         eval_logits = self.extract_eval_logits(raw_logits)
         metrics = self.compute_metrics(eval_logits, batch, mode)

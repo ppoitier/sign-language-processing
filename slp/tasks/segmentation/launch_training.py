@@ -11,8 +11,8 @@ from slp.core.parser import parse_config
 from slp.tasks.segmentation.config import SegmentationTaskConfig
 from slp.tasks.segmentation.data import load_segmentation_datasets
 from slp.tasks.segmentation.trainer import load_segmentation_trainer
-from slp.tasks.training import run_training
-from slp.tasks.testing import run_testing
+from slp.training import run_training
+from slp.testing import run_testing
 from slp.utils.random import set_seed
 
 from slp.nn.loading import load_model_architecture
