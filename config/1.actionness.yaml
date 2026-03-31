@@ -1,0 +1,100 @@
+experiment:
+  id: "actionness_with_weights"
+  task: "segmentation2"
+  variant: "lsfb"
+  output_dir: "F:/outputs/tmp"
+  seed: random
+  debug: false
+  show_progress_bar: false
+
+
+datasets:
+  training:
+    shards_url: "file:F:/datasets/sign-language/lsfb-cont/shards/annotated/shard_{000000..000005}.tar"
+    dataloader:
+      batch_size: 16
+      shuffle: true
+      n_workers: 0
+    preprocessing:
+      targets: [ 'temporal-segmentation', 'temporal-offsets', 'segments' ]
+      pose_transforms: [ { name: 'flatten2d' } ]
+      use_windows: true
+      window_size: 3500
+      window_stride: 2800
+      max_empty_windows: 0
+
+  validation:
+    shards_url: "file:F:/datasets/sign-language/lsfb-cont/shards/annotated/shard_{000006..000007}.tar"
+    dataloader:
+      batch_size: 16
+      shuffle: false
+      n_workers: 0
+    preprocessing:
+      targets: [ 'temporal-segmentation', 'temporal-offsets', 'segments' ]
+      pose_transforms: [ { name: 'flatten2d' } ]
+      use_windows: true
+      window_size: 3500
+      window_stride: 2800
+      max_empty_windows: 0
+
+  testing:
+    shards_url: "file:F:/datasets/sign-language/lsfb-cont/shards/annotated/shard_{000006..000007}.tar"
+    dataloader:
+      batch_size: 16
+      shuffle: false
+      n_workers: 0
+    preprocessing:
+      targets: [ 'temporal-segmentation', 'temporal-offsets', 'segments' ]
+      pose_transforms: [ { name: 'flatten2d' } ]
+      use_windows: true
+      window_size: 3500
+      window_stride: 2800
+      max_empty_windows: 0
+
+
+model:
+  name: 'hydra'
+#  backbone:
+#    name: "ms-tcn"
+#    kwargs:
+#      in_channels: 130
+#      out_channels: 2
+#      hidden_channels: 64
+#      n_stages: 4
+#      n_layers: 10
+  backbone:
+    name: "rnn"
+    kwargs:
+      rnn_type: "gru"
+      in_channels: 130
+      out_channels: 2
+      hidden_channels: 128
+      bidirectional: true
+      num_layers: 4
+  heads:
+    classification:
+      name: "identity"
+      n_channels: 2
+
+
+training:
+  max_epochs: 300
+  n_warmup_epochs: 50
+
+  loss_functions:
+    classification:
+      name: "cross-entropy"
+      use_weights: false
+      multi_layer: true
+  learning_rate: 1e-4
+  early_stopping_patience: 10
+
+  n_classes: 2
+
+  is_output_multilayer: true
+  overfit_one_batch: false
+  use_offsets: false
+
+  heads_to_targets:
+    classification: temporal-segmentation
+  segment_decoder: { name: 'actionness' }
