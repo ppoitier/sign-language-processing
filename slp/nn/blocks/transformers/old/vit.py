@@ -3,7 +3,7 @@ from torch import nn, Tensor
 from torch.nn.functional import pad
 from einops import repeat
 
-from slp.nn.blocks.positional_encoding.original import PositionalEncoding
+from slp.nn.blocks.positional_encoding.sinusoidal import PositionalEncoding
 
 
 class InputEmbedding(nn.Module):

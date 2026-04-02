@@ -1,7 +1,7 @@
 import torch
 from torch import nn, Tensor, BoolTensor
 
-from slp.nn.blocks.positional_encoding.original import PositionalEncoding
+from slp.nn.blocks.positional_encoding.sinusoidal import PositionalEncoding
 
 
 class PoseTransformer(nn.Module):

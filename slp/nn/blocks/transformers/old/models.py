@@ -1,7 +1,7 @@
 from torch import nn, Tensor
 
 from slp.nn.multi_stage import MultiStageModel
-from slp.nn.blocks.positional_encoding.original import PositionalEncoding
+from slp.nn.blocks.positional_encoding.sinusoidal import PositionalEncoding
 from slp.nn.blocks.transformers.blocks import TransformerBlock
 
 

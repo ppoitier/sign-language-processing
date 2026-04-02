@@ -1,7 +1,6 @@
 import torch
 import torch.nn as nn
 import math
-import matplotlib.pyplot as plt
 
 
 class PositionalEncoding(nn.Module):
@@ -9,28 +8,30 @@ class PositionalEncoding(nn.Module):
         super().__init__()
         position = torch.arange(max_length).unsqueeze(-1)
         div_term = torch.exp(torch.arange(0, in_channels, 2) * (-math.log(10000.0) / in_channels)).unsqueeze(0)
-        pe = torch.zeros(1, max_length, in_channels)
-        pe[0, :, 0::2] = torch.sin(position * div_term)
-        pe[0, :, 1::2] = torch.cos(position * div_term)
+        pe = torch.zeros(1, in_channels, max_length)
+        pe[0, 0::2, :] = torch.sin(position * div_term).T
+        pe[0, 1::2, :] = torch.cos(position * div_term).T
         self.register_buffer('pe', pe)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
         Args:
-            x: Tensor of shape (N, L, C_in)
+            x: Tensor of shape (N, C_in, )
         """
-        return x + self.pe[:, : x.size(1)]
+        return x + self.pe[:, :, : x.size(2)]
 
 
 if __name__ == "__main__":
-    N, C_in, L = 1, 320, 1024
-    pose_encoder = PositionalEncoding(in_channels=C_in, max_length=L)
+    import matplotlib.pyplot as plt
 
-    example_x = torch.zeros(N, C_in, L)
+    N, C_in, T = 1, 320, 1024
+    pose_encoder = PositionalEncoding(in_channels=C_in, max_length=T)
+
+    example_x = torch.zeros(N, C_in, T)
     example_y = pose_encoder(example_x)
 
     plt.figure(figsize=(6, 4))
-    plt.title(f"Positional Encoding ($C_{{in}}={C_in}, L={L}$)")
+    plt.title(f"Positional Encoding ($C_{{in}}={C_in}, T={T}$)")
     plt.xlabel("Sequence Length")
     plt.ylabel("Channels")
 
