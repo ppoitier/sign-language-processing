@@ -58,4 +58,4 @@ def launch_segmentation_training(config_path):
 
 
 if __name__ == "__main__":
-    launch_segmentation_training("../config/1.actionness_with_weights.yaml")
+    launch_segmentation_training("../config/1.actionness.yaml")

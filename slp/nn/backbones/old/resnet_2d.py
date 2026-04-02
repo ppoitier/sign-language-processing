@@ -8,29 +8,41 @@ from torchvision.models import (
     ResNet18_Weights,
     resnet152,
     ResNet152_Weights,
+    resnet34,
+    ResNet34_Weights,
+    resnet101,
+    ResNet101_Weights,
 )
 
 
 class ResNet_2d(nn.Module):
     def __init__(
-            self,
-            c_out: int = 500,
-            dropout: float = 0.2,
-            n_layers: int = 50,
-            pretrained: bool = True,
+        self,
+        c_out: int = 500,
+        dropout: float = 0.2,
+        n_layers: int = 50,
+        pretrained: bool = True,
     ):
         super().__init__()
         if n_layers == 18:
-            self.resnet = resnet18(weights=ResNet18_Weights.IMAGENET1K_V1 if pretrained else None)
+            self.resnet = resnet18(
+                weights=ResNet18_Weights.IMAGENET1K_V1 if pretrained else None
+            )
             embed_dim = 512
         elif n_layers == 50:
-            self.resnet = resnet50(weights=ResNet50_Weights.IMAGENET1K_V2 if pretrained else None)
+            self.resnet = resnet50(
+                weights=ResNet50_Weights.IMAGENET1K_V2 if pretrained else None
+            )
             embed_dim = 2048
         elif n_layers == 152:
-            self.resnet = resnet152(weights=ResNet152_Weights.IMAGENET1K_V2 if pretrained else None)
+            self.resnet = resnet152(
+                weights=ResNet152_Weights.IMAGENET1K_V2 if pretrained else None
+            )
             embed_dim = 2048
         else:
-            raise ValueError(f"Invalid number of layers: {n_layers}. Must be 18, 50 or 152.")
+            raise ValueError(
+                f"Invalid number of layers: {n_layers}. Must be 18, 50 or 152."
+            )
         self.resnet.fc = nn.Identity()
         self.dropout = nn.Dropout(dropout)
         self.fc_out = nn.Linear(embed_dim, c_out)

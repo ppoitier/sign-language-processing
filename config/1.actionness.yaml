@@ -1,16 +1,16 @@
 experiment:
   id: "actionness_with_weights"
-  task: "segmentation"
+  task: "segmentation2"
   variant: "lsfb"
-  output_dir: "E:/outputs/tmp"
-  seed: 42
+  output_dir: "F:/outputs/tmp"
+  seed: random
   debug: false
-  show_progress_bar: true
+  show_progress_bar: false
 
 
 datasets:
   training:
-    shards_url: "file:E:/datasets/sign-language/lsfb-cont/shards/annotated/shard_000000.tar"
+    shards_url: "file:F:/datasets/sign-language/lsfb-cont/shards/annotated/shard_{000000..000005}.tar"
     dataloader:
       batch_size: 16
       shuffle: true
@@ -24,7 +24,7 @@ datasets:
       max_empty_windows: 0
 
   validation:
-    shards_url: "file:E:/datasets/sign-language/lsfb-cont/shards/annotated/shard_000000.tar"
+    shards_url: "file:F:/datasets/sign-language/lsfb-cont/shards/annotated/shard_{000006..000007}.tar"
     dataloader:
       batch_size: 16
       shuffle: false
@@ -38,7 +38,7 @@ datasets:
       max_empty_windows: 0
 
   testing:
-    shards_url: "file:E:/datasets/sign-language/lsfb-cont/shards/annotated/shard_000000.tar"
+    shards_url: "file:F:/datasets/sign-language/lsfb-cont/shards/annotated/shard_{000006..000007}.tar"
     dataloader:
       batch_size: 16
       shuffle: false
@@ -54,14 +54,23 @@ datasets:
 
 model:
   name: 'hydra'
+#  backbone:
+#    name: "ms-tcn"
+#    kwargs:
+#      in_channels: 130
+#      out_channels: 2
+#      hidden_channels: 64
+#      n_stages: 4
+#      n_layers: 10
   backbone:
-    name: "ms-tcn"
+    name: "rnn"
     kwargs:
+      rnn_type: "gru"
       in_channels: 130
       out_channels: 2
-      hidden_channels: 64
-      n_stages: 4
-      n_layers: 10
+      hidden_channels: 128
+      bidirectional: true
+      num_layers: 4
   heads:
     classification:
       name: "identity"
@@ -83,7 +92,7 @@ training:
   n_classes: 2
 
   is_output_multilayer: true
-  overfit_one_batch: true
+  overfit_one_batch: false
   use_offsets: false
 
   heads_to_targets:
