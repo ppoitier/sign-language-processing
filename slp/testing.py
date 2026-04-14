@@ -1,6 +1,6 @@
 from torch.utils.data import DataLoader
 import lightning as pl
-from lightning.pytorch.loggers import TensorBoardLogger
+from lightning.pytorch.loggers import Logger
 
 from slp.core.config.experiment import ExperimentConfig
 
@@ -10,18 +10,13 @@ def run_testing(
     testing_dataloader: DataLoader,
     lightning_module: pl.LightningModule,
     experiment_config: ExperimentConfig,
-    # loggers: list[Logger],
+    loggers: list[Logger],
 ):
-    identifier = (
-        f"{experiment_config.task}/{experiment_config.variant}/{experiment_config.id}"
-    )
-    log_dir = f"{experiment_config.output_dir}/logs/{identifier}"
-
     if experiment_config.debug:
         checkpoint_path = None
     lightning_trainer = pl.Trainer(
         fast_dev_run=experiment_config.debug,
-        logger=[TensorBoardLogger(save_dir=log_dir, name='tb')],
+        logger=loggers,
         enable_progress_bar=experiment_config.show_progress_bar,
         # plugins=BitsandbytesPrecision("nf4-dq"),
     )

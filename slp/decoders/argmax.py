@@ -1,9 +1,11 @@
 import torch
 from torch import Tensor
 
+from slp.core.registry import SEGMENT_DECODER_REGISTRY
 from slp.decoders.base import SegmentDecoder
 
 
+@SEGMENT_DECODER_REGISTRY.register("argmax")
 class ArgmaxDecoder(SegmentDecoder):
     """Decodes frame-level classification logits into segments by taking
     the argmax and grouping contiguous runs of non-background classes.

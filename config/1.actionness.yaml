@@ -1,16 +1,15 @@
 experiment:
-  id: "actionness_with_weights"
-  task: "segmentation2"
-  variant: "lsfb"
-  output_dir: "F:/outputs/tmp"
-  seed: random
-  debug: false
+  id: "segmentation"
+  variant: "actionness/ms-tcn"
+  output_dir: "E:/outputs/tmp"
+  seed: 42
+  debug: true
   show_progress_bar: false
 
 
 datasets:
   training:
-    shards_url: "file:F:/datasets/sign-language/lsfb-cont/shards/annotated/shard_{000000..000005}.tar"
+    shards_url: "file:E:/datasets/sign-language/lsfb-cont/shards/annotated/shard_{000000..000005}.tar"
     dataloader:
       batch_size: 16
       shuffle: true
@@ -24,7 +23,7 @@ datasets:
       max_empty_windows: 0
 
   validation:
-    shards_url: "file:F:/datasets/sign-language/lsfb-cont/shards/annotated/shard_{000006..000007}.tar"
+    shards_url: "file:E:/datasets/sign-language/lsfb-cont/shards/annotated/shard_{000006..000007}.tar"
     dataloader:
       batch_size: 16
       shuffle: false
@@ -38,7 +37,7 @@ datasets:
       max_empty_windows: 0
 
   testing:
-    shards_url: "file:F:/datasets/sign-language/lsfb-cont/shards/annotated/shard_{000006..000007}.tar"
+    shards_url: "file:E:/datasets/sign-language/lsfb-cont/shards/annotated/shard_{000006..000007}.tar"
     dataloader:
       batch_size: 16
       shuffle: false
@@ -54,25 +53,28 @@ datasets:
 
 model:
   name: 'hydra'
+  backbone:
+    name: "ms-tcn"
+    kwargs:
+      in_channels: 130
+      out_channels: 4
+      hidden_channels: 64
+      n_stages: 4
+      n_layers: 10
 #  backbone:
-#    name: "ms-tcn"
+#    name: "rnn"
 #    kwargs:
+#      rnn_type: "gru"
 #      in_channels: 130
 #      out_channels: 2
-#      hidden_channels: 64
-#      n_stages: 4
-#      n_layers: 10
-  backbone:
-    name: "rnn"
-    kwargs:
-      rnn_type: "gru"
-      in_channels: 130
-      out_channels: 2
-      hidden_channels: 128
-      bidirectional: true
-      num_layers: 4
+#      hidden_channels: 128
+#      bidirectional: true
+#      num_layers: 4
   heads:
     classification:
+      name: "identity"
+      n_channels: 2
+    regression:
       name: "identity"
       n_channels: 2
 
@@ -86,6 +88,11 @@ training:
       name: "cross-entropy"
       use_weights: false
       multi_layer: true
+    regression:
+      name: "gIoU"
+      use_weights: false
+      multi_layer: true
+
   learning_rate: 1e-4
   early_stopping_patience: 10
 
@@ -93,8 +100,10 @@ training:
 
   is_output_multilayer: true
   overfit_one_batch: false
-  use_offsets: false
+  use_offsets: true
 
   heads_to_targets:
     classification: temporal-segmentation
-  segment_decoder: { name: 'actionness' }
+    regression: temporal-offsets
+
+  segment_decoder: { name: 'offsets' }

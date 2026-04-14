@@ -6,8 +6,9 @@ from slp.datasets.loading import load_continuous_datasets_and_loaders
 from slp.nn.model_builder import build_hydra_model
 from slp.nn.losses.loading import build_multi_layer_criterion
 from slp.utils.random import set_seed
+from slp.utils.loggers import load_loggers
 from slp.trainers.segmentation import load_segmentation_trainer
-from slp.decoders.argmax import ArgmaxDecoder
+from slp.decoders.loading import load_segment_decoder
 from slp.training import run_training
 from slp.testing import run_testing
 
@@ -31,13 +32,21 @@ def launch_segmentation_training(config_path):
     criterion = build_multi_layer_criterion(config.training)
     print(criterion)
 
+    print("Loading segment decoder...")
+    segment_decoder = load_segment_decoder(config.training.segment_decoder)
+
     print("Loading segmentation trainer...")
     lightning_module = load_segmentation_trainer(
         model=model,
         criterion=criterion,
         training_config=config.training,
-        segment_decoder=ArgmaxDecoder(),
+        segment_decoder=segment_decoder,
     )
+
+    exp_config = config.experiment
+    checkpoints_dir = f"{exp_config.output_dir}/checkpoints/{exp_config.id}/{exp_config.variant}"
+    logs_dir = f"{exp_config.output_dir}/logs/{exp_config.id}/{exp_config.variant}"
+    loggers = load_loggers(logs_dir, exp_config)
 
     lightning_module, best_checkpoint_path = run_training(
         training_dataloader=dataloaders['training'],
@@ -45,6 +54,8 @@ def launch_segmentation_training(config_path):
         lightning_module=lightning_module,
         experiment_config=config.experiment,
         training_config=config.training,
+        loggers=loggers,
+        checkpoints_dir=checkpoints_dir,
         monitor_loss='validation/loss',
     )
 
@@ -53,7 +64,7 @@ def launch_segmentation_training(config_path):
         testing_dataloader=dataloaders['testing'],
         lightning_module=lightning_module,
         experiment_config=config.experiment,
-        # loggers=load_loggers(config.experiment, 'test/'),
+        loggers=loggers,
     )
 
 

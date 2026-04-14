@@ -39,11 +39,10 @@ def build_hydra_model(config: HydraConfig) -> HydraModel:
     }
 
     # 4. Build the Channel Splitter
-    split_sections = [head_config.n_channels for head_config in config.heads.values()]
-    multi_task_splitter = TaskChannelSplitter(
-        split_sections=split_sections,
-        heads=heads
-    )
+    task_specs = {
+        name: (cfg.n_channels, heads[name]) for name, cfg in config.heads.items()
+    }
+    multi_task_splitter = TaskChannelSplitter(task_specs=task_specs)
 
     # 5. Wrap in Multi-Stage logic
     if config.multi_layer:

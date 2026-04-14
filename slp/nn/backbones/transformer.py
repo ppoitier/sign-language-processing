@@ -345,6 +345,7 @@ class TransformerQueryReadout(nn.Module):
             mask_mod = and_masks(mask_mod, self.attn_mask_mod)
         enc_block_mask = build_block_mask(
             mask_mod, B=N, H=self.n_heads, Q_LEN=T, KV_LEN=T,
+            device=x.device,
         )
 
         for layer in self.encoder_layers:
@@ -358,6 +359,7 @@ class TransformerQueryReadout(nn.Module):
         cross_block_mask = build_block_mask(
             cross_mask_mod, B=N, H=self.n_heads,
             Q_LEN=self.n_queries, KV_LEN=T,
+            device=x.device,
         )
 
         for layer in self.decoder_layers:

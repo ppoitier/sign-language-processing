@@ -39,3 +39,5 @@ CRITERION_REGISTRY = Registry("criterion")
 
 POSE_TRANSFORM_REGISTRY = Registry("pose-transform")
 VIDEO_TRANSFORM_REGISTRY = Registry("video-transform")
+
+SEGMENT_DECODER_REGISTRY = Registry("segment-decoder")

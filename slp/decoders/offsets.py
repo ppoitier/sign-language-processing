@@ -1,12 +1,14 @@
 import torch
 from torch import Tensor
 
+from slp.core.registry import SEGMENT_DECODER_REGISTRY
 from slp.decoders.base import SegmentDecoder
 from slp.decoders.scoring import ProposalScorer, ActionScorer
 from slp.utils.nms import soft_nms
 from slp.utils.proposals import generate_proposals
 
 
+@SEGMENT_DECODER_REGISTRY.register("offsets")
 class OffsetProposalDecoder(SegmentDecoder):
     """Decodes temporal offset predictions into segments via proposal
     generation and soft-NMS.

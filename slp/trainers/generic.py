@@ -50,6 +50,7 @@ class GenericTrainer(TrainerBase):
         features = features.permute(0, 2, 1).float().contiguous()
         masks = masks.unsqueeze(1).bool().contiguous()
 
+
         raw_logits = self.model(features, masks)
         losses = self.criterion(
             raw_logits,

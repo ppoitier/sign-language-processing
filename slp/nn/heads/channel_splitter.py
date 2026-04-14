@@ -8,17 +8,15 @@ class TaskChannelSplitter(nn.Module):
     resulting chunks to task-specific heads.
 
     Args:
-        split_sections: A list of integers defining the number of channels for each task.
-        heads: A dictionary mapping task names to their respective head modules.
+        task_specs: A dictionary mapping task names to a (n_channels, head_module) tuple.
+            The iteration order of this dict defines the channel slicing order.
     """
 
-    def __init__(self, split_sections: list[int], heads: dict[str, nn.Module]):
+    def __init__(self, task_specs: dict[str, tuple[int, nn.Module]]):
         super().__init__()
-        self.split_sections = split_sections
-        self.heads = nn.ModuleDict(heads)
-
-        if len(self.split_sections) != len(self.heads):
-            raise ValueError("Number of split sections must match the number of heads.")
+        self.task_names = list(task_specs.keys())
+        self.split_sections = [n for n, _ in task_specs.values()]
+        self.heads = nn.ModuleDict({name: head for name, (_, head) in task_specs.items()})
 
     def forward(self, x: Tensor) -> dict[str, Tensor]:
         """
@@ -28,11 +26,5 @@ class TaskChannelSplitter(nn.Module):
         Returns:
             A dictionary mapping task names to their output tensors.
         """
-        # Split along the channel dimension
         splits = torch.split(x, self.split_sections, dim=1)
-
-        outputs = {}
-        for i, (task_name, head_module) in enumerate(self.heads.items()):
-            outputs[task_name] = head_module(splits[i])
-
-        return outputs
+        return {name: self.heads[name](chunk) for name, chunk in zip(self.task_names, splits)}

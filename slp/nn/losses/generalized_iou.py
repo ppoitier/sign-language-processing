@@ -4,12 +4,13 @@ from torch import nn, Tensor
 from slp.core.registry import CRITERION_REGISTRY
 
 
-@CRITERION_REGISTRY.register()
+@CRITERION_REGISTRY.register('gIoU')
 class GeneralizedIoU(nn.Module):
     def __init__(
         self,
         reduction: str = "mean",
         eps: float = 1e-8,
+        weights: Tensor = None,
     ):
         """
         Reference:
@@ -24,8 +25,8 @@ class GeneralizedIoU(nn.Module):
     def forward(self, pred_offsets: Tensor, gt_offsets: Tensor) -> Tensor:
         """
         Args:
-            pred_offsets: tensor of shape (N, 2, L)
-            gt_offsets: tensor of shape (N, 2, L)
+            pred_offsets: tensor of shape (N, 2, T)
+            gt_offsets: tensor of shape (N, 2, T)
         """
         mask = ~(gt_offsets < 0).any(dim=1)
 

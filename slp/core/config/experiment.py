@@ -11,7 +11,6 @@ from slp.core.config.model import HydraConfig
 
 class ExperimentConfig(BaseModel):
     id: str
-    task: str = 'default'
     variant: str = 'default'
 
     output_dir: str

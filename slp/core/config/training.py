@@ -1,8 +1,6 @@
 from typing import Optional
 
-from pydantic import BaseModel
-
-from slp.core.config.codec import SegmentCodecConfig
+from pydantic import BaseModel, Field
 
 
 class CriterionConfig(BaseModel):
@@ -28,7 +26,12 @@ class TrainingConfig(BaseModel):
     is_output_multilayer: bool = False
 
 
+class SegmentDecoderConfig(BaseModel):
+    name: str
+    kwargs: dict = Field(default_factory=dict)
+
+
 class SegmentationTrainingConfig(TrainingConfig):
     use_offsets: bool = False
     heads_to_targets: dict[str, str]
-    segment_decoder: SegmentCodecConfig
+    segment_decoder: SegmentDecoderConfig

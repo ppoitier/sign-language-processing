@@ -23,21 +23,26 @@ class FeaturePyramidNetwork(nn.Module):
     """
     def __init__(
             self,
-            c_in: int,
+            c_in: int | list[int],
             c_out: int,
             n_levels: int,
     ):
         super().__init__()
         self.n_levels = n_levels
 
+        if isinstance(c_in, int):
+            c_in = [c_in] * n_levels
+        elif len(c_in) != n_levels:
+            raise ValueError(f"Expected c_in to have {n_levels} elements, got {len(c_in)}.")
+
         # 1x1 convs to unify channel dimensions across all backbone levels
         self.lateral_convs = nn.ModuleList([
             nn.Conv1d(
-                in_channels=c_in,
+                in_channels=c_in[i],
                 out_channels=c_out,
                 kernel_size=1,
                 bias=False,
-            ) for _ in range(n_levels)
+            ) for i in range(n_levels)
         ])
 
         # 3x3 smoothing convs applied after the top-down addition
