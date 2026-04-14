@@ -8,6 +8,7 @@ class CriterionConfig(BaseModel):
     kwargs: dict = {}
     n_classes: Optional[int] = None
     use_weights: bool = False
+    weight_strategy: str = "inverse"
     multi_layer: bool = False
 
 
@@ -24,6 +25,7 @@ class TrainingConfig(BaseModel):
     checkpoint_path: Optional[str] = None
     n_classes: Optional[int] = None
     is_output_multilayer: bool = False
+    heads_to_targets: dict[str, str]
 
 
 class SegmentDecoderConfig(BaseModel):
@@ -33,5 +35,4 @@ class SegmentDecoderConfig(BaseModel):
 
 class SegmentationTrainingConfig(TrainingConfig):
     use_offsets: bool = False
-    heads_to_targets: dict[str, str]
     segment_decoder: SegmentDecoderConfig

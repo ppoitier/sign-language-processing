@@ -42,11 +42,19 @@ class SegmentationTrainer(GenericTrainer):
         self.segments_target = segments_target
         self.segment_decoder = segment_decoder
 
-        self.frame_metrics = nn.ModuleDict({
-            "training_metrics": FrameBasedMetrics(prefix="training/frames/", n_classes=n_classes),
-            "validation_metrics": FrameBasedMetrics(prefix="validation/frames/", n_classes=n_classes),
-            "testing_metrics": FrameBasedMetrics(prefix="testing/frames/", n_classes=n_classes),
-        })
+        self.frame_metrics = nn.ModuleDict(
+            {
+                "training_metrics": FrameBasedMetrics(
+                    prefix="training/frames/", n_classes=n_classes
+                ),
+                "validation_metrics": FrameBasedMetrics(
+                    prefix="validation/frames/", n_classes=n_classes
+                ),
+                "testing_metrics": FrameBasedMetrics(
+                    prefix="testing/frames/", n_classes=n_classes
+                ),
+            }
+        )
         self.segment_metrics_test = SegmentBasedMetrics(prefix="testing/segments/")
 
         self.save_hyperparameters(ignore=["model", "criterion", "segment_decoder"])
@@ -55,7 +63,7 @@ class SegmentationTrainer(GenericTrainer):
         cls_logits = logits[self.classification_head]
         per_frame_probs = cls_logits.softmax(dim=1)
         frame_targets = batch["targets"][self.frame_labels_target]
-        return self.frame_metrics[f'{mode}_metrics'](per_frame_probs, frame_targets)
+        return self.frame_metrics[f"{mode}_metrics"](per_frame_probs, frame_targets)
 
     def on_test_batch(self, logits: dict, batch: dict, batch_size: int) -> None:
         if self.segment_decoder is None:
@@ -81,7 +89,11 @@ def load_segmentation_trainer(
     if checkpoint_path is not None:
         print("Loading checkpoint:", checkpoint_path)
         return SegmentationTrainer.load_from_checkpoint(
-            checkpoint_path, model=model, criterion=criterion, segment_decoder=segment_decoder, weights_only=False,
+            checkpoint_path=checkpoint_path,
+            model=model,
+            criterion=criterion,
+            segment_decoder=segment_decoder,
+            weights_only=False,
         )
 
     n_classes = training_config.n_classes

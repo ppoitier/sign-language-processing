@@ -11,6 +11,7 @@ from slp.trainers.segmentation import load_segmentation_trainer
 from slp.decoders.loading import load_segment_decoder
 from slp.training import run_training
 from slp.testing import run_testing
+from slp.utils.logits import save_logits
 
 
 def launch_segmentation_training(config_path):
@@ -28,8 +29,10 @@ def launch_segmentation_training(config_path):
     model = build_hydra_model(config.model)
     print(model)
 
+    assert config.training is not None, "Missing training configuration."
+
     print("Building criterion...")
-    criterion = build_multi_layer_criterion(config.training)
+    criterion = build_multi_layer_criterion(config.training, datasets["training"])
     print(criterion)
 
     print("Loading segment decoder...")
@@ -44,29 +47,32 @@ def launch_segmentation_training(config_path):
     )
 
     exp_config = config.experiment
-    checkpoints_dir = f"{exp_config.output_dir}/checkpoints/{exp_config.id}/{exp_config.variant}"
-    logs_dir = f"{exp_config.output_dir}/logs/{exp_config.id}/{exp_config.variant}"
+    checkpoints_dir = f"{exp_config.output_dir}/checkpoints/{exp_config.id}/{exp_config.variant}/{selected_seed}"
+    logs_dir = f"{exp_config.output_dir}/logs/{exp_config.id}/{exp_config.variant}/{selected_seed}"
     loggers = load_loggers(logs_dir, exp_config)
 
     lightning_module, best_checkpoint_path = run_training(
-        training_dataloader=dataloaders['training'],
-        validation_dataloader=dataloaders['validation'],
+        training_dataloader=dataloaders["training"],
+        validation_dataloader=dataloaders["validation"],
         lightning_module=lightning_module,
         experiment_config=config.experiment,
         training_config=config.training,
         loggers=loggers,
         checkpoints_dir=checkpoints_dir,
-        monitor_loss='validation/loss',
+        monitor_loss="validation/loss",
     )
 
     run_testing(
         checkpoint_path=best_checkpoint_path,
-        testing_dataloader=dataloaders['testing'],
+        testing_dataloader=dataloaders["testing"],
         lightning_module=lightning_module,
         experiment_config=config.experiment,
         loggers=loggers,
     )
 
+    logits_dir = f"{exp_config.output_dir}/logits/{exp_config.id}/{exp_config.variant}/{selected_seed}"
+    save_logits(lightning_module.test_logits, logits_dir)
+
 
 if __name__ == "__main__":
-    launch_segmentation_training("../config/1.actionness.yaml")
+    launch_segmentation_training("../config/1.offsets.yaml")

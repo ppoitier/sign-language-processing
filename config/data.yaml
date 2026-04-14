@@ -1,0 +1,45 @@
+datasets:
+  training:
+    shards_url: "file:F:/datasets/sign-language/dgs/shards/shard_{000000..000006}.tar"
+#    shards_url: "file:F:/datasets/sign-language/lsfb-cont/shards/annotated/shard_{000000..000006}.tar"
+    dataloader:
+      batch_size: 32
+      shuffle: true
+      n_workers: 0
+    preprocessing:
+      targets: [ 'temporal-segmentation', 'temporal-offsets', 'segments' ]
+      pose_transforms: [ { name: 'norm+flatten2d' } ]
+      use_windows: true
+      window_size: 3500
+      window_stride: 2800
+      max_empty_windows: 0
+
+  validation:
+    shards_url: "file:F:/datasets/sign-language/dgs/shards/shard_000007.tar"
+#    shards_url: "file:F:/datasets/sign-language/lsfb-cont/shards/annotated/shard_000007.tar"
+    dataloader:
+      batch_size: 32
+      shuffle: false
+      n_workers: 0
+    preprocessing:
+      targets: [ 'temporal-segmentation', 'temporal-offsets', 'segments' ]
+      pose_transforms: [ { name: 'norm+flatten2d' } ]
+      use_windows: true
+      window_size: 3500
+      window_stride: 2800
+      max_empty_windows: 0
+
+  testing:
+    shards_url: "file:F:/datasets/sign-language/dgs/shards/shard_000007.tar"
+#    shards_url: "file:F:/datasets/sign-language/lsfb-cont/shards/annotated/shard_000007.tar"
+    dataloader:
+      batch_size: 32
+      shuffle: false
+      n_workers: 0
+    preprocessing:
+      targets: [ 'temporal-segmentation', 'temporal-offsets', 'segments' ]
+      pose_transforms: [ { name: 'norm+flatten2d' } ]
+      use_windows: true
+      window_size: 3500
+      window_stride: 2800
+      max_empty_windows: 0
