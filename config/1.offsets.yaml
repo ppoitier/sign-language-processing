@@ -2,24 +2,34 @@ from: "data.yaml"
 
 
 experiment:
-  id: "segmentation"
+  id: "test"
   variant: "dgs/ms-tcn"
-  output_dir: "F:/outputs/tmp"
   seed: random
-  debug: true
+  debug: false
   show_progress_bar: true
 
 
 model:
   name: 'hydra'
   backbone:
-    name: "ms-tcn"
+    name: 'vit'
     kwargs:
       in_channels: 130
-      out_channels: 4
-      hidden_channels: 64
-      n_stages: 4
-      n_layers: 10
+      hidden_channels: 256
+      max_length: 3500
+      n_heads: 4
+      n_layers: 6
+      dim_feedforward: 1024
+      dropout: 0.1
+      pos_encoding: "rope"
+      attn_mask_strategy: "window:128"
+#    name: "ms-tcn"
+#    kwargs:
+#      in_channels: 130
+#      out_channels: 4
+#      hidden_channels: 64
+#      n_stages: 4
+#      n_layers: 10
 #  backbone:
 #    name: "rnn"
 #    kwargs:
@@ -31,11 +41,17 @@ model:
 #      num_layers: 4
   heads:
     classification:
-      name: "identity"
-      n_channels: 2
+      name: "linear"
+      n_channels: 128
+      kwargs:
+        in_features: 128
+        out_features: 2
     regression:
-      name: "identity"
-      n_channels: 2
+      name: "linear"
+      n_channels: 128
+      kwargs:
+        in_features: 128
+        out_features: 2
 
 
 training:
@@ -46,11 +62,11 @@ training:
     classification:
       name: "cross-entropy"
       use_weights: true
-      multi_layer: true
+      multi_layer: false
     regression:
       name: "gIoU"
       use_weights: false
-      multi_layer: true
+      multi_layer: false
 
   learning_rate: 1e-4
   early_stopping_patience: 10

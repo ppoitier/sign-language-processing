@@ -23,6 +23,7 @@ import torch
 from torch import nn, Tensor
 from torchtune.modules import RotaryPositionalEmbeddings
 
+from slp.core.registry import BACKBONE_REGISTRY
 from slp.nn.blocks.positional_encoding.sinusoidal import PositionalEncoding
 from slp.nn.blocks.transformers.blocks import TransformerBlock
 from slp.nn.blocks.transformers.layers import (
@@ -33,10 +34,12 @@ from slp.nn.blocks.transformers.attention_patterns import (
     padding_mask_mod,
     and_masks,
     build_block_mask,
+    get_attn_mask_mod,
 )
 from slp.nn.backbones.multi_stage import MultiStageBackbone
 
 
+@BACKBONE_REGISTRY.register("ms-transformer")
 class MultiStageTransformer(nn.Module):
     """
     Hierarchical transformer for dense temporal prediction.
@@ -80,11 +83,13 @@ class MultiStageTransformer(nn.Module):
         n_branch_layers: int = 5,
         dropout: float = 0.1,
         pos_encoding: str = "rope",
-        attn_mask_mod=None,
+        attn_mask_strategy: str | None =None,
     ):
         super().__init__()
 
         self.proj_in = nn.Conv1d(in_channels, hidden_channels, kernel_size=1)
+
+        attn_mask_mod = get_attn_mask_mod(attn_mask_strategy)
 
         # -- Positional encoding --
         head_dim = hidden_channels // n_heads
@@ -133,6 +138,7 @@ class MultiStageTransformer(nn.Module):
         return self.stages(x, mask)
 
 
+@BACKBONE_REGISTRY.register("vit")
 class TransformerViT(nn.Module):
     """
     ViT-style encoder-only transformer.
@@ -166,12 +172,12 @@ class TransformerViT(nn.Module):
         dropout: float = 0.1,
         pos_encoding: str = "rope",
         pool: str | None = None,
-        attn_mask_mod=None,
+        attn_mask_strategy: str | None =None,
     ):
         super().__init__()
         self.pool = pool
         self.n_heads = n_heads
-        self.attn_mask_mod = attn_mask_mod
+        self.attn_mask_mod = get_attn_mask_mod(attn_mask_strategy)
 
         head_dim = hidden_channels // n_heads
         pe_length = max_length + 1 if pool == "cls" else max_length
@@ -234,7 +240,7 @@ class TransformerViT(nn.Module):
         mask_mod = padding_mask_mod(padding)
         if self.attn_mask_mod is not None:
             mask_mod = and_masks(mask_mod, self.attn_mask_mod)
-        block_mask = build_block_mask(mask_mod, B=N, H=self.n_heads, Q_LEN=T, KV_LEN=T)
+        block_mask = build_block_mask(mask_mod, B=N, H=self.n_heads, Q_LEN=T, KV_LEN=T, device=x.device)
 
         for layer in self.layers:
             x = layer(x, block_mask=block_mask)
@@ -249,6 +255,7 @@ class TransformerViT(nn.Module):
             return (x.transpose(1, 2)) * mask
 
 
+@BACKBONE_REGISTRY.register("transformer-query-readout")
 class TransformerQueryReadout(nn.Module):
     """
     Encoder with cross-attention query readout for classification.
@@ -273,12 +280,12 @@ class TransformerQueryReadout(nn.Module):
         dropout: float = 0.1,
         pos_encoding: str = "rope",
         n_queries: int = 1,
-        attn_mask_mod=None,
+        attn_mask_strategy: str | None =None,
     ):
         super().__init__()
         self.n_heads = n_heads
         self.n_queries = n_queries
-        self.attn_mask_mod = attn_mask_mod
+        self.attn_mask_mod = get_attn_mask_mod(attn_mask_strategy)
 
         head_dim = hidden_channels // n_heads
 

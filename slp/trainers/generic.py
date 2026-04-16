@@ -1,3 +1,4 @@
+import torch
 from torch import nn, optim, Tensor
 
 from slp.trainers.base import TrainerBase
@@ -34,7 +35,7 @@ class GenericTrainer(TrainerBase):
         self.is_output_multilayer = is_output_multilayer
 
         self.test_logits: dict = {}
-        self.save_hyperparameters(ignore=["model", "criterion"])
+        self.save_hyperparameters(ignore=["model", "criterion", "test_logits"])
 
     def forward_step(self, batch: dict) -> tuple[dict, Tensor, dict, int]:
         """Run model forward and compute loss.
@@ -49,7 +50,6 @@ class GenericTrainer(TrainerBase):
         batch_size = features.size(0)
         features = features.permute(0, 2, 1).float().contiguous()
         masks = masks.unsqueeze(1).bool().contiguous()
-
 
         raw_logits = self.model(features, masks)
         losses = self.criterion(
@@ -111,7 +111,10 @@ class GenericTrainer(TrainerBase):
     def prediction_step(self, batch: dict, mode: str):
         raw_logits, loss, task_losses, batch_size = self.forward_step(batch)
         self.log(
-            f"{mode}/loss", loss, on_step=True, on_epoch=True, batch_size=batch_size
+            f"{mode}/loss", loss,
+            on_step=True,
+            on_epoch=True,
+            batch_size=batch_size,
         )
         for task_name, task_loss in task_losses.items():
             self.log(

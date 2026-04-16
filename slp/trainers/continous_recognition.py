@@ -70,7 +70,7 @@ def compute_wer(predicted: list[list[int]], references: list[list[int]]) -> dict
     }
 
 
-class RecognitionTrainer(GenericTrainer):
+class ContinuousRecognitionTrainer(GenericTrainer):
     """Trainer for continuous sign language recognition (CTC-based).
 
     Computes WER by decoding frame-level logits into gloss sequences

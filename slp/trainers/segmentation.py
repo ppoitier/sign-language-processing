@@ -60,7 +60,7 @@ class SegmentationTrainer(GenericTrainer):
         self.save_hyperparameters(ignore=["model", "criterion", "segment_decoder"])
 
     def compute_metrics(self, logits: dict, batch: dict, mode: str) -> dict:
-        cls_logits = logits[self.classification_head]
+        cls_logits = logits[self.classification_head].detach()
         per_frame_probs = cls_logits.softmax(dim=1)
         frame_targets = batch["targets"][self.frame_labels_target]
         return self.frame_metrics[f"{mode}_metrics"](per_frame_probs, frame_targets)

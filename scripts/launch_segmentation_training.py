@@ -1,5 +1,8 @@
 from pprint import pprint
 
+import torch
+torch.set_float32_matmul_precision('medium')
+
 from slp.core.parser import parse_config
 from slp.core.config.experiment import SegmentationTaskConfig
 from slp.datasets.loading import load_continuous_datasets_and_loaders
@@ -28,6 +31,9 @@ def launch_segmentation_training(config_path):
     print("Building model...")
     model = build_hydra_model(config.model)
     print(model)
+
+    print("Compiling model...")
+    model = torch.compile(model, fullgraph=False)
 
     assert config.training is not None, "Missing training configuration."
 
