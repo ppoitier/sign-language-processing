@@ -1,5 +1,7 @@
 from pprint import pprint
 
+import click
+
 import torch
 torch.set_float32_matmul_precision('medium')
 
@@ -17,6 +19,14 @@ from slp.testing import run_testing
 from slp.utils.logits import save_logits
 
 
+@click.command()
+@click.option(
+    '--config_path',
+    '-c',
+    type=click.Path(exists=True, file_okay=True, dir_okay=False, readable=True),
+    required=True,
+    help="Path to the YAML/JSON segmentation training configuration file."
+)
 def launch_segmentation_training(config_path):
     config: SegmentationTaskConfig = parse_config(config_path, SegmentationTaskConfig)
     pprint(config)
@@ -81,4 +91,4 @@ def launch_segmentation_training(config_path):
 
 
 if __name__ == "__main__":
-    launch_segmentation_training("../config/1.offsets.yaml")
+    launch_segmentation_training()
