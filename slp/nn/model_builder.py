@@ -9,6 +9,7 @@ from torch import nn
 from slp.nn.architectures.hydra import HydraModel
 from slp.nn.heads.multi_stage import SharedMultiStageHead, SingleStageHead
 from slp.nn.heads.channel_splitter import TaskChannelSplitter
+from slp.nn.heads.shared_channel_heads import SharedChannelHeads
 from slp.core.config.model import HydraConfig, HeadConfig
 from slp.core.registry import BACKBONE_REGISTRY, HEAD_REGISTRY, NECK_REGISTRY
 
@@ -38,17 +39,23 @@ def build_hydra_model(config: HydraConfig) -> HydraModel:
         for name, head_config in config.heads.items()
     }
 
-    # 4. Build the Channel Splitter
-    task_specs = {
-        name: (cfg.n_channels, heads[name]) for name, cfg in config.heads.items()
-    }
-    multi_task_splitter = TaskChannelSplitter(task_specs=task_specs)
+    # 4. Build the Channel Routing Strategy
+    if config.channels_to_head_routing == 'split':
+        task_specs = {
+            name: (cfg.n_channels, heads[name]) for name, cfg in config.heads.items()
+        }
+        head_model = TaskChannelSplitter(task_specs=task_specs)
+    else:
+        task_specs = {
+            name: heads[name] for name, cfg in config.heads.items()
+        }
+        head_model = SharedChannelHeads(task_specs=task_specs)
 
     # 5. Wrap in Multi-Stage logic
     if config.multi_layer:
-        head_assembly = SharedMultiStageHead(multi_task_splitter)
+        head_assembly = SharedMultiStageHead(head_model)
     else:
-        head_assembly = SingleStageHead(multi_task_splitter)
+        head_assembly = SingleStageHead(head_model)
 
     # 6. Assemble the HydraModel
     return HydraModel(

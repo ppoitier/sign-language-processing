@@ -1,3 +1,5 @@
+from typing import Literal
+
 from torch import nn, Tensor
 from torch.nn import functional as F
 
@@ -22,13 +24,15 @@ class FeaturePyramidNetwork(nn.Module):
         n_levels: Number of feature levels in the input pyramid.
     """
     def __init__(
-            self,
-            c_in: int | list[int],
-            c_out: int,
-            n_levels: int,
+        self,
+        c_in: int | list[int],
+        c_out: int,
+        n_levels: int,
+        output_mode: Literal["all", "finest"] = "all",
     ):
         super().__init__()
         self.n_levels = n_levels
+        self.output_mode = output_mode
 
         if isinstance(c_in, int):
             c_in = [c_in] * n_levels
@@ -94,5 +98,8 @@ class FeaturePyramidNetwork(nn.Module):
         fpn_feats = tuple(
             conv(x) for conv, x in zip(self.fpn_convs, laterals)
         )
+
+        if self.output_mode == "finest":
+            return (fpn_feats[0],)
 
         return fpn_feats

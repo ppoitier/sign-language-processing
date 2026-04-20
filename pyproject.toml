@@ -5,6 +5,9 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools]
 py-modules = ['slp']
 
+[tool.pytest.ini_options]
+addopts = "-v"
+
 [project]
 name = "slp"
 version = "0.0.1"

@@ -1,4 +1,4 @@
-from typing import Any, Optional, OrderedDict
+from typing import Any, Optional, OrderedDict, Literal
 
 from pydantic import BaseModel, Field
 
@@ -17,6 +17,7 @@ class HydraConfig(ModelConfig):
     backbone: ModelConfig
     neck: Optional[ModelConfig] = None
     heads: OrderedDict[str, HeadConfig]
+    channels_to_head_routing: Literal["split", "shared"] = "split"
     multi_layer: bool = True
     loss_on_all_stages: bool = True
 

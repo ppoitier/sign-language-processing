@@ -12,7 +12,9 @@ pyyaml
 scikit-learn
 tensorboard
 torch
+torchao
 torchmetrics
 torchvision
+torchtune
 tqdm
 webdataset

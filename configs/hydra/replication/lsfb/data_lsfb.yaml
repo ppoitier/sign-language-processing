@@ -1,7 +1,7 @@
 datasets:
   training:
-    shards_url: "file:F:/datasets/sign-language/lsfb-cont/shards/annotated/shard_{000002..000007}.tar"
-#    shards_url: "/gpfs/scratch/acad/lsfb/datasets/lsfb-cont/shards/annotated/shard_{000002..000007}.tar"
+#    shards_url: "file:F:/datasets/sign-language/lsfb-cont/shards/annotated/shard_{000002..000007}.tar"
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/lsfb-cont/shards/annotated/shard_{000002..000007}.tar"
     dataloader:
       batch_size: 16
       shuffle: true
@@ -15,8 +15,8 @@ datasets:
       max_empty_windows: 0
 
   validation:
-    shards_url: "file:F:/datasets/sign-language/lsfb-cont/shards/annotated/shard_000001.tar"
-#    shards_url: "/gpfs/scratch/acad/lsfb/datasets/lsfb-cont/shards/annotated/shard_000001.tar"
+#    shards_url: "file:F:/datasets/sign-language/lsfb-cont/shards/annotated/shard_000001.tar"
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/lsfb-cont/shards/annotated/shard_000001.tar"
     dataloader:
       batch_size: 16
       shuffle: false
@@ -30,8 +30,8 @@ datasets:
       max_empty_windows: 0
 
   testing:
-    shards_url: "file:F:/datasets/sign-language/lsfb-cont/shards/annotated/shard_000000.tar"
-#    shards_url: "/gpfs/scratch/acad/lsfb/datasets/lsfb-cont/shards/annotated/shard_000000.tar"
+#    shards_url: "file:F:/datasets/sign-language/lsfb-cont/shards/annotated/shard_000000.tar"
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/lsfb-cont/shards/annotated/shard_000000.tar"
     dataloader:
       batch_size: 16
       shuffle: false
@@ -47,8 +47,8 @@ datasets:
 
 experiment:
   id: "segmentation/lsfb"
-  output_dir: "F:/outputs/hydra/comparison"
-#  output_dir: "/gpfs/scratch/acad/lsfb/outputs/hydra/comparison"
+#  output_dir: "F:/outputs/hydra/comparison"
+  output_dir: "/gpfs/scratch/acad/lsfb/outputs/hydra/comparison"
   debug: false
   show_progress_bar: true
 #  mlflow_uri: "http://127.0.0.1:5000"

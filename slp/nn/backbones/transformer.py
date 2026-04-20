@@ -147,7 +147,7 @@ class MultiStageTransformer(nn.Module):
         for layer in self.stage0:
             x = layer(x, mask)
 
-        return self.stages(x, mask)
+        return [x] + self.stages(x, mask)
 
 
 @BACKBONE_REGISTRY.register("vit")
