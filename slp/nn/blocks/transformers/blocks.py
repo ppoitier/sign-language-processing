@@ -41,7 +41,7 @@ class TransformerBlock(nn.Module):
         stride:          temporal downsampling factor (1 = identity).
         rope:            optional rotary embedding module (torchtune-compatible).
         attn_mask_mod:   optional mask mod composed with padding via
-                         :func:`and_masks` (e.g. sliding window, causal).
+                         :func:`and_masks` (e.g., sliding window, causal).
     """
 
     def __init__(
@@ -73,15 +73,11 @@ class TransformerBlock(nn.Module):
     def forward(self, x: Tensor, mask: Tensor) -> Tensor:
         """
         Args:
-            x:    (N, C, T)
+            x: (N, C, T)
             mask: (N, 1, T) — 1 = valid, 0 = pad.
         Returns:
             (N, C, T') where T' = T // stride.
         """
-        # assert (
-        #     x.is_cuda
-        # ), "TransformerBlock requires CUDA tensors (flex_attention does not support CPU)."
-
         N, C, T = x.shape
 
         # -- Build flex_attention BlockMask from padding --

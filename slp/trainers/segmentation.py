@@ -22,7 +22,7 @@ class SegmentationTrainer(GenericTrainer):
         criterion: nn.Module,
         learning_rate: float,
         heads_to_targets: dict[str, str],
-        is_output_multilayer: bool,
+        is_output_multistage: bool,
         n_classes: int,
         classification_head: str = "classification",
         frame_labels_target: str = "temporal-segmentation",
@@ -34,7 +34,7 @@ class SegmentationTrainer(GenericTrainer):
             criterion=criterion,
             learning_rate=learning_rate,
             heads_to_targets=heads_to_targets,
-            is_output_multilayer=is_output_multilayer,
+            is_output_multistage=is_output_multistage,
         )
         self.n_classes = n_classes
         self.classification_head = classification_head
@@ -107,7 +107,7 @@ def load_segmentation_trainer(
         criterion=criterion,
         learning_rate=training_config.learning_rate,
         heads_to_targets=training_config.heads_to_targets,
-        is_output_multilayer=training_config.is_output_multilayer,
+        is_output_multistage=training_config.is_output_multistage,
         n_classes=n_classes,
         segment_decoder=segment_decoder,
     )

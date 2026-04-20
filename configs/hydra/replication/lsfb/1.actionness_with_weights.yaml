@@ -1,0 +1,51 @@
+# LSFB — actionness / inverse weights
+# Part of the replication of the chapter's per-frame classification baseline.
+# Backbone: MS-TCN 4 stages × 10 layers × 64 hidden (same as chapter §6 protocol).
+
+from: "data_lsfb.yaml"
+
+
+experiment:
+  variant: "mstcn_actionness_winverse"
+  seed: random
+
+
+model:
+  name: 'hydra'
+  backbone:
+    name: "ms-tcn"
+    kwargs:
+      in_channels: 130
+      out_channels: 2
+      hidden_channels: 64
+      n_stages: 4
+      n_layers: 10
+  heads:
+    classification:
+      name: "identity"
+      n_channels: 2
+
+
+training:
+  max_epochs: 300
+
+  loss_functions:
+    classification:
+      name: "cross-entropy"
+      use_weights: true
+      weight_strategy: "inverse"
+      multi_layer: true
+
+  learning_rate: 1e-4
+  early_stopping_patience: 10
+
+  n_classes: 2
+
+  is_output_multistage: true
+  overfit_one_batch: false
+  use_offsets: false
+
+  heads_to_targets:
+    classification: temporal-segmentation
+
+  segment_decoder: { name: 'argmax' }

@@ -1,0 +1,54 @@
+# LSFB — boundaries  / no weights
+# Part of the replication of the chapter's per-frame classification baseline.
+# Backbone: MS-TCN 4 stages × 10 layers × 64 hidden (same as chapter §6 protocol).
+
+from: "../data_lsfb_baselines.yaml"
+
+
+experiment:
+  variant: "mstcn_boundaries_noweight"
+  seed: random
+
+
+model:
+  name: 'hydra'
+  backbone:
+    name: "ms-tcn"
+    kwargs:
+      in_channels: 130
+      out_channels: 64
+      hidden_channels: 64
+      n_stages: 4
+      n_layers: 10
+  heads:
+    classification:
+      name: "linear"
+      n_channels: 64
+      kwargs:
+        in_features: 64
+        out_features: 3
+
+
+training:
+  max_epochs: 300
+  n_warmup_epochs: 50
+
+  loss_functions:
+    classification:
+      name: "cross-entropy"
+      use_weights: false
+      multi_layer: false
+
+  learning_rate: 1e-4
+  early_stopping_patience: 10
+
+  n_classes: 3
+
+  is_output_multistage: true
+  overfit_one_batch: false
+  use_offsets: false
+
+  heads_to_targets:
+    classification: temporal-boundaries
+
+  segment_decoder: { name: 'boundaries' }

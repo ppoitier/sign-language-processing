@@ -1,0 +1,38 @@
+# MS-Transformer large variant — deeper, wider.
+
+from: "mstx_base.yaml"
+
+
+experiment:
+  variant: "mstx_8h_3s6b_h512_win128_rope"
+  seed: random
+
+
+model:
+  name: 'hydra'
+  backbone:
+    name: 'ms-transformer'
+    kwargs:
+      in_channels: 130
+      hidden_channels: 512
+      max_length: 300
+      n_heads: 8
+      dim_feedforward: 2048
+      n_stem_layers: 3
+      n_branch_layers: 6
+      dropout: 0.1
+      pos_encoding: "rope"
+      attn_mask_strategy: "window:128"
+  heads:
+    classification:
+      name: "linear"
+      n_channels: 512
+      kwargs:
+        in_features: 512
+        out_features: 2
+    regression:
+      name: "linear"
+      n_channels: 512
+      kwargs:
+        in_features: 512
+        out_features: 2

@@ -1,0 +1,35 @@
+from: "vit_base.yaml"
+
+
+experiment:
+  variant: "vit_8h_8l_h512_win128_rope"
+  seed: random
+
+
+model:
+  name: 'hydra'
+  backbone:
+    name: 'vit'
+    kwargs:
+      in_channels: 130
+      hidden_channels: 512
+      max_length: 300
+      n_heads: 8
+      n_layers: 8
+      dim_feedforward: 2048
+      dropout: 0.1
+      pos_encoding: "rope"
+      attn_mask_strategy: "window:128"
+  heads:
+    classification:
+      name: "linear"
+      n_channels: 256
+      kwargs:
+        in_features: 256
+        out_features: 2
+    regression:
+      name: "linear"
+      n_channels: 256
+      kwargs:
+        in_features: 256
+        out_features: 2

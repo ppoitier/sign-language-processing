@@ -1,0 +1,14 @@
+from: "1.actionness_with_weights.yaml"
+
+
+experiment:
+  variant: "mstcn_actionness_noweight"
+  seed: random
+
+
+training:
+  loss_functions:
+    classification:
+      name: "cross-entropy"
+      use_weights: false
+      multi_layer: true

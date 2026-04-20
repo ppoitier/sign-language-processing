@@ -1,0 +1,33 @@
+# MS-TCN with 3 stages — two refinement steps.
+
+from: "mstcn_4s10l.yaml"
+
+
+experiment:
+  variant: "mstcn_3s10l_h64"
+  seed: random
+
+
+model:
+  name: 'hydra'
+  backbone:
+    name: "ms-tcn"
+    kwargs:
+      in_channels: 130
+      out_channels: 64
+      hidden_channels: 64
+      n_stages: 3
+      n_layers: 10
+  heads:
+    classification:
+      name: "linear"
+      n_channels: 64
+      kwargs:
+        in_features: 64
+        out_features: 2
+    regression:
+      name: "linear"
+      n_channels: 64
+      kwargs:
+        in_features: 64
+        out_features: 2

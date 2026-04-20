@@ -34,7 +34,7 @@ def build_multi_layer_criterion(
                 dtype=torch.float32,
             )
         criterion = criterion_cls(weights=weights, **criterion_config.kwargs)
-        if config.is_output_multilayer:
+        if config.is_output_multistage:
             criterion = MultiLayerLoss(
                 base_criterion=criterion,
                 apply_on_all_stages=criterion_config.multi_layer,

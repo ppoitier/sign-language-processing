@@ -1,0 +1,65 @@
+from: "data_lsfb.yaml"
+
+
+experiment:
+  variant: "vit_4h_6l_h256_win128_rope"
+  seed: random
+
+
+model:
+  name: 'hydra'
+  backbone:
+    name: 'vit'
+    kwargs:
+      in_channels: 130
+      hidden_channels: 256
+      max_length: 3500
+      n_heads: 4
+      n_layers: 6
+      dim_feedforward: 1024
+      dropout: 0.1
+      pos_encoding: "rope"
+      attn_mask_strategy: "window:128"
+  heads:
+    classification:
+      name: "linear"
+      n_channels: 128
+      kwargs:
+        in_features: 128
+        out_features: 2
+    regression:
+      name: "linear"
+      n_channels: 128
+      kwargs:
+        in_features: 128
+        out_features: 2
+
+
+training:
+  max_epochs: 300
+  n_warmup_epochs: 50
+
+  loss_functions:
+    classification:
+      name: "cross-entropy"
+      use_weights: false
+      multi_layer: false
+    regression:
+      name: "gIoU"
+      use_weights: false
+      multi_layer: false
+
+  learning_rate: 1e-4
+  early_stopping_patience: 10
+
+  n_classes: 2
+
+  is_output_multistage: true
+  overfit_one_batch: false
+  use_offsets: true
+
+  heads_to_targets:
+    classification: temporal-segmentation
+    regression: temporal-offsets
+
+  segment_decoder: { name: 'offsets' }

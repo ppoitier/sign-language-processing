@@ -83,7 +83,7 @@ class MultiStageTransformer(nn.Module):
         n_branch_layers: int = 5,
         dropout: float = 0.1,
         pos_encoding: str = "rope",
-        attn_mask_strategy: str | None =None,
+        attn_mask_strategy: str | None = None,
     ):
         super().__init__()
 
@@ -101,23 +101,35 @@ class MultiStageTransformer(nn.Module):
             self.additive_pe = PositionalEncoding(hidden_channels, max_length)
 
         # -- Stage 0: full resolution --
-        self.stage0 = nn.ModuleList([
-            TransformerBlock(
-                hidden_channels, dim_feedforward, n_heads=n_heads,
-                dropout=dropout, rope=rope, attn_mask_mod=attn_mask_mod,
-            )
-            for _ in range(n_stem_layers)
-        ])
+        self.stage0 = nn.ModuleList(
+            [
+                TransformerBlock(
+                    hidden_channels,
+                    dim_feedforward,
+                    n_heads=n_heads,
+                    dropout=dropout,
+                    rope=rope,
+                    attn_mask_mod=attn_mask_mod,
+                )
+                for _ in range(n_stem_layers)
+            ]
+        )
 
         # -- Stage 1..N: stride-2 downsampling --
-        self.stages = MultiStageBackbone([
-            TransformerBlock(
-                hidden_channels, dim_feedforward, n_heads=n_heads,
-                stride=2, dropout=dropout, rope=rope,
-                attn_mask_mod=attn_mask_mod,
-            )
-            for _ in range(n_branch_layers)
-        ])
+        self.stages = MultiStageBackbone(
+            [
+                TransformerBlock(
+                    hidden_channels,
+                    dim_feedforward,
+                    n_heads=n_heads,
+                    stride=2,
+                    dropout=dropout,
+                    rope=rope,
+                    attn_mask_mod=attn_mask_mod,
+                )
+                for _ in range(n_branch_layers)
+            ]
+        )
 
     def forward(self, x: Tensor, mask: Tensor) -> list[Tensor]:
         """
@@ -172,7 +184,7 @@ class TransformerViT(nn.Module):
         dropout: float = 0.1,
         pos_encoding: str = "rope",
         pool: str | None = None,
-        attn_mask_strategy: str | None =None,
+        attn_mask_strategy: str | None = None,
     ):
         super().__init__()
         self.pool = pool
@@ -197,16 +209,18 @@ class TransformerViT(nn.Module):
             self.cls_token = nn.Parameter(torch.randn(1, 1, hidden_channels))
 
         # -- Encoder layers --
-        self.layers = nn.ModuleList([
-            TransformerEncoderLayer(
-                d_model=hidden_channels,
-                n_heads=n_heads,
-                dim_feedforward=dim_feedforward,
-                dropout=dropout,
-                rope=rope,
-            )
-            for _ in range(n_layers)
-        ])
+        self.layers = nn.ModuleList(
+            [
+                TransformerEncoderLayer(
+                    d_model=hidden_channels,
+                    n_heads=n_heads,
+                    dim_feedforward=dim_feedforward,
+                    dropout=dropout,
+                    rope=rope,
+                )
+                for _ in range(n_layers)
+            ]
+        )
 
     def forward(self, x: Tensor, mask: Tensor) -> Tensor:
         """
@@ -227,10 +241,13 @@ class TransformerViT(nn.Module):
         if self.pool == "cls":
             cls = self.cls_token.expand(N, -1, -1)
             x = torch.cat([cls, x], dim=1)
-            padding = torch.cat([
-                torch.ones(N, 1, device=padding.device, dtype=torch.bool),
-                padding,
-            ], dim=1)
+            padding = torch.cat(
+                [
+                    torch.ones(N, 1, device=padding.device, dtype=torch.bool),
+                    padding,
+                ],
+                dim=1,
+            )
 
         if self.additive_pe is not None:
             x = self.additive_pe(x.transpose(1, 2)).transpose(1, 2)
@@ -240,7 +257,9 @@ class TransformerViT(nn.Module):
         mask_mod = padding_mask_mod(padding)
         if self.attn_mask_mod is not None:
             mask_mod = and_masks(mask_mod, self.attn_mask_mod)
-        block_mask = build_block_mask(mask_mod, B=N, H=self.n_heads, Q_LEN=T, KV_LEN=T, device=x.device)
+        block_mask = build_block_mask(
+            mask_mod, B=N, H=self.n_heads, Q_LEN=T, KV_LEN=T, device=x.device
+        )
 
         for layer in self.layers:
             x = layer(x, block_mask=block_mask)
@@ -250,7 +269,9 @@ class TransformerViT(nn.Module):
             return x[:, 0]
         elif self.pool == "mean":
             lengths = padding.sum(dim=1, keepdim=True).unsqueeze(-1)
-            return (x * padding.unsqueeze(-1)).sum(dim=1) / lengths.squeeze(-1).clamp(min=1)
+            return (x * padding.unsqueeze(-1)).sum(dim=1) / lengths.squeeze(-1).clamp(
+                min=1
+            )
         else:
             return (x.transpose(1, 2)) * mask
 
@@ -280,7 +301,7 @@ class TransformerQueryReadout(nn.Module):
         dropout: float = 0.1,
         pos_encoding: str = "rope",
         n_queries: int = 1,
-        attn_mask_strategy: str | None =None,
+        attn_mask_strategy: str | None = None,
     ):
         super().__init__()
         self.n_heads = n_heads
@@ -300,28 +321,32 @@ class TransformerQueryReadout(nn.Module):
             self.additive_pe = PositionalEncoding(hidden_channels, max_length)
 
         # -- Encoder --
-        self.encoder_layers = nn.ModuleList([
-            TransformerEncoderLayer(
-                d_model=hidden_channels,
-                n_heads=n_heads,
-                dim_feedforward=dim_feedforward,
-                dropout=dropout,
-                rope=rope,
-            )
-            for _ in range(n_encoder_layers)
-        ])
+        self.encoder_layers = nn.ModuleList(
+            [
+                TransformerEncoderLayer(
+                    d_model=hidden_channels,
+                    n_heads=n_heads,
+                    dim_feedforward=dim_feedforward,
+                    dropout=dropout,
+                    rope=rope,
+                )
+                for _ in range(n_encoder_layers)
+            ]
+        )
 
         # -- Decoder --
-        self.decoder_layers = nn.ModuleList([
-            TransformerDecoderLayer(
-                d_model=hidden_channels,
-                n_heads=n_heads,
-                dim_feedforward=dim_feedforward,
-                dropout=dropout,
-                rope=rope,
-            )
-            for _ in range(n_decoder_layers)
-        ])
+        self.decoder_layers = nn.ModuleList(
+            [
+                TransformerDecoderLayer(
+                    d_model=hidden_channels,
+                    n_heads=n_heads,
+                    dim_feedforward=dim_feedforward,
+                    dropout=dropout,
+                    rope=rope,
+                )
+                for _ in range(n_decoder_layers)
+            ]
+        )
 
         self.class_query = nn.Parameter(torch.randn(1, n_queries, hidden_channels))
 
@@ -351,7 +376,11 @@ class TransformerQueryReadout(nn.Module):
         if self.attn_mask_mod is not None:
             mask_mod = and_masks(mask_mod, self.attn_mask_mod)
         enc_block_mask = build_block_mask(
-            mask_mod, B=N, H=self.n_heads, Q_LEN=T, KV_LEN=T,
+            mask_mod,
+            B=N,
+            H=self.n_heads,
+            Q_LEN=T,
+            KV_LEN=T,
             device=x.device,
         )
 
@@ -364,8 +393,11 @@ class TransformerQueryReadout(nn.Module):
         query = self.class_query.expand(N, -1, -1)
         cross_mask_mod = padding_mask_mod(padding)
         cross_block_mask = build_block_mask(
-            cross_mask_mod, B=N, H=self.n_heads,
-            Q_LEN=self.n_queries, KV_LEN=T,
+            cross_mask_mod,
+            B=N,
+            H=self.n_heads,
+            Q_LEN=self.n_queries,
+            KV_LEN=T,
             device=x.device,
         )
 

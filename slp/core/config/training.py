@@ -24,7 +24,7 @@ class TrainingConfig(BaseModel):
 
     checkpoint_path: Optional[str] = None
     n_classes: Optional[int] = None
-    is_output_multilayer: bool = False
+    is_output_multistage: bool = False
     heads_to_targets: dict[str, str]
 
 

@@ -3,7 +3,8 @@ from pprint import pprint
 import click
 
 import torch
-torch.set_float32_matmul_precision('medium')
+
+torch.set_float32_matmul_precision("medium")
 
 from slp.core.parser import parse_config
 from slp.core.config.experiment import SegmentationTaskConfig
@@ -21,11 +22,11 @@ from slp.utils.logits import save_logits
 
 @click.command()
 @click.option(
-    '--config_path',
-    '-c',
+    "--config_path",
+    "-c",
     type=click.Path(exists=True, file_okay=True, dir_okay=False, readable=True),
     required=True,
-    help="Path to the YAML/JSON segmentation training configuration file."
+    help="Path to the YAML/JSON segmentation training configuration file.",
 )
 def launch_segmentation_training(config_path):
     config: SegmentationTaskConfig = parse_config(config_path, SegmentationTaskConfig)
@@ -42,8 +43,8 @@ def launch_segmentation_training(config_path):
     model = build_hydra_model(config.model)
     print(model)
 
-    print("Compiling model...")
-    model = torch.compile(model, fullgraph=False)
+    # print("Compiling model...")
+    # model = torch.compile(model)
 
     assert config.training is not None, "Missing training configuration."
 

@@ -1,0 +1,60 @@
+# Cross-dataset: ViT small on Phoenix Weather 2014.
+# The SMALL Transformer is used here (not vit_base or vit_large) because
+# Phoenix is a small-data regime — see experiment_plan.md §5.1.
+# Pairing this with a vit_base_phoenix run (identical file except `from:`
+# pointing at vit_base.yaml) gives the overfitting-gap diagnostic.
+#
+# Note: Phoenix windows are much smaller because clips are ~7s long.
+
+from: "vit_small.yaml"
+
+
+experiment:
+  id: "segmentation/phoenix"
+  variant: "vit_4h_4l_h128_win128_rope"
+  seed: random
+
+
+# Override datasets with Phoenix shards. Update paths to match your filesystem.
+datasets:
+  training:
+    shards_url: "file:F:/datasets/sign-language/phoenix-wt-14/shards/annotated/shard_{000002..000007}.tar"
+    dataloader:
+      batch_size: 16
+      shuffle: true
+      n_workers: 23
+    preprocessing:
+      targets: [ 'temporal-segmentation', 'temporal-offsets', 'segments' ]
+      pose_transforms: [ { name: 'norm+flatten2d' } ]
+      use_windows: true
+      window_size: 500
+      window_stride: 400
+      max_empty_windows: 0
+
+  validation:
+    shards_url: "file:F:/datasets/sign-language/phoenix-wt-14/shards/annotated/shard_000001.tar"
+    dataloader:
+      batch_size: 16
+      shuffle: false
+      n_workers: 23
+    preprocessing:
+      targets: [ 'temporal-segmentation', 'temporal-offsets', 'segments' ]
+      pose_transforms: [ { name: 'norm+flatten2d' } ]
+      use_windows: true
+      window_size: 500
+      window_stride: 400
+      max_empty_windows: 0
+
+  testing:
+    shards_url: "file:F:/datasets/sign-language/phoenix-wt-14/shards/annotated/shard_000000.tar"
+    dataloader:
+      batch_size: 16
+      shuffle: false
+      n_workers: 23
+    preprocessing:
+      targets: [ 'temporal-segmentation', 'temporal-offsets', 'segments' ]
+      pose_transforms: [ { name: 'norm+flatten2d' } ]
+      use_windows: true
+      window_size: 500
+      window_stride: 400
+      max_empty_windows: 0

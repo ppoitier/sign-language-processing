@@ -1,0 +1,68 @@
+# Bidirectional GRU backbone — RNN family baseline.
+# 4 layers × 128 hidden (256 bi-directional) roughly matches MS-TCN's parameter count.
+# Fully-specified; rnn_lstm.yaml inherits from this one.
+
+from: "data_lsfb.yaml"
+
+
+experiment:
+  variant: "rnn_gru_bi_4l_h128"
+  seed: random
+#  mlflow_uri: "http://127.0.0.1:5000"
+
+
+model:
+  name: 'hydra'
+  backbone:
+    name: "rnn"
+    kwargs:
+      rnn_type: "gru"
+      in_channels: 130
+      hidden_channels: 128
+      out_channels: 256
+      num_layers: 4
+      bidirectional: true
+  heads:
+    classification:
+      name: "linear"
+      n_channels: 256
+      kwargs:
+        in_features: 256
+        out_features: 2
+    regression:
+      name: "linear"
+      n_channels: 256
+      kwargs:
+        in_features: 256
+        out_features: 2
+
+
+training:
+  max_epochs: 300
+  n_warmup_epochs: 50
+
+  loss_functions:
+    classification:
+      name: "cross-entropy"
+      use_weights: false
+      multi_layer: false
+    regression:
+      name: "gIoU"
+      use_weights: false
+      multi_layer: false
+
+  learning_rate: 1e-4
+  early_stopping_patience: 10
+
+  n_classes: 2
+
+  # RNN returns a single tensor, not a list of stage outputs.
+  is_output_multistage: false
+  overfit_one_batch: false
+  use_offsets: true
+
+  heads_to_targets:
+    classification: temporal-segmentation
+    regression: temporal-offsets
+
+  segment_decoder: { name: 'offsets' }

@@ -25,14 +25,14 @@ class GenericTrainer(TrainerBase):
         criterion: nn.Module,
         learning_rate: float,
         heads_to_targets: dict[str, str],
-        is_output_multilayer: bool = False,
+        is_output_multistage: bool = False,
     ):
         super().__init__()
         self.model = model
         self.criterion = criterion
         self.learning_rate = learning_rate
         self.heads_to_targets = heads_to_targets
-        self.is_output_multilayer = is_output_multilayer
+        self.is_output_multistage = is_output_multistage
 
         self.test_logits: dict = {}
         self.save_hyperparameters(ignore=["model", "criterion", "test_logits"])
@@ -64,7 +64,7 @@ class GenericTrainer(TrainerBase):
 
     def extract_eval_logits(self, raw_logits: dict) -> dict:
         """Take the last layer from each head if the model is multi-layer."""
-        if self.is_output_multilayer:
+        if self.is_output_multistage:
             return {k: v[-1] for k, v in raw_logits.items()}
         return raw_logits
 
@@ -111,7 +111,8 @@ class GenericTrainer(TrainerBase):
     def prediction_step(self, batch: dict, mode: str):
         raw_logits, loss, task_losses, batch_size = self.forward_step(batch)
         self.log(
-            f"{mode}/loss", loss,
+            f"{mode}/loss",
+            loss,
             on_step=True,
             on_epoch=True,
             batch_size=batch_size,

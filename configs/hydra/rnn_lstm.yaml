@@ -1,0 +1,34 @@
+# Bidirectional LSTM — same size as rnn_gru.yaml, only rnn_type changes.
+
+from: "rnn_gru.yaml"
+
+
+experiment:
+  variant: "rnn_lstm_bi_4l_h128"
+  seed: random
+
+
+model:
+  name: 'hydra'
+  backbone:
+    name: "rnn"
+    kwargs:
+      rnn_type: "lstm"
+      in_channels: 130
+      hidden_channels: 128
+      out_channels: 256
+      num_layers: 4
+      bidirectional: true
+  heads:
+    classification:
+      name: "linear"
+      n_channels: 256
+      kwargs:
+        in_features: 256
+        out_features: 2
+    regression:
+      name: "linear"
+      n_channels: 256
+      kwargs:
+        in_features: 256
+        out_features: 2

@@ -1,0 +1,19 @@
+from: "3.actionness_with_offsets_and_weights.yaml"
+
+
+experiment:
+  variant: "mstcn_actionness_with_offsets_noweight"
+  seed: random
+
+
+training:
+  loss_functions:
+    classification:
+      name: "cross-entropy"
+      use_weights: true
+      weight_strategy: "inverse"
+      multi_layer: true
+    regression:
+      name: "gIoU"
+      use_weights: false
+      multi_layer: true

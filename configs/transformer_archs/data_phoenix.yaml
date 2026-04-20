@@ -1,0 +1,44 @@
+datasets:
+  training:
+    shards_url: "file:F:/datasets/sign-language/phoenix/shards/shard_{000000..000003}.tar"
+    dataloader:
+      batch_size: 16
+      shuffle: true
+      n_workers: 0
+    preprocessing:
+      targets: [ 'temporal-segmentation', 'temporal-offsets', 'segments' ]
+      pose_transforms: [ { name: 'norm+flatten2d' } ]
+      use_windows: true
+      window_size: 300
+      window_stride: 240
+
+  validation:
+    shards_url: "file:F:/datasets/sign-language/phoenix/shards/shard_000004.tar"
+    dataloader:
+      batch_size: 16
+      shuffle: false
+      n_workers: 0
+    preprocessing:
+      targets: [ 'temporal-segmentation', 'temporal-offsets', 'segments' ]
+      pose_transforms: [ { name: 'norm+flatten2d' } ]
+      use_windows: true
+      window_size: 300
+      window_stride: 240
+
+  testing:
+    shards_url: "file:F:/datasets/sign-language/phoenix/shards/shard_000004.tar"
+    dataloader:
+      batch_size: 16
+      shuffle: false
+      n_workers: 0
+    preprocessing:
+      targets: [ 'temporal-segmentation', 'temporal-offsets', 'segments' ]
+      pose_transforms: [ { name: 'norm+flatten2d' } ]
+      use_windows: true
+      window_size: 300
+      window_stride: 240
+
+
+experiment:
+  id: "segmentation/phoenix"
+  output_dir: "/home/sign-language/outputs/segmentation"

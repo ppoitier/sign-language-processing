@@ -1,0 +1,41 @@
+# MS-TCN with deep supervision — loss computed on EVERY stage, not just the last.
+# Everything else identical to mstcn_4s10l. Tests whether the multi_layer loss
+# (which the original MS-TCN paper emphasizes) is a necessary companion to
+# iterative refinement.
+
+from: "mstcn_4s10l.yaml"
+
+
+experiment:
+  variant: "mstcn_4s10l_h64_deepsup"
+  seed: random
+
+
+training:
+  max_epochs: 300
+  n_warmup_epochs: 50
+
+  loss_functions:
+    classification:
+      name: "cross-entropy"
+      use_weights: false
+      multi_layer: true
+    regression:
+      name: "gIoU"
+      use_weights: false
+      multi_layer: true
+
+  learning_rate: 1e-4
+  early_stopping_patience: 10
+
+  n_classes: 2
+
+  is_output_multistage: true
+  overfit_one_batch: false
+  use_offsets: true
+
+  heads_to_targets:
+    classification: temporal-segmentation
+    regression: temporal-offsets
+
+  segment_decoder: { name: 'offsets' }
