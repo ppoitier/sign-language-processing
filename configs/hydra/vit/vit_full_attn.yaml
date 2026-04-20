@@ -20,16 +20,17 @@ model:
       dropout: 0.1
       pos_encoding: "rope"
       attn_mask_strategy: null
+  channels_to_head_routing: "shared"
   heads:
     classification:
       name: "linear"
-      n_channels: 128
+      n_channels: 256
       kwargs:
-        in_features: 128
+        in_features: 256
         out_features: 2
     regression:
       name: "linear"
-      n_channels: 128
+      n_channels: 256
       kwargs:
-        in_features: 128
+        in_features: 256
         out_features: 2

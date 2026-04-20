@@ -2,7 +2,7 @@ from: "vit_base.yaml"
 
 
 experiment:
-  variant: "vit_4h_4l_h128_win128_rope"
+  variant: "vit_2h_3l_h64_win128_rope"
   seed: random
 
 
@@ -12,10 +12,10 @@ model:
     name: 'vit'
     kwargs:
       in_channels: 130
-      hidden_channels: 128
+      hidden_channels: 64
       max_length: 3200
-      n_heads: 4
-      n_layers: 4
+      n_heads: 2
+      n_layers: 3
       dim_feedforward: 512
       dropout: 0.1
       pos_encoding: "rope"
@@ -24,13 +24,13 @@ model:
   heads:
     classification:
       name: "linear"
-      n_channels: 128
+      n_channels: 64
       kwargs:
-        in_features: 128
+        in_features: 64
         out_features: 2
     regression:
       name: "linear"
-      n_channels: 128
+      n_channels: 64
       kwargs:
-        in_features: 128
+        in_features: 64
         out_features: 2
