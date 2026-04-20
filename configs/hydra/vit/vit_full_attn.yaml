@@ -13,7 +13,7 @@ model:
     kwargs:
       in_channels: 130
       hidden_channels: 256
-      max_length: 300
+      max_length: 3200
       n_heads: 4
       n_layers: 6
       dim_feedforward: 1024
