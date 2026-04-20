@@ -25,6 +25,7 @@ module load EasyBuild/2025a
 module load CUDA/12.8.0
 module load Python/3.13.1-GCCcore-14.2.0
 
+source ~/miniconda3/etc/profile.d/conda.sh
 conda activate slp
 
 config_files=(
