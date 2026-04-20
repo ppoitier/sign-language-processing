@@ -20,13 +20,16 @@
 #
 #SBATCH --output=./out/slp_replication/%A_%a.out
 
+source ~/miniconda3/etc/profile.d/conda.sh
+
 module purge
 module load EasyBuild/2025a
 module load CUDA/12.8.0
-module load Python/3.13.1-GCCcore-14.2.0
+#module load Python/3.13.1-GCCcore-14.2.0
 
-source ~/miniconda3/etc/profile.d/conda.sh
 conda activate slp
+which python
+python --version
 
 config_files=(
 #  "../../configs/hydra/replication/lsfb/1.actionness_with_weights.yaml"
