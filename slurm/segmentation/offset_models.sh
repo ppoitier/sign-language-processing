@@ -11,7 +11,7 @@
 #SBATCH --gres="gpu:1"
 #SBATCH --mem-per-cpu=16384
 #SBATCH --partition=gpu
-#SBATCH --array=0-3
+#SBATCH --array=0-1
 #
 #SBATCH --mail-user=pierre.poitier@unamur.be
 #SBATCH --mail-type=ALL
@@ -22,9 +22,10 @@
 
 module purge
 module load EasyBuild/2025a
+module load CUDA/12.8.0
 module load Python/3.13.1-GCCcore-14.2.0
 
-source /gpfs/home/acad/unamur-fac_info/ppoitier/envs/slp/bin/activate
+conda activate slp
 
 config_files=(
 #  "../../configs/hydra/replication/lsfb/1.actionness_with_weights.yaml"
