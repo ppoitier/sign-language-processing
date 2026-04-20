@@ -27,7 +27,14 @@ module load EasyBuild/2025a
 module load CUDA/12.8.0
 #module load Python/3.13.1-GCCcore-14.2.0
 
+source ~/miniconda3/etc/profile.d/conda.sh
 conda activate slp
+export LD_LIBRARY_PATH=$CONDA_PREFIX/lib:$LD_LIBRARY_PATH
+
+# Should show conda's libstdc++, not /lib64/
+ldconfig -p | grep libstdc++
+strings $CONDA_PREFIX/lib/libstdc++.so.6 | grep GLIBCXX_3.4.29
+
 which python
 python --version
 
