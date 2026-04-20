@@ -2,7 +2,7 @@ from: "base.yaml"
 
 datasets:
   training:
-    shards_url: "/gpfs/scratch/acad/lsfb/datasets/lsfb-cont/shards/annotated/shard_{000000..000003}.tar :: /gpfs/scratch/acad/lsfb/datasets/lsfb-cont/shards/annotated/shard_{000005..000007}.tar"
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/lsfb-cont/shards/annotated/shard_{000000..000003}.tar::/gpfs/scratch/acad/lsfb/datasets/lsfb-cont/shards/annotated/shard_{000005..000007}.tar"
 
   validation:
     shards_url: "/gpfs/scratch/acad/lsfb/datasets/lsfb-cont/shards/annotated/shard_000004.tar"

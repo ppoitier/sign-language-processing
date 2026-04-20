@@ -37,8 +37,8 @@ datasets:
       targets: [ 'temporal-segmentation', 'temporal-offsets', 'segments' ]
       pose_transforms: [ { name: 'norm+flatten2d' } ]
       use_windows: true
-      window_size: 3500
-      window_stride: 2800
+      window_size: 3200
+      window_stride: 2560
       max_empty_windows: 0
 
 
@@ -77,11 +77,11 @@ training:
     classification:
       name: "cross-entropy"
       use_weights: false
-      multi_layer: true
+      multi_layer: false
     regression:
       name: "gIoU"
       use_weights: false
-      multi_layer: true
+      multi_layer: false
 
   learning_rate: 1e-4
   early_stopping_patience: 50
