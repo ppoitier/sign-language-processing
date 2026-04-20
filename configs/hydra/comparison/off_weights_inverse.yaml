@@ -1,0 +1,19 @@
+from: "off.yaml"
+
+
+experiment:
+  variant: "mstcn_off_weight_inverse"
+  seed: random
+
+
+training:
+  loss_functions:
+    classification:
+      name: "cross-entropy"
+      use_weights: true
+      weight_strategy: "inverse"
+      multi_layer: true
+    regression:
+      name: "gIoU"
+      use_weights: false
+      multi_layer: true

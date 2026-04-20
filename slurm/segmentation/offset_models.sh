@@ -11,7 +11,7 @@
 #SBATCH --gres="gpu:1"
 #SBATCH --mem-per-cpu=16384
 #SBATCH --partition=gpu
-#SBATCH --array=0-1
+#SBATCH --array=0-6
 #
 #SBATCH --mail-user=pierre.poitier@unamur.be
 #SBATCH --mail-type=ALL
@@ -39,10 +39,13 @@ which python
 python --version
 
 config_files=(
-#  "../../configs/hydra/replication/lsfb/1.actionness_with_weights.yaml"
-#  "../../configs/hydra/replication/lsfb/2.actionness_without_weights.yaml"
-  "../../configs/hydra/replication/lsfb/3.actionness_with_offsets_and_weights.yaml"
-  "../../configs/hydra/replication/lsfb/4.actionness_with_offsets_without_weights.yaml"
+  "../../configs/hydra/comparison/io.yaml"
+  "../../configs/hydra/comparison/io_weights_inverse.yaml"
+  "../../configs/hydra/comparison/io_weights_inverse_sqrt.yaml"
+  "../../configs/hydra/comparison/off.yaml"
+  "../../configs/hydra/comparison/off_weights_inverse.yaml"
+  "../../configs/hydra/comparison/off_weights_inverse_sqrt.yaml"
+  "../../configs/hydra/comparison/off_no_refinement.yaml"
 )
 
 config_file=${config_files[$SLURM_ARRAY_TASK_ID]}

@@ -43,8 +43,8 @@ def launch_segmentation_training(config_path):
     model = build_hydra_model(config.model)
     print(model)
 
-    # print("Compiling model...")
-    # model = torch.compile(model)
+    print("Compiling model...")
+    model = torch.compile(model)
 
     assert config.training is not None, "Missing training configuration."
 
@@ -85,6 +85,14 @@ def launch_segmentation_training(config_path):
         lightning_module=lightning_module,
         experiment_config=config.experiment,
         loggers=loggers,
+    )
+
+    run_testing(
+        checkpoint_path=best_checkpoint_path,
+        testing_dataloader=dataloaders["training"],  # deterministic variant
+        lightning_module=lightning_module,
+        experiment_config=config.experiment,
+        loggers=None,
     )
 
     logits_dir = f"{exp_config.output_dir}/logits/{exp_config.id}/{exp_config.variant}/{selected_seed}"

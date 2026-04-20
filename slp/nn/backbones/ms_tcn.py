@@ -65,7 +65,8 @@ class MultiStageTCN(nn.Module):
             hidden_channels: int,
             out_channels: int,
             n_stages: int,
-            n_layers: int
+            n_layers: int,
+            activation: str = 'softmax',
     ):
         super().__init__()
 
@@ -75,7 +76,13 @@ class MultiStageTCN(nn.Module):
             for _ in range(n_stages - 1)
         ]
 
-        self.model = IterativeRefinementModel(initial_stage, refinement_stages, activation=nn.Softmax(dim=1))
+        act = None
+        if activation == 'softmax':
+            act = nn.Softmax(dim=1)
+        elif activation == 'sigmoid':
+            act = nn.Sigmoid()
+
+        self.model = IterativeRefinementModel(initial_stage, refinement_stages, activation=act)
 
     def forward(self, x: Tensor, mask: Tensor) -> list[Tensor]:
         """

@@ -1,0 +1,16 @@
+from: "base.yaml"
+
+datasets:
+  training:
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/lsfb-cont/shards/annotated/shard_000000.tar :: /gpfs/scratch/acad/lsfb/datasets/lsfb-cont/shards/annotated/shard_{000002..000007}.tar"
+
+  validation:
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/lsfb-cont/shards/annotated/shard_000001.tar"
+
+  testing:
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/lsfb-cont/shards/annotated/shard_000001.tar"
+
+
+experiment:
+  id: "segmentation/lsfb"
+  variant: "mstcn_off_fold1"

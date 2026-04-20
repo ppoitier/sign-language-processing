@@ -1,0 +1,18 @@
+from: "off.yaml"
+
+
+experiment:
+  variant: "mstcn_off_no_refinement"
+  seed: random
+
+
+training:
+  loss_functions:
+    classification:
+      name: "cross-entropy"
+      use_weights: false
+      multi_layer: false
+    regression:
+      name: "gIoU"
+      use_weights: false
+      multi_layer: false

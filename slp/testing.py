@@ -10,7 +10,7 @@ def run_testing(
     testing_dataloader: DataLoader,
     lightning_module: pl.LightningModule,
     experiment_config: ExperimentConfig,
-    loggers: list[Logger],
+    loggers: list[Logger] | None,
 ):
     if experiment_config.debug:
         checkpoint_path = None

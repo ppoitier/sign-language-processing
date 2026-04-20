@@ -1,0 +1,15 @@
+from: "io.yaml"
+
+
+experiment:
+  variant: "mstcn_io_weight_inverse_sqrt"
+  seed: random
+
+
+training:
+  loss_functions:
+    classification:
+      name: "cross-entropy"
+      use_weights: true
+      weight_strategy: "inverse_sqrt"
+      multi_layer: true
