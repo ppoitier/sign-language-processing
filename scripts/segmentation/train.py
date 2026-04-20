@@ -22,7 +22,7 @@ from slp.utils.logits import save_logits
 
 @click.command()
 @click.option(
-    "--config_path",
+    "--config-path",
     "-c",
     type=click.Path(exists=True, file_okay=True, dir_okay=False, readable=True),
     required=True,

@@ -50,5 +50,5 @@ experiment:
 #  output_dir: "F:/outputs/hydra/comparison"
   output_dir: "/gpfs/scratch/acad/lsfb/outputs/hydra/comparison"
   debug: false
-  show_progress_bar: true
+  show_progress_bar: false
 #  mlflow_uri: "http://127.0.0.1:5000"
