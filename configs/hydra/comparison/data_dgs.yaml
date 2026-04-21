@@ -1,0 +1,49 @@
+datasets:
+  training:
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/dgs/shards/shard_{000000..000005}.tar"
+    dataloader:
+      batch_size: 16
+      shuffle: true
+      n_workers: 0
+    preprocessing:
+      targets: [ 'temporal-segmentation', 'temporal-offsets', 'segments' ]
+      pose_transforms: [ { name: 'norm+flatten2d' } ]
+      use_windows: true
+      window_size: 3200
+      window_stride: 2560
+      max_empty_windows: 0
+
+  validation:
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/dgs/shards/shard_000006.tar"
+    dataloader:
+      batch_size: 16
+      shuffle: false
+      n_workers: 0
+    preprocessing:
+      targets: [ 'temporal-segmentation', 'temporal-offsets', 'segments' ]
+      pose_transforms: [ { name: 'norm+flatten2d' } ]
+      use_windows: true
+      window_size: 3200
+      window_stride: 2560
+      max_empty_windows: 0
+
+  testing:
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/dgs/shards/shard_000007.tar"
+    dataloader:
+      batch_size: 16
+      shuffle: false
+      n_workers: 0
+    preprocessing:
+      targets: [ 'temporal-segmentation', 'temporal-offsets', 'segments' ]
+      pose_transforms: [ { name: 'norm+flatten2d' } ]
+      use_windows: true
+      window_size: 3200
+      window_stride: 2560
+      max_empty_windows: 0
+
+
+experiment:
+  id: "segmentation/dgs"
+  output_dir: "/gpfs/scratch/acad/lsfb/outputs/hydra/comparison"
+  debug: false
+  show_progress_bar: false

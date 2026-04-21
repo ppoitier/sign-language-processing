@@ -12,5 +12,4 @@ datasets:
 
 
 experiment:
-  id: "segmentation/lsfb"
   variant: "mstcn_off_fold0"

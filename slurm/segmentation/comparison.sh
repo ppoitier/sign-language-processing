@@ -18,7 +18,7 @@
 #
 #SBATCH --account=lsfb
 #
-#SBATCH --output=./out/slp_replication/%A_%a.out
+#SBATCH --output=./out/comparison/%A_%a.out
 
 source ~/miniconda3/etc/profile.d/conda.sh
 

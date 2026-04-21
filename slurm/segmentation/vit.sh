@@ -8,7 +8,7 @@
 #SBATCH --gres="gpu:1"
 #SBATCH --mem-per-cpu=16384
 #SBATCH --partition=gpu
-#SBATCH --array=0-0
+#SBATCH --array=0-5
 #
 #SBATCH --mail-user=pierre.poitier@unamur.be
 #SBATCH --mail-type=ALL
@@ -36,12 +36,12 @@ which python
 python --version
 
 config_files=(
-#  "../../configs/hydra/vit/vit_base.yaml"
+  "../../configs/hydra/vit/vit_base.yaml"
   "../../configs/hydra/vit/vit_full_attn.yaml"
-#  "../../configs/hydra/vit/vit_xsmall.yaml"
-#  "../../configs/hydra/vit/vit_small.yaml"
-#  "../../configs/hydra/vit/vit_medium.yaml"
-#  "../../configs/hydra/vit/vit_large.yaml"
+  "../../configs/hydra/vit/vit_xsmall.yaml"
+  "../../configs/hydra/vit/vit_small.yaml"
+  "../../configs/hydra/vit/vit_medium.yaml"
+  "../../configs/hydra/vit/vit_large.yaml"
 #  "../../configs/hydra/vit/vit_xlarge.yaml"
 )
 
