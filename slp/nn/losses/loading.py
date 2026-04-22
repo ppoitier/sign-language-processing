@@ -8,6 +8,33 @@ from slp.nn.losses.multi_layer import MultiLayerLoss
 from slp.nn.losses.multi_task import MultiTaskLoss
 
 
+def build_classification_criterion(
+    config: TrainingConfig,
+    training_dataset: SignLanguageDataset,
+):
+    criterion_config = config.loss_functions.get('classification')
+    if criterion_config is None:
+        raise ValueError("Missing classification head in training configuration.")
+    criterion_cls = CRITERION_REGISTRY.get(criterion_config.name)
+    weights = None
+    if criterion_config.use_weights:
+        print(
+            f'Loading weights [classification] with "{criterion_config.weight_strategy}" strategy...'
+        )
+        target_name = config.heads_to_targets['classification']
+        weights = training_dataset.get_label_weights(
+            target_name, strategy=criterion_config.weight_strategy
+        )
+        weights = torch.tensor(
+            [weights[i] for i in range(config.n_classes)],
+            device="cuda",
+            dtype=torch.float32,
+        )
+    criterion = criterion_cls(weights=weights, **criterion_config.kwargs)
+    return criterion
+
+
+# TODO: rename this multi-task criterion... not only multi-layer
 def build_multi_layer_criterion(
     config: TrainingConfig,
     training_dataset: SignLanguageDataset,

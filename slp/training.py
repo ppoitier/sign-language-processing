@@ -1,5 +1,3 @@
-import os
-
 import lightning as pl
 from lightning.pytorch.callbacks import (
     ModelCheckpoint,
@@ -23,11 +21,6 @@ def run_training(
     checkpoints_dir: str,
     monitor_loss: str = 'validation/loss',
 ) -> tuple[pl.LightningModule, str]:
-
-    # identifier = f"{experiment_config.task}/{experiment_config.variant}/{experiment_config.id}"
-    # checkpoints_dir = f"{experiment_config.output_dir}/checkpoints/{identifier}"
-    # os.makedirs(checkpoints_dir, exist_ok=True)
-    # log_dir = f"{experiment_config.output_dir}/logs/{identifier}"
 
     checkpoint_callback = ModelCheckpoint(
         dirpath=checkpoints_dir,

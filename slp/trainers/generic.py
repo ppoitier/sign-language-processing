@@ -1,7 +1,9 @@
-import torch
+from typing import Optional
+
 from torch import nn, optim, Tensor
 
 from slp.trainers.base import TrainerBase
+from slp.schedulers.types import OptimizerFactory, SchedulerFactory
 
 
 class GenericTrainer(TrainerBase):
@@ -26,16 +28,34 @@ class GenericTrainer(TrainerBase):
         learning_rate: float,
         heads_to_targets: dict[str, str],
         is_output_multistage: bool = False,
+        optimizer_factory: Optional[OptimizerFactory] = None,
+        scheduler_factory: Optional[SchedulerFactory] = None,
+        scheduler_interval: str = "epoch",
+        scheduler_monitor: Optional[str] = None,
     ):
         super().__init__()
         self.model = model
         self.criterion = criterion
         self.learning_rate = learning_rate
+
+        self.optimizer_factory = optimizer_factory
+        self.scheduler_factory = scheduler_factory
+        self.scheduler_interval = scheduler_interval
+        self.scheduler_monitor = scheduler_monitor
+
         self.heads_to_targets = heads_to_targets
         self.is_output_multistage = is_output_multistage
 
         self.test_logits: dict = {}
-        self.save_hyperparameters(ignore=["model", "criterion", "test_logits"])
+        self.save_hyperparameters(
+            ignore=[
+                "model",
+                "criterion",
+                "test_logits",
+                "optimizer_factory",
+                "scheduler_factory",
+            ]
+        )
 
     def forward_step(self, batch: dict) -> tuple[dict, Tensor, dict, int]:
         """Run model forward and compute loss.
@@ -145,4 +165,23 @@ class GenericTrainer(TrainerBase):
         self.on_test_batch(eval_logits, batch, batch_size)
 
     def configure_optimizers(self):
-        return optim.AdamW(self.parameters(), lr=self.learning_rate)
+        if self.optimizer_factory is not None:
+            optimizer = self.optimizer_factory(self.parameters())
+        else:
+            optimizer = optim.AdamW(self.parameters(), lr=self.learning_rate)
+
+        if self.scheduler_factory is None:
+            return optimizer
+
+        scheduler = self.scheduler_factory(optimizer)
+
+        lr_scheduler_config = {
+            "scheduler": scheduler,
+            "interval": self.scheduler_interval,
+            "frequency": 1,
+        }
+
+        if self.scheduler_monitor is not None:
+            lr_scheduler_config["monitor"] = self.scheduler_monitor
+
+        return {"optimizer": optimizer, "lr_scheduler": lr_scheduler_config}

@@ -12,9 +12,16 @@ class CriterionConfig(BaseModel):
     multi_layer: bool = False
 
 
+class LRSchedulerConfig(BaseModel):
+    name: str
+    kwargs: dict = Field(default_factory=dict)
+    monitor: Optional[str] = None
+
+
 class TrainingConfig(BaseModel):
     max_epochs: int
     n_warmup_epochs: Optional[int] = None
+    lr_scheduler: Optional[LRSchedulerConfig] = None
 
     loss_functions: dict[str, CriterionConfig]
     learning_rate: float

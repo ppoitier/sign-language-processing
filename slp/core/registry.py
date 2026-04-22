@@ -36,6 +36,7 @@ NECK_REGISTRY = Registry("neck")
 HEAD_REGISTRY = Registry("head")
 
 CRITERION_REGISTRY = Registry("criterion")
+LR_SCHEDULER_REGISTRY = Registry("lr_scheduler")
 
 POSE_TRANSFORM_REGISTRY = Registry("pose-transform")
 VIDEO_TRANSFORM_REGISTRY = Registry("video-transform")

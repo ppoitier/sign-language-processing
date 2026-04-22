@@ -7,7 +7,10 @@ from torch.optim.lr_scheduler import (
     ReduceLROnPlateau,
 )
 
+from slp.core.registry import LR_SCHEDULER_REGISTRY
 
+
+@LR_SCHEDULER_REGISTRY.register("warmup-reduce-on-plateau")
 def create_warmup_reduce_on_plateau(
         optimizer: Optimizer,
         n_warmup_steps: int,
@@ -29,10 +32,11 @@ def create_warmup_reduce_on_plateau(
     )
 
 
+@LR_SCHEDULER_REGISTRY.register("warmup-plateau-cosine-annealing")
 def create_warmup_plateau_cosine_scheduler(
     optimizer: Optimizer,
     n_warmup_steps: int,
-    n_plateau_steps: int,  # <-- Highlighted Change: New parameter
+    n_plateau_steps: int,
     max_steps: int,
     lr: float,
     start_lr: float,

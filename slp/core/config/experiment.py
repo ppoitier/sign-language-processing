@@ -5,8 +5,8 @@ from uuid import uuid4
 from pydantic import BaseModel, Field
 
 from slp.core.config.dataset import ContinuousDatasetConfig
-from slp.core.config.training import SegmentationTrainingConfig
-from slp.core.config.model import HydraConfig
+from slp.core.config.training import SegmentationTrainingConfig, TrainingConfig
+from slp.core.config.model import HydraConfig, ClassificationModelConfig
 
 
 class ExperimentConfig(BaseModel):
@@ -24,6 +24,13 @@ class ExperimentConfig(BaseModel):
 
 class TaskConfig(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid4()))
+
+
+class IsolatedRecognitionClassificationTaskConfig(TaskConfig):
+    experiment: ExperimentConfig
+    datasets: dict[str, ContinuousDatasetConfig]
+    model: ClassificationModelConfig
+    training: Optional[TrainingConfig] = None
 
 
 class SegmentationTaskConfig(TaskConfig):

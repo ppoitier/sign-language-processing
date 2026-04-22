@@ -13,6 +13,11 @@ class HeadConfig(ModelConfig):
     n_channels: int
 
 
+class ClassificationModelConfig(ModelConfig):
+    backbone: ModelConfig
+    head: HeadConfig
+
+
 class HydraConfig(ModelConfig):
     backbone: ModelConfig
     neck: Optional[ModelConfig] = None

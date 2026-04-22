@@ -36,6 +36,10 @@ class ContinuousDatasetConfig(DatasetConfig):
     preprocessing: ContinuousDataPreprocessing | None = None
 
 
+class IsolatedDatasetConfig(DatasetConfig):
+    ...
+
+
 # class IsolatedRecognitionDatasetConfig(DatasetConfig):
 #     preprocessing: DataPreprocessing | None = None
 #     split_filepath: Optional[str] = None
