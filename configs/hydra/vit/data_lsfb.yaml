@@ -44,6 +44,6 @@ datasets:
 
 experiment:
   id: "segmentation/lsfb"
-  output_dir: "/gpfs/scratch/acad/lsfb/outputs/hydra/vit"
+  output_dir: "/gpfs/scratch/acad/lsfb/outputs/hydra/vit_warmup"
   debug: false
   show_progress_bar: false

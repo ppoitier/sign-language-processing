@@ -37,13 +37,13 @@ datasets:
       targets: [ 'temporal-segmentation', 'temporal-offsets', 'segments' ]
       pose_transforms: [ { name: 'norm+flatten2d' } ]
       use_windows: true
-      window_size: 3500
-      window_stride: 2800
+      window_size: 3200
+      window_stride: 2560
       max_empty_windows: 0
 
 
 experiment:
   id: "segmentation/lsfb"
   output_dir: "F:/outputs/hydra/vit"
-  debug: false
+  debug: true
   show_progress_bar: false

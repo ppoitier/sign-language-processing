@@ -1,9 +1,7 @@
 from pprint import pprint
 
 import click
-
 import torch
-
 torch.set_float32_matmul_precision("medium")
 
 from slp.core.parser import parse_config
@@ -56,8 +54,11 @@ def launch_segmentation_training(config_path):
     print("Loading segment decoder...")
     segment_decoder = load_segment_decoder(config.training.segment_decoder)
 
-    # print("Loading learning rate scheduler factory...")
-    # lr_scheduler_factory, lr_scheduler_monitor = load_lr_scheduler_factory(config.training.lr_scheduler)
+    print("Loading learning rate scheduler factory...")
+    if config.training.lr_scheduler is not None:
+        lr_scheduler_factory, lr_scheduler_monitor = load_lr_scheduler_factory(config.training.lr_scheduler)
+    else:
+        lr_scheduler_factory, lr_scheduler_monitor = None, None
 
     print("Loading segmentation trainer...")
     lightning_module = load_segmentation_trainer(
@@ -65,8 +66,8 @@ def launch_segmentation_training(config_path):
         criterion=criterion,
         training_config=config.training,
         segment_decoder=segment_decoder,
-        # scheduler_factory=lr_scheduler_factory,
-        # scheduler_monitor=lr_scheduler_monitor,
+        scheduler_factory=lr_scheduler_factory,
+        scheduler_monitor=lr_scheduler_monitor,
     )
 
     exp_config = config.experiment
@@ -95,7 +96,7 @@ def launch_segmentation_training(config_path):
 
     run_testing(
         checkpoint_path=best_checkpoint_path,
-        testing_dataloader=dataloaders["training"],  # deterministic variant
+        testing_dataloader=dataloaders["training"],
         lightning_module=lightning_module,
         experiment_config=config.experiment,
         loggers=None,

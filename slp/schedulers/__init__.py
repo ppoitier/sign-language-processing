@@ -1,1 +1,1 @@
-from .cosine_annealing_with_linear_warmup import create_warmup_plateau_cosine_scheduler, create_warmup_reduce_on_plateau
+from .cosine_annealing_with_linear_warmup import create_warmup_plateau_cosine_scheduler
