@@ -1,4 +1,4 @@
-from: "data_lsfb.yaml"
+from: "data_dgs.yaml"
 
 
 experiment:

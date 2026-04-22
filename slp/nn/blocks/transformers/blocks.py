@@ -107,8 +107,7 @@ class TransformerBlock(nn.Module):
 
         # -- Downsample & re-mask --
         x = self.downsample(x * mask)
-        if self.ds_stride > 1:
-            mask = (self.downsample(mask.to(x.dtype)) > 0).to(x.dtype)
+        mask = (self.downsample(mask.to(x.dtype)) > 0).to(x.dtype)
         x = x * mask
 
         return x
