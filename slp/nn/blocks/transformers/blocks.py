@@ -66,9 +66,12 @@ class TransformerBlock(nn.Module):
             rope=rope,
         )
 
-        self.downsample = (
-            nn.AvgPool1d(kernel_size=stride, stride=stride) if stride > 1 else None
-        )
+        if stride > 1:
+            self.downsample = nn.AvgPool1d(kernel_size=stride, stride=stride)
+            self.ds_stride = stride
+        else:
+            self.downsample = nn.Identity()
+            self.ds_stride = 1
 
     def forward(self, x: Tensor, mask: Tensor) -> Tensor:
         """
@@ -103,9 +106,13 @@ class TransformerBlock(nn.Module):
         x = x.transpose(1, 2)
 
         # -- Downsample & re-mask --
-        if self.downsample is not None:
-            x = self.downsample(x * mask)
-            mask = mask[:, :, :: self.downsample.stride[0]]
-            x = x * mask
+        # if self.downsample is not None:
+        #     x = self.downsample(x * mask)
+        #     mask = mask[:, :, :: self.downsample.stride[0]]
+        #     x = x * mask
+
+        x = self.downsample(x * mask)
+        mask = mask[:, :, :: self.ds_stride]
+        x = x * mask
 
         return x

@@ -26,7 +26,7 @@ model:
     kwargs:
       c_in: 64
       c_out: 64
-      n_levels: 6
+      n_levels: 4
       output_mode: "finest"
   channels_to_head_routing: "shared"
   heads:
