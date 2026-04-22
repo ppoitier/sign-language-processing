@@ -11,7 +11,7 @@
 #SBATCH --gres="gpu:1"
 #SBATCH --mem-per-cpu=16384
 #SBATCH --partition=gpu
-#SBATCH --array=0-6
+#SBATCH --array=0-7
 #
 #SBATCH --mail-user=pierre.poitier@unamur.be
 #SBATCH --mail-type=ALL
@@ -42,6 +42,7 @@ config_files=(
   "../../configs/hydra/comparison/io.yaml"
   "../../configs/hydra/comparison/io_weights_inverse.yaml"
   "../../configs/hydra/comparison/io_weights_inverse_sqrt.yaml"
+  "../../configs/hydra/comparison/io_no_refinement.yaml"
   "../../configs/hydra/comparison/off.yaml"
   "../../configs/hydra/comparison/off_weights_inverse.yaml"
   "../../configs/hydra/comparison/off_weights_inverse_sqrt.yaml"
