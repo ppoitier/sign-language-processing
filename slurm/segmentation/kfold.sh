@@ -39,14 +39,14 @@ which python
 python --version
 
 config_files=(
-  "../../configs/hydra/kfold/fold0.yaml"
-  "../../configs/hydra/kfold/fold1.yaml"
-  "../../configs/hydra/kfold/fold2.yaml"
-  "../../configs/hydra/kfold/fold3.yaml"
-  "../../configs/hydra/kfold/fold4.yaml"
-  "../../configs/hydra/kfold/fold5.yaml"
-  "../../configs/hydra/kfold/fold6.yaml"
-  "../../configs/hydra/kfold/fold7.yaml"
+  "../../configs/hydra/kfold_dgs/fold0.yaml"
+  "../../configs/hydra/kfold_dgs/fold1.yaml"
+  "../../configs/hydra/kfold_dgs/fold2.yaml"
+  "../../configs/hydra/kfold_dgs/fold3.yaml"
+  "../../configs/hydra/kfold_dgs/fold4.yaml"
+  "../../configs/hydra/kfold_dgs/fold5.yaml"
+  "../../configs/hydra/kfold_dgs/fold6.yaml"
+  "../../configs/hydra/kfold_dgs/fold7.yaml"
 )
 
 config_file=${config_files[$SLURM_ARRAY_TASK_ID]}

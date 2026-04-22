@@ -1,0 +1,15 @@
+from: "base.yaml"
+
+datasets:
+  training:
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/dgs/shards/shard_{000000..000006}.tar"
+
+  validation:
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/dgs/shards/shard_000007.tar"
+
+  testing:
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/dgs/shards/shard_000007.tar"
+
+
+experiment:
+  variant: "mstcn_off_fold7"

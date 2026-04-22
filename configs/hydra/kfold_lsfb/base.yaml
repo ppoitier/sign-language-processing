@@ -1,6 +1,6 @@
 datasets:
   training:
-    shards_url: "/gpfs/scratch/acad/lsfb/datasets/dgs/shards/shard_{000000..000006}.tar"
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/lsfb-cont/shards/annotated/shard_{000000..000006}.tar"
     dataloader:
       batch_size: 16
       shuffle: true
@@ -14,7 +14,7 @@ datasets:
       max_empty_windows: 0
 
   validation:
-    shards_url: "/gpfs/scratch/acad/lsfb/datasets/dgs/shards/shard_000007.tar"
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/lsfb-cont/shards/annotated/shard_000007.tar"
     dataloader:
       batch_size: 16
       shuffle: false
@@ -28,7 +28,7 @@ datasets:
       max_empty_windows: 0
 
   testing:
-    shards_url: "/gpfs/scratch/acad/lsfb/datasets/dgs/shards/shard_000007.tar"
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/lsfb-cont/shards/annotated/shard_000007.tar"
     dataloader:
       batch_size: 16
       shuffle: false
@@ -43,7 +43,7 @@ datasets:
 
 
 experiment:
-  id: "segmentation/dgs"
+  id: "segmentation/lsfb"
   variant: "mstcn_off_base"
   seed: random
   output_dir: "/gpfs/scratch/acad/lsfb/outputs/hydra/fold_comparison"
