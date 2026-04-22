@@ -45,8 +45,7 @@ model:
 
 
 training:
-  max_epochs: 300
-  n_warmup_epochs: 50
+  max_epochs: 150
 
   loss_functions:
     classification:
@@ -58,8 +57,17 @@ training:
       use_weights: false
       multi_layer: false
 
-  learning_rate: 1e-4
-  early_stopping_patience: 10
+  learning_rate: 1.0e-4
+  early_stopping_patience: 20
+  lr_scheduler:
+    name: 'warmup-plateau-cosine-annealing'
+    kwargs:
+      n_warmup_steps: 10
+      n_plateau_steps: 5
+      max_steps: 150
+      lr: 1.0e-4
+      start_lr: 1.0e-6
+      end_lr: 1.0e-6
 
   n_classes: 2
 

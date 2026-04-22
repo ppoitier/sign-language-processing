@@ -2,7 +2,7 @@ from: "mstx_base.yaml"
 
 
 experiment:
-  variant: "mstx_8h_3s6b_h512_win128_rope"
+  variant: "mstx_6h_2s6b_h384_win128_rope"
   seed: random
 
 
@@ -12,11 +12,11 @@ model:
     name: 'ms-transformer'
     kwargs:
       in_channels: 130
-      hidden_channels: 512
+      hidden_channels: 384
       max_length: 3200
-      n_heads: 8
-      dim_feedforward: 2048
-      n_stem_layers: 3
+      n_heads: 6
+      dim_feedforward: 1536
+      n_stem_layers: 2
       n_branch_layers: 6
       dropout: 0.1
       pos_encoding: "rope"
@@ -24,21 +24,21 @@ model:
   neck:
     name: 'fpn'
     kwargs:
-      c_in: 512
-      c_out: 512
+      c_in: 384
+      c_out: 384
       n_levels: 6
       output_mode: "finest"
   channels_to_head_routing: "shared"
   heads:
     classification:
       name: "linear"
-      n_channels: 512
+      n_channels: 384
       kwargs:
-        in_features: 512
+        in_features: 384
         out_features: 2
     regression:
       name: "linear"
-      n_channels: 512
+      n_channels: 384
       kwargs:
-        in_features: 512
+        in_features: 384
         out_features: 2
