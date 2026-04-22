@@ -56,8 +56,8 @@ def launch_segmentation_training(config_path):
     print("Loading segment decoder...")
     segment_decoder = load_segment_decoder(config.training.segment_decoder)
 
-    print("Loading learning rate scheduler factory...")
-    lr_scheduler_factory, lr_scheduler_monitor = load_lr_scheduler_factory(config.training.lr_scheduler)
+    # print("Loading learning rate scheduler factory...")
+    # lr_scheduler_factory, lr_scheduler_monitor = load_lr_scheduler_factory(config.training.lr_scheduler)
 
     print("Loading segmentation trainer...")
     lightning_module = load_segmentation_trainer(
@@ -65,8 +65,8 @@ def launch_segmentation_training(config_path):
         criterion=criterion,
         training_config=config.training,
         segment_decoder=segment_decoder,
-        scheduler_factory=lr_scheduler_factory,
-        scheduler_monitor=lr_scheduler_monitor,
+        # scheduler_factory=lr_scheduler_factory,
+        # scheduler_monitor=lr_scheduler_monitor,
     )
 
     exp_config = config.experiment
