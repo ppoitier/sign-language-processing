@@ -106,13 +106,9 @@ class TransformerBlock(nn.Module):
         x = x.transpose(1, 2)
 
         # -- Downsample & re-mask --
-        # if self.downsample is not None:
-        #     x = self.downsample(x * mask)
-        #     mask = mask[:, :, :: self.downsample.stride[0]]
-        #     x = x * mask
-
         x = self.downsample(x * mask)
-        mask = mask[:, :, :: self.ds_stride]
+        if self.ds_stride > 1:
+            mask = (self.downsample(mask.to(x.dtype)) > 0).to(x.dtype)
         x = x * mask
 
         return x
