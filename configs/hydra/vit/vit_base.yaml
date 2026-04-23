@@ -1,4 +1,4 @@
-from: "data_lsfb_and_dgs.yaml"
+from: "data_lsfb.yaml"
 
 
 experiment:
@@ -55,7 +55,7 @@ training:
     name: 'warmup-plateau-cosine-annealing'
     kwargs:
       n_warmup_steps: 10
-      n_plateau_steps: 5
+      n_plateau_steps: 0
       max_steps: 150
       lr: 1.0e-4
       start_lr: 1.0e-6
