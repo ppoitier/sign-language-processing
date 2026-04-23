@@ -4,9 +4,9 @@
 #SBATCH --time=24:00:00
 #
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=2
+#SBATCH --cpus-per-task=4
 #SBATCH --gres="gpu:1"
-#SBATCH --mem-per-cpu=16384
+#SBATCH --mem-per-cpu=32768
 #SBATCH --partition=gpu
 #SBATCH --array=0-5
 #
@@ -15,7 +15,7 @@
 #
 #SBATCH --account=lsfb
 #
-#SBATCH --output=./out/vit/%A_%a.out
+#SBATCH --output=./out/vit_with_dgs/%A_%a.out
 
 source ~/miniconda3/etc/profile.d/conda.sh
 

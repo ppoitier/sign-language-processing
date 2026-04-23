@@ -66,12 +66,14 @@ class TransformerBlock(nn.Module):
             rope=rope,
         )
 
-        if stride > 1:
-            self.downsample = nn.AvgPool1d(kernel_size=stride, stride=stride)
-            self.ds_stride = stride
-        else:
-            self.downsample = nn.Identity()
-            self.ds_stride = 1
+        self.downsample = nn.AvgPool1d(kernel_size=stride, stride=stride)
+        self.ds_stride = stride
+        # if stride > 1:
+        #     self.downsample = nn.AvgPool1d(kernel_size=stride, stride=stride)
+        #     self.ds_stride = stride
+        # else:
+        #     self.downsample = nn.Identity()
+        #     self.ds_stride = 1
 
     def forward(self, x: Tensor, mask: Tensor) -> Tensor:
         """
