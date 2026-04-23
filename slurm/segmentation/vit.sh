@@ -15,7 +15,7 @@
 #
 #SBATCH --account=lsfb
 #
-#SBATCH --output=./out/vit_with_dgs/%A_%a.out
+#SBATCH --output=./out/vit_warm_no_plateau/%A_%a.out
 
 source ~/miniconda3/etc/profile.d/conda.sh
 
