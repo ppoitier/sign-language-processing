@@ -2,7 +2,7 @@ from: "data_lsfb.yaml"
 
 
 experiment:
-  variant: "vit_4h_6l_h256_win128_rope"
+  variant: "warm20/vit_4h_6l_h256_win128_rope"
   seed: random
 
 
@@ -54,7 +54,7 @@ training:
   lr_scheduler:
     name: 'warmup-plateau-cosine-annealing'
     kwargs:
-      n_warmup_steps: 10
+      n_warmup_steps: 20
       n_plateau_steps: 0
       max_steps: 150
       lr: 1.0e-4
