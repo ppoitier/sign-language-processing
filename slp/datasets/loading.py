@@ -1,22 +1,10 @@
 from sldl import SignLanguageDataset
-from sldl.targets.temporal_segmentation import TemporalSegmentationTarget
-from sldl.targets.temporal_boundary_offset import TemporalBoundaryOffsetsTarget
-from sldl.targets.segments import SegmentTarget
 from torch.utils.data import DataLoader
 
 from slp.core.config.dataset import ContinuousDatasetConfig, IsolatedDatasetConfig
 from slp.datasets.dataloaders import load_dataloader
 from slp.transforms.loading import load_pose_transform, load_video_transform
-
-
-def load_target(target_id: str):
-    if target_id == "temporal-segmentation":
-        return TemporalSegmentationTarget()
-    elif target_id == "temporal-offsets":
-        return TemporalBoundaryOffsetsTarget()
-    elif target_id == "segments":
-        return SegmentTarget()
-    raise ValueError(f"Unknown target: {target_id}")
+from slp.targets.loading import load_target
 
 
 def load_continuous_dataset(

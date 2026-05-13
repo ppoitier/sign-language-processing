@@ -29,7 +29,7 @@ class SegmentationTrainer(GenericTrainer):
         n_classes: int,
         classification_head: str = "classification",
         frame_labels_target: str = "temporal-segmentation",
-        segments_target: str = "segments",
+        segment_target: str = "segments",
         segment_decoder: SegmentDecoder | None = None,
         optimizer_factory: Optional[OptimizerFactory] = None,
         scheduler_factory: Optional[SchedulerFactory] = None,
@@ -50,7 +50,7 @@ class SegmentationTrainer(GenericTrainer):
         self.n_classes = n_classes
         self.classification_head = classification_head
         self.frame_labels_target = frame_labels_target
-        self.segments_target = segments_target
+        self.segment_target = segment_target
         self.segment_decoder = segment_decoder
 
         self.frame_metrics = nn.ModuleDict(
@@ -91,7 +91,7 @@ class SegmentationTrainer(GenericTrainer):
         pred_segments = self.segment_decoder.decode_batch(
             logits, self.n_classes, batch_size
         )
-        gt_segments = batch["targets"][self.segments_target]
+        gt_segments = batch["targets"][self.segment_target]
         segment_metrics = self.segment_metrics_test(pred_segments, gt_segments)
         self.log_metrics(segment_metrics, batch_size=batch_size)
 
@@ -137,6 +137,7 @@ def load_segmentation_trainer(
         heads_to_targets=training_config.heads_to_targets,
         is_output_multistage=training_config.is_output_multistage,
         n_classes=n_classes,
+        segment_target=training_config.segment_target,
         segment_decoder=segment_decoder,
         optimizer_factory=optimizer_factory,
         scheduler_factory=scheduler_factory,

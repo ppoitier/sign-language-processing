@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field
 
 from slp.core.config.dataset import ContinuousDatasetConfig
 from slp.core.config.training import SegmentationTrainingConfig, TrainingConfig
-from slp.core.config.model import HydraConfig, ClassificationModelConfig
+from slp.core.config.model import HydraConfig
 
 
 class ExperimentConfig(BaseModel):
@@ -29,7 +29,7 @@ class TaskConfig(BaseModel):
 class IsolatedRecognitionClassificationTaskConfig(TaskConfig):
     experiment: ExperimentConfig
     datasets: dict[str, ContinuousDatasetConfig]
-    model: ClassificationModelConfig
+    model: HydraConfig
     training: Optional[TrainingConfig] = None
 
 

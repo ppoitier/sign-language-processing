@@ -41,4 +41,5 @@ class SegmentDecoderConfig(BaseModel):
 
 class SegmentationTrainingConfig(TrainingConfig):
     use_offsets: bool = False
+    segment_target: str = 'segments'
     segment_decoder: SegmentDecoderConfig

@@ -1,7 +1,7 @@
 import torch
 from torch import Tensor
 
-from sign_language_tools.annotations.transforms import SegmentationVectorToSegments
+from sign_language_tools.annotations.transforms import FrameLabelsToSegments
 
 from slp.core.registry import SEGMENT_DECODER_REGISTRY
 from slp.decoders.base import SegmentDecoder
@@ -26,8 +26,9 @@ class ArgmaxDecoder(SegmentDecoder):
     ):
         self.classification_head = classification_head
         self.background_class = background_class
-        self.to_segments = SegmentationVectorToSegments(
-            background_classes=(background_class,), use_annotation_labels=False
+        self.to_segments = FrameLabelsToSegments(
+            background_classes=(background_class,),
+            include_labels=False,
         )
 
     def decode(self, logits: dict[str, Tensor], n_classes: int) -> Tensor:

@@ -1,0 +1,37 @@
+datasets:
+  training:
+    shards_url: "file:E:/datasets/sign-language/lsfb-isol/shards/500/shard_{000002..000009}.tar"
+    dataloader:
+      batch_size: 16
+      shuffle: true
+      n_workers: 0
+    preprocessing:
+      targets: []
+      max_empty_windows: 0
+
+  validation:
+    shards_url: "file:E:/datasets/sign-language/lsfb-isol/shards/500/shard_000001.tar"
+    dataloader:
+      batch_size: 16
+      shuffle: false
+      n_workers: 0
+    preprocessing:
+      targets: [ ]
+      max_empty_windows: 0
+
+  testing:
+    shards_url: "file:E:/datasets/sign-language/lsfb-isol/shards/500/shard_000000.tar"
+    dataloader:
+      batch_size: 16
+      shuffle: false
+      n_workers: 0
+    preprocessing:
+      targets: [ ]
+      max_empty_windows: 0
+
+
+experiment:
+  id: "simple_islr/lsfb"
+  output_dir: "E:/outputs/simple_islr"
+  debug: true
+  show_progress_bar: true

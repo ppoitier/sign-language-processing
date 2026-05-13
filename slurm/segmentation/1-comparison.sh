@@ -3,24 +3,24 @@
 # 30 configs: 5 methods × 2 weightings × 3 datasets.
 # Each method × weighting × dataset combination is one run.
 #
-#SBATCH --job-name=slp_hydra_replication
-#SBATCH --time=12:00:00
+#SBATCH --job-name=sls_comparison
+#SBATCH --time=06:00:00
 #
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=1
+#SBATCH --cpus-per-task=2
 #SBATCH --gres="gpu:1"
 #SBATCH --mem-per-cpu=16384
 #SBATCH --partition=gpu
-#SBATCH --array=0-7
+#SBATCH --array=0-9
 #
 #SBATCH --mail-user=pierre.poitier@unamur.be
 #SBATCH --mail-type=ALL
 #
 #SBATCH --account=lsfb
 #
-#SBATCH --output=./out/comparison/%A_%a.out
+#SBATCH --output=./out/1-comparison/%A_%a.out
 
-source ~/miniconda3/etc/profile.d/conda.sh
+#source ~/miniconda3/etc/profile.d/conda.sh
 
 module purge
 module load EasyBuild/2025a
@@ -39,14 +39,20 @@ which python
 python --version
 
 config_files=(
-  "../../configs/hydra/comparison/io.yaml"
-  "../../configs/hydra/comparison/io_weights_inverse.yaml"
-  "../../configs/hydra/comparison/io_weights_inverse_sqrt.yaml"
-  "../../configs/hydra/comparison/io_no_refinement.yaml"
-  "../../configs/hydra/comparison/off.yaml"
-  "../../configs/hydra/comparison/off_weights_inverse.yaml"
-  "../../configs/hydra/comparison/off_weights_inverse_sqrt.yaml"
-  "../../configs/hydra/comparison/off_no_refinement.yaml"
+  "../../configs/segmentation/1-comparison/lsfb/io.yaml"
+  "../../configs/segmentation/1-comparison/lsfb/io_weights.yaml"
+
+  "../../configs/segmentation/1-comparison/lsfb/off.yaml"
+  "../../configs/segmentation/1-comparison/lsfb/off_weights.yaml"
+
+  "../../configs/segmentation/1-comparison/lsfb/bio.yaml"
+  "../../configs/segmentation/1-comparison/lsfb/bio_weights.yaml"
+
+  "../../configs/segmentation/1-comparison/lsfb/bound_io.yaml"
+  "../../configs/segmentation/1-comparison/lsfb/bound_io_weights.yaml"
+
+  "../../configs/segmentation/1-comparison/lsfb/bound_off.yaml"
+  "../../configs/segmentation/1-comparison/lsfb/bound_off_weights.yaml"
 )
 
 config_file=${config_files[$SLURM_ARRAY_TASK_ID]}

@@ -1,13 +1,13 @@
 import torch
 from torch import Tensor
 
-from sign_language_tools.annotations.transforms import SegmentationVectorToSegments
+from sign_language_tools.annotations.transforms import FrameLabelsToSegments
 
 from slp.core.registry import SEGMENT_DECODER_REGISTRY
 from slp.decoders.base import SegmentDecoder
 
 
-@SEGMENT_DECODER_REGISTRY.register("biotags-argmax")
+@SEGMENT_DECODER_REGISTRY.register("bio-argmax")
 class BioTagsDecoder(SegmentDecoder):
 
     def __init__(
@@ -19,9 +19,9 @@ class BioTagsDecoder(SegmentDecoder):
         self.classification_head = classification_head
         self.b_tag_class = b_tag_class
         self.i_tag_class = i_tag_class
-        self.to_segments = SegmentationVectorToSegments(
+        self.to_segments = FrameLabelsToSegments(
             background_classes=(0,),
-            use_annotation_labels=False,
+            include_labels=False,
         )
 
     def decode(self, logits: dict[str, Tensor], n_classes: int) -> Tensor:

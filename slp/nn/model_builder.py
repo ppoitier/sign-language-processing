@@ -11,7 +11,7 @@ from slp.nn.architectures.cls_model import ClassificationModel
 from slp.nn.heads.multi_stage import SharedMultiStageHead, SingleStageHead
 from slp.nn.heads.channel_splitter import TaskChannelSplitter
 from slp.nn.heads.shared_channel_heads import SharedChannelHeads
-from slp.core.config.model import HydraConfig, HeadConfig, ClassificationModelConfig
+from slp.core.config.model import HydraConfig, HeadConfig
 from slp.core.registry import BACKBONE_REGISTRY, HEAD_REGISTRY, NECK_REGISTRY
 
 
@@ -22,7 +22,7 @@ def load_head(head_config: HeadConfig) -> nn.Module:
 
 
 def build_hydra_model(config: HydraConfig) -> HydraModel:
-    """Builds the complete multi-task architecture."""
+    """Builds the complete multitask architecture."""
 
     # 1. Build Backbone
     backbone_cls = BACKBONE_REGISTRY.get(config.backbone.name)
@@ -64,10 +64,3 @@ def build_hydra_model(config: HydraConfig) -> HydraModel:
         neck=neck,
         head_assembly=head_assembly
     )
-
-
-def build_classification_model(config: ClassificationModelConfig) -> ClassificationModel:
-    backbone_cls = BACKBONE_REGISTRY.get(config.backbone.name)
-    backbone = backbone_cls(**config.backbone.kwargs)
-    head = load_head(config.head)
-    return ClassificationModel(backbone=backbone, head=head)
