@@ -1,10 +1,10 @@
 datasets:
   training:
-    shards_url: "file:E:/datasets/sign-language/dgs/shards/shard_{000000..000005}.tar"
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/dgs/shards/shard_{000000..000005}.tar"
     dataloader:
-      batch_size: 16
+      batch_size: 32
       shuffle: true
-      n_workers: 0
+      n_workers: 4
     preprocessing:
       targets:
         - 'temporal-segmentation'
@@ -21,11 +21,11 @@ datasets:
       max_empty_windows: 0
 
   validation:
-    shards_url: "file:E:/datasets/sign-language/dgs/shards/shard_000006.tar"
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/dgs/shards/shard_000006.tar"
     dataloader:
       batch_size: 32
       shuffle: false
-      n_workers: 0
+      n_workers: 4
     preprocessing:
       targets:
         - 'temporal-segmentation'
@@ -42,11 +42,11 @@ datasets:
       max_empty_windows: 0
 
   testing:
-    shards_url: "file:E:/datasets/sign-language/dgs/shards/shard_000007.tar"
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/dgs/shards/shard_000007.tar"
     dataloader:
       batch_size: 32
       shuffle: false
-      n_workers: 0
+      n_workers: 4
     preprocessing:
       targets:
         - 'temporal-segmentation'
@@ -65,6 +65,6 @@ datasets:
 
 experiment:
   id: "segmentation/first-ablation/dgs"
-  output_dir: "E:/outputs/debug"
-  debug: true
-  show_progress_bar: true
+  output_dir: "/gpfs/scratch/acad/lsfb/outputs/hydra_v2"
+  debug: false
+  show_progress_bar: false
