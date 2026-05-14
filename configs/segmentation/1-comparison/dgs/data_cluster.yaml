@@ -42,7 +42,7 @@ datasets:
       max_empty_windows: 0
 
   testing:
-    shards_url: "/gpfs/scratch/acad/lsfb/datasets/dgs/shards/annotated/shard_000007.tar"
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/dgs/shards/shard_000007.tar"
     dataloader:
       batch_size: 32
       shuffle: false
