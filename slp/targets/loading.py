@@ -9,7 +9,11 @@ from slp.targets.boundaries import (
     SegmentBoundarySegmentsTarget,
 )
 
-from sign_language_tools.annotations.transforms import RemoveOverlapping
+from sign_language_tools.common.transforms import Compose
+from sign_language_tools.annotations.transforms import (
+    RemoveOverlapping,
+    CloseShortSilences,
+)
 
 
 def load_target(target_id: str):
@@ -22,9 +26,24 @@ def load_target(target_id: str):
     elif target_id == "bio-tags":
         return BIOLabelsTarget()
     elif target_id == "boundaries-segments":
-        return SegmentBoundarySegmentsTarget()
+        return SegmentBoundarySegmentsTarget(
+            width=2,
+            segment_transform=Compose(
+                [RemoveOverlapping(min_gap=0), CloseShortSilences(max_silence=16)]
+            ),
+        )
     elif target_id == "boundaries-segmentation":
-        return SegmentBoundaryLabelsTarget(boundary_labels=(1, 1))
+        return SegmentBoundaryLabelsTarget(
+            width=2,
+            segment_transform=Compose(
+                [RemoveOverlapping(min_gap=0), CloseShortSilences(max_silence=16)]
+            ),
+        )
     elif target_id == "boundaries-offsets":
-        return SegmentBoundaryOffsetsTarget()
+        return SegmentBoundaryOffsetsTarget(
+            width=2,
+            segment_transform=Compose(
+                [RemoveOverlapping(min_gap=0), CloseShortSilences(max_silence=16)]
+            ),
+        )
     raise ValueError(f"Unknown target: {target_id}")

@@ -2,7 +2,7 @@ from: "bound_io.yaml"
 
 
 experiment:
-  variant: "bound_io_weights"
+  variant: "bound_io_weights_2"
   seed: random
 
 

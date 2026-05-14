@@ -1,0 +1,42 @@
+from: "mstcn_base.yaml"
+
+
+experiment:
+  variant: "mstcn_no_bottleneck"
+  seed: random
+
+model:
+  name: 'hydra'
+  backbone:
+    name: "ms-tcn"
+    kwargs:
+      in_channels: 130
+      out_channels: 64
+      hidden_channels: 64
+      n_stages: 4
+      n_layers: 10
+  channels_to_head_routing: 'shared'
+  heads:
+    classification:
+      name: "linear"
+      n_channels: 64
+      kwargs:
+        in_features: 64
+        out_features: 2
+    regression:
+      name: "linear"
+      n_channels: 64
+      kwargs:
+        in_features: 64
+        out_features: 2
+
+training:
+  loss_functions:
+    classification:
+      name: "cross-entropy"
+      use_weights: false
+      multi_layer: false
+    regression:
+      name: "gIoU"
+      use_weights: false
+      multi_layer: false

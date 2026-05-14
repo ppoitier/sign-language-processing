@@ -2,7 +2,7 @@ from: "bound_off.yaml"
 
 
 experiment:
-  variant: "bound_off_weights"
+  variant: "bound_off_weights_2"
   seed: random
 
 

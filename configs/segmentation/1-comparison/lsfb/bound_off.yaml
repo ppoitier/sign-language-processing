@@ -2,7 +2,7 @@ from: "data.yaml"
 
 
 experiment:
-  variant: "bound_off"
+  variant: "bound_off_2"
   seed: random
 
 
