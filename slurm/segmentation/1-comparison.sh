@@ -11,7 +11,7 @@
 #SBATCH --gres="gpu:1"
 #SBATCH --mem-per-cpu=16384
 #SBATCH --partition=gpu
-#SBATCH --array=0-11
+#SBATCH --array=0-13
 #
 #SBATCH --mail-user=pierre.poitier@unamur.be
 #SBATCH --mail-type=ALL
@@ -46,8 +46,8 @@ config_files=(
 #  "../../configs/segmentation/1-comparison/lsfb/bio.yaml"
 #  "../../configs/segmentation/1-comparison/lsfb/bio_weights.yaml"
 #
-#  "../../configs/segmentation/1-comparison/lsfb/bound_io.yaml"
-#  "../../configs/segmentation/1-comparison/lsfb/bound_io_weights.yaml"
+  "../../configs/segmentation/1-comparison/lsfb/bound_io.yaml"
+  "../../configs/segmentation/1-comparison/lsfb/bound_io_weights.yaml"
 
   "../../configs/segmentation/1-comparison/lsfb/bound_off.yaml"
   "../../configs/segmentation/1-comparison/lsfb/bound_off_weights.yaml"
