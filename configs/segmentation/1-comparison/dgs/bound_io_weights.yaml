@@ -1,0 +1,15 @@
+from: "bound_io.yaml"
+
+
+experiment:
+  variant: "bound_io_weights"
+  seed: random
+
+
+training:
+  loss_functions:
+    classification:
+      name: "cross-entropy"
+      use_weights: true
+      weight_strategy: "inverse"
+      multi_layer: true

@@ -64,8 +64,8 @@ class SegmentBoundarySegmentsTarget(_BoundarySegmentsBase):
     def __init__(
         self,
         annotation_id: str = "both_hands",
-        width: int | None = 4,
-        relative_width: float | None = None,
+        width: int | None = None,
+        relative_width: float | None = 0.1,
         min_width: int = 2,
         boundary_labels: tuple[int, int] = (1, 2),
         pad_value: int = -1,
@@ -101,8 +101,8 @@ class SegmentBoundaryLabelsTarget(_BoundarySegmentsBase):
     def __init__(
         self,
         annotation_id: str = "both_hands",
-        width: int | None = 4,
-        relative_width: float | None = None,
+        width: int | None = None,
+        relative_width: float | None = 0.1,
         min_width: int = 2,
         boundary_labels: tuple[int, int] = (1, 2),
         background_id: int = 0,
@@ -143,8 +143,8 @@ class SegmentBoundaryOffsetsTarget(_BoundarySegmentsBase):
     def __init__(
         self,
         annotation_id: str = "both_hands",
-        width: int | None = 4,
-        relative_width: float | None = None,
+        width: int | None = None,
+        relative_width: float | None = 0.1,
         min_width: int = 2,
         background_value: float = -1.0,
         pad_value: float = -1.0,
