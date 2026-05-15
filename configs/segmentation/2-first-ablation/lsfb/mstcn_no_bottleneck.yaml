@@ -15,6 +15,7 @@ model:
       hidden_channels: 64
       n_stages: 4
       n_layers: 10
+      activation: 'identity'
   channels_to_head_routing: 'shared'
   heads:
     classification:

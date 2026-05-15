@@ -11,7 +11,7 @@
 #SBATCH --gres="gpu:1"
 #SBATCH --mem-per-cpu=16384
 #SBATCH --partition=gpu
-#SBATCH --array=0-5
+#SBATCH --array=0-1
 #
 #SBATCH --mail-user=pierre.poitier@unamur.be
 #SBATCH --mail-type=ALL
@@ -37,12 +37,12 @@ which python
 python --version
 
 config_files=(
-  "../../configs/segmentation/2-first-ablation/lsfb/mstcn_base.yaml"
-  "../../configs/segmentation/2-first-ablation/lsfb/mstcn_no_deepsup.yaml"
+#  "../../configs/segmentation/2-first-ablation/lsfb/mstcn_base.yaml"
+#  "../../configs/segmentation/2-first-ablation/lsfb/mstcn_no_deepsup.yaml"
   "../../configs/segmentation/2-first-ablation/lsfb/mstcn_no_bottleneck.yaml"
-
-  "../../configs/segmentation/2-first-ablation/dgs/mstcn_base.yaml"
-  "../../configs/segmentation/2-first-ablation/dgs/mstcn_no_deepsup.yaml"
+#
+#  "../../configs/segmentation/2-first-ablation/dgs/mstcn_base.yaml"
+#  "../../configs/segmentation/2-first-ablation/dgs/mstcn_no_deepsup.yaml"
   "../../configs/segmentation/2-first-ablation/dgs/mstcn_no_bottleneck.yaml"
 )
 
