@@ -64,7 +64,7 @@ datasets:
 
 
 experiment:
-  id: "segmentation/2-first-ablation/dgs"
+  id: "segmentation/3-mstcn-archs/dgs"
   output_dir: "E:/outputs/debug"
   debug: true
   show_progress_bar: true

@@ -1,0 +1,14 @@
+from: "base.yaml"
+
+
+experiment:
+  variant: "large_6s_12l_128h"
+  seed: random
+
+
+model:
+  backbone:
+    kwargs:
+      n_stages: 6
+      n_layers: 12
+      hidden_channels: 128

@@ -1,0 +1,6 @@
+variant,config_file,n_heads,n_layers,hidden_channels,dim_feedforward,attn_mask
+xsmall,xsmall.yaml,2,3,64,512,window:128
+small,small.yaml,4,4,128,512,window:128
+base,base.yaml,4,6,256,1024,window:128
+medium,medium.yaml,6,7,384,1536,window:128
+large,large.yaml,8,8,512,2048,window:128

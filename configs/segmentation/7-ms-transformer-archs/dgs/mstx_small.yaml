@@ -1,0 +1,44 @@
+from: "mstx_base.yaml"
+
+
+experiment:
+  variant: "mstx_4h_2s3b_h128_win128_rope"
+  seed: random
+
+
+model:
+  name: 'hydra'
+  backbone:
+    name: 'ms-transformer'
+    kwargs:
+      in_channels: 130
+      hidden_channels: 128
+      max_length: 3200
+      n_heads: 4
+      dim_feedforward: 512
+      n_stem_layers: 2
+      n_branch_layers: 3
+      dropout: 0.1
+      pos_encoding: "rope"
+      attn_mask_strategy: "window:128"
+  neck:
+    name: 'fpn'
+    kwargs:
+      c_in: 128
+      c_out: 128
+      n_levels: 4
+      output_mode: "finest"
+  channels_to_head_routing: "shared"
+  heads:
+    classification:
+      name: "linear"
+      n_channels: 128
+      kwargs:
+        in_features: 128
+        out_features: 2
+    regression:
+      name: "linear"
+      n_channels: 128
+      kwargs:
+        in_features: 128
+        out_features: 2

@@ -4,7 +4,7 @@ from torch.utils.data import DataLoader
 from slp.core.config.dataset import ContinuousDatasetConfig, IsolatedDatasetConfig
 from slp.datasets.dataloaders import load_dataloader
 from slp.transforms.loading import load_pose_transform, load_video_transform
-from slp.targets.loading import load_target
+from slp.targets.loading import load_continuous_target
 
 
 def load_continuous_dataset(
@@ -15,7 +15,9 @@ def load_continuous_dataset(
     pose_transform, video_transform = None, None
     if config.preprocessing:
         targets = {
-            target_id: load_target(target_id)
+            target_id: load_continuous_target(
+                target_id, config.preprocessing.annotation_transforms
+            )
             for target_id in config.preprocessing.targets
         }
         use_windows = config.preprocessing.use_windows
@@ -27,7 +29,7 @@ def load_continuous_dataset(
     return SignLanguageDataset(
         shards_url=config.shards_url,
         targets=targets,
-        annotations=('both_hands',),
+        annotations=("both_hands",),
         precompute_targets=True,
         use_windows=use_windows,
         window_size=window_size,
@@ -41,9 +43,9 @@ def load_continuous_dataset(
 def load_continuous_datasets_and_loaders(
     configs: dict[str, ContinuousDatasetConfig],
 ) -> tuple[dict[str, SignLanguageDataset], dict[str, DataLoader]]:
-    assert 'training' in configs, "Missing 'training' dataset."
-    assert 'validation' in configs, "Missing 'validation' dataset."
-    assert 'testing' in configs, "Missing 'testing' dataset."
+    assert "training" in configs, "Missing 'training' dataset."
+    assert "validation" in configs, "Missing 'validation' dataset."
+    assert "testing" in configs, "Missing 'testing' dataset."
     datasets = {k: load_continuous_dataset(config) for k, config in configs.items()}
     dataloaders = {
         k: load_dataloader(datasets[k], config.dataloader)
@@ -59,10 +61,10 @@ def load_isolated_dataset(
     targets = None
     pose_transform, video_transform = None, None
     if config.preprocessing:
-        targets = {
-            target_id: load_target(target_id)
-            for target_id in config.preprocessing.targets
-        }
+        # targets = {
+        #     target_id: load_continuous_target(target_id, config.preprocessing.annotation_transforms)
+        #     for target_id in config.preprocessing.targets
+        # }
         pose_transform = load_pose_transform(config.preprocessing.pose_transforms)
         video_transform = load_video_transform(config.preprocessing.video_transforms)
     return SignLanguageDataset(
@@ -80,9 +82,9 @@ def load_isolated_dataset(
 def load_isolated_datasets_and_loaders(
     configs: dict[str, IsolatedDatasetConfig],
 ) -> tuple[dict[str, SignLanguageDataset], dict[str, DataLoader]]:
-    assert 'training' in configs, "Missing 'training' dataset."
-    assert 'validation' in configs, "Missing 'validation' dataset."
-    assert 'testing' in configs, "Missing 'testing' dataset."
+    assert "training" in configs, "Missing 'training' dataset."
+    assert "validation" in configs, "Missing 'validation' dataset."
+    assert "testing" in configs, "Missing 'testing' dataset."
     datasets = {k: load_isolated_dataset(config) for k, config in configs.items()}
     dataloaders = {
         k: load_dataloader(datasets[k], config.dataloader)

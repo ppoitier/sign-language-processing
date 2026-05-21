@@ -1,9 +1,8 @@
 #!/bin/bash
-# Submission script for Lucia — chapter baseline replication.
-# 30 configs: 5 methods × 2 weightings × 3 datasets.
-# Each method × weighting × dataset combination is one run.
+# Submission script for Lucia — mixing sign languages.
+# 1 config: lsfb training set augmented with dgs shards.
 #
-#SBATCH --job-name=sls_ablation
+#SBATCH --job-name=sls_mixing
 #SBATCH --time=06:00:00
 #
 #SBATCH --ntasks=1
@@ -11,14 +10,14 @@
 #SBATCH --gres="gpu:1"
 #SBATCH --mem-per-cpu=16384
 #SBATCH --partition=gpu
-#SBATCH --array=0-5
+#SBATCH --array=0-0
 #
 #SBATCH --mail-user=pierre.poitier@unamur.be
 #SBATCH --mail-type=ALL
 #
 #SBATCH --account=lsfb
 #
-#SBATCH --output=./out/2-first-ablation/%A_%a.out
+#SBATCH --output=./out/5-mixing-sign-languages/%A_%a.out
 
 module purge
 module load EasyBuild/2025a
@@ -37,13 +36,7 @@ which python
 python --version
 
 config_files=(
-  "../../configs/segmentation/2-first-ablation/lsfb/mstcn_base.yaml"
-  "../../configs/segmentation/2-first-ablation/lsfb/mstcn_no_deepsup.yaml"
-  "../../configs/segmentation/2-first-ablation/lsfb/mstcn_no_bottleneck.yaml"
-#
-  "../../configs/segmentation/2-first-ablation/dgs/mstcn_base.yaml"
-  "../../configs/segmentation/2-first-ablation/dgs/mstcn_no_deepsup.yaml"
-  "../../configs/segmentation/2-first-ablation/dgs/mstcn_no_bottleneck.yaml"
+  "../../configs/segmentation/5-mixing-sign-languages/dgs_and_lsfb.yaml"
 )
 
 config_file=${config_files[$SLURM_ARRAY_TASK_ID]}

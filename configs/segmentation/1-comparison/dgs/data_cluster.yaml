@@ -64,7 +64,7 @@ datasets:
 
 
 experiment:
-  id: "segmentation/comparison/dgs"
+  id: "segmentation/1-comparison/dgs"
   output_dir: "/gpfs/scratch/acad/lsfb/outputs/hydra_v2"
   debug: false
   show_progress_bar: false

@@ -64,7 +64,7 @@ datasets:
 
 
 experiment:
-  id: "segmentation/first-ablation/dgs"
+  id: "segmentation/2-first-ablation/dgs"
   output_dir: "/gpfs/scratch/acad/lsfb/outputs/hydra_v2"
   debug: false
   show_progress_bar: false

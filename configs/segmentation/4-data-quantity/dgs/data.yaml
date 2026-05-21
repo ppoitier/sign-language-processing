@@ -1,10 +1,10 @@
 datasets:
   training:
-    shards_url: "file:E:/datasets/sign-language/dgs/shards/shard_{000000..000005}.tar"
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/dgs/shards/shard_{000000..000005}.tar"
     dataloader:
-      batch_size: 16
+      batch_size: 32
       shuffle: true
-      n_workers: 0
+      n_workers: 4
     preprocessing:
       targets:
         - 'temporal-segmentation'
@@ -21,11 +21,11 @@ datasets:
       max_empty_windows: 0
 
   validation:
-    shards_url: "file:E:/datasets/sign-language/dgs/shards/shard_000006.tar"
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/dgs/shards/shard_000006.tar"
     dataloader:
       batch_size: 32
       shuffle: false
-      n_workers: 0
+      n_workers: 4
     preprocessing:
       targets:
         - 'temporal-segmentation'
@@ -42,11 +42,11 @@ datasets:
       max_empty_windows: 0
 
   testing:
-    shards_url: "file:E:/datasets/sign-language/dgs/shards/shard_000007.tar"
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/dgs/shards/shard_000007.tar"
     dataloader:
       batch_size: 32
       shuffle: false
-      n_workers: 0
+      n_workers: 4
     preprocessing:
       targets:
         - 'temporal-segmentation'
@@ -63,8 +63,56 @@ datasets:
       max_empty_windows: 0
 
 
+model:
+  name: 'hydra'
+  backbone:
+    name: "ms-tcn"
+    kwargs:
+      in_channels: 130
+      out_channels: 4
+      hidden_channels: 64
+      n_stages: 4
+      n_layers: 10
+  heads:
+    classification:
+      name: "identity"
+      n_channels: 2
+    regression:
+      name: "identity"
+      n_channels: 2
+
+
+training:
+  max_epochs: 300
+
+  loss_functions:
+    classification:
+      name: "cross-entropy"
+      use_weights: false
+      multi_layer: true
+    regression:
+      name: "gIoU"
+      use_weights: false
+      multi_layer: true
+
+  learning_rate: 1e-4
+  early_stopping_patience: 30
+
+  n_classes: 2
+
+  is_output_multistage: true
+  overfit_one_batch: false
+  use_offsets: true
+
+  heads_to_targets:
+    classification: temporal-segmentation
+    regression: temporal-offsets
+
+  segment_decoder: { name: 'offsets' }
+
+
 experiment:
-  id: "segmentation/2-first-ablation/dgs"
-  output_dir: "E:/outputs/debug"
-  debug: true
-  show_progress_bar: true
+  id: "segmentation/4-data-quantity/dgs"
+  output_dir: "/gpfs/scratch/acad/lsfb/outputs/hydra_v2"
+  debug: false
+  show_progress_bar: false

@@ -2,11 +2,18 @@ datasets:
   training:
     shards_url: "/gpfs/scratch/acad/lsfb/datasets/dgs/shards/shard_{000000..000005}.tar"
     dataloader:
-      batch_size: 16
+      batch_size: 32
       shuffle: true
-      n_workers: 0
+      n_workers: 4
     preprocessing:
-      targets: [ 'temporal-segmentation', 'temporal-offsets', 'segments' ]
+      targets:
+        - 'temporal-segmentation'
+        - 'temporal-offsets'
+        - 'segments'
+        - 'bio-tags'
+        - 'boundaries-segments'
+        - 'boundaries-segmentation'
+        - 'boundaries-offsets'
       pose_transforms: [ { name: 'norm+flatten2d' } ]
       use_windows: true
       window_size: 3200
@@ -16,11 +23,18 @@ datasets:
   validation:
     shards_url: "/gpfs/scratch/acad/lsfb/datasets/dgs/shards/shard_000006.tar"
     dataloader:
-      batch_size: 16
+      batch_size: 32
       shuffle: false
-      n_workers: 0
+      n_workers: 4
     preprocessing:
-      targets: [ 'temporal-segmentation', 'temporal-offsets', 'segments' ]
+      targets:
+        - 'temporal-segmentation'
+        - 'temporal-offsets'
+        - 'segments'
+        - 'bio-tags'
+        - 'boundaries-segments'
+        - 'boundaries-segmentation'
+        - 'boundaries-offsets'
       pose_transforms: [ { name: 'norm+flatten2d' } ]
       use_windows: true
       window_size: 3200
@@ -30,11 +44,18 @@ datasets:
   testing:
     shards_url: "/gpfs/scratch/acad/lsfb/datasets/dgs/shards/shard_000007.tar"
     dataloader:
-      batch_size: 16
+      batch_size: 32
       shuffle: false
-      n_workers: 0
+      n_workers: 4
     preprocessing:
-      targets: [ 'temporal-segmentation', 'temporal-offsets', 'segments' ]
+      targets:
+        - 'temporal-segmentation'
+        - 'temporal-offsets'
+        - 'segments'
+        - 'bio-tags'
+        - 'boundaries-segments'
+        - 'boundaries-segmentation'
+        - 'boundaries-offsets'
       pose_transforms: [ { name: 'norm+flatten2d' } ]
       use_windows: true
       window_size: 3200
@@ -43,7 +64,7 @@ datasets:
 
 
 experiment:
-  id: "segmentation/dgs"
-  output_dir: "/gpfs/scratch/acad/lsfb/outputs/hydra/mstx_warm10"
+  id: "segmentation/3-mstcn-archs/dgs"
+  output_dir: "/gpfs/scratch/acad/lsfb/outputs/hydra_v2"
   debug: false
   show_progress_bar: false

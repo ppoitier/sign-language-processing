@@ -64,7 +64,7 @@ datasets:
 
 
 experiment:
-  id: "segmentation/first-ablation/lsfb"
+  id: "segmentation/2-first-ablation/lsfb"
   output_dir: "E:/outputs/debug"
   debug: true
   show_progress_bar: true

@@ -64,7 +64,7 @@ datasets:
 
 
 experiment:
-  id: "segmentation/comparison/dgs"
+  id: "segmentation/1-comparison/dgs"
   output_dir: "E:/outputs/debug"
   debug: true
   show_progress_bar: true

@@ -1,0 +1,24 @@
+from: "base.yaml"
+
+
+experiment:
+  variant: "vit_6h_7l_h384_win128_rope"
+  seed: random
+
+
+model:
+  backbone:
+    kwargs:
+      hidden_channels: 384
+      n_heads: 6
+      n_layers: 7
+      dim_feedforward: 1536
+  heads:
+    classification:
+      n_channels: 384
+      kwargs:
+        in_features: 384
+    regression:
+      n_channels: 384
+      kwargs:
+        in_features: 384

@@ -4,7 +4,7 @@ from slp.core.config.transform import TransformConfig
 from slp.core.registry import POSE_TRANSFORM_REGISTRY, VIDEO_TRANSFORM_REGISTRY
 
 
-def load_pose_transform(configs: list[TransformConfig]):
+def load_pose_transform(configs: list[TransformConfig] | None):
     if configs is None:
         return None
     transforms = []

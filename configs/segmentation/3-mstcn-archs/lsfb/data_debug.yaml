@@ -1,6 +1,6 @@
 datasets:
   training:
-    shards_url: "file:E:/datasets/sign-language/dgs/shards/shard_{000000..000005}.tar"
+    shards_url: "file:E:/datasets/sign-language/lsfb-cont/shards/annotated/shard_{000002..000007}.tar"
     dataloader:
       batch_size: 16
       shuffle: true
@@ -21,7 +21,7 @@ datasets:
       max_empty_windows: 0
 
   validation:
-    shards_url: "file:E:/datasets/sign-language/dgs/shards/shard_000006.tar"
+    shards_url: "file:E:/datasets/sign-language/lsfb-cont/shards/annotated/shard_000001.tar"
     dataloader:
       batch_size: 32
       shuffle: false
@@ -42,7 +42,7 @@ datasets:
       max_empty_windows: 0
 
   testing:
-    shards_url: "file:E:/datasets/sign-language/dgs/shards/shard_000007.tar"
+    shards_url: "file:E:/datasets/sign-language/lsfb-cont/shards/annotated/shard_000000.tar"
     dataloader:
       batch_size: 32
       shuffle: false
@@ -64,7 +64,7 @@ datasets:
 
 
 experiment:
-  id: "segmentation/2-first-ablation/dgs"
+  id: "segmentation/3-mstcn-archs/lsfb"
   output_dir: "E:/outputs/debug"
   debug: true
   show_progress_bar: true

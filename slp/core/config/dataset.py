@@ -25,7 +25,7 @@ class DatasetConfig(BaseModel):
 
 
 class ContinuousDataPreprocessing(DataPreprocessing):
-    annotation_transform_pipeline: str = "none"
+    annotation_transforms: str = "none"
     use_windows: bool = False
     window_size: int = 1500
     window_stride: int = 1200
@@ -36,8 +36,7 @@ class ContinuousDatasetConfig(DatasetConfig):
     preprocessing: ContinuousDataPreprocessing | None = None
 
 
-class IsolatedDatasetConfig(DatasetConfig):
-    ...
+class IsolatedDatasetConfig(DatasetConfig): ...
 
 
 # class IsolatedRecognitionDatasetConfig(DatasetConfig):
