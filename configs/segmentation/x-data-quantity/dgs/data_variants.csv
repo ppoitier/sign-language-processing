@@ -1,0 +1,7 @@
+variant,config_file,n_train_shards,pct_of_base,training_shards_url,validation_shard,test_shard
+data_1,data_1.yaml,1,17%,shard_000000.tar,shard_000006,shard_000007
+data_2,data_2.yaml,2,33%,shard_{000000..000001}.tar,shard_000006,shard_000007
+data_3,data_3.yaml,3,50%,shard_{000000..000002}.tar,shard_000006,shard_000007
+data_4,data_4.yaml,4,67%,shard_{000000..000003}.tar,shard_000006,shard_000007
+data_5,data_5.yaml,5,83%,shard_{000000..000004}.tar,shard_000006,shard_000007
+data_6 (base),data.yaml,6,100%,shard_{000000..000005}.tar,shard_000006,shard_000007

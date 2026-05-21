@@ -28,7 +28,9 @@ class TrainingConfig(BaseModel):
     gradient_clipping: float = 0.0
     overfit_one_batch: bool = False
 
+    skip_training: bool = False
     checkpoint_path: Optional[str] = None
+
     n_classes: Optional[int] = None
     is_output_multistage: bool = False
     heads_to_targets: dict[str, str]

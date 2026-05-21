@@ -46,16 +46,21 @@ def launch_segmentation_training(config_path):
     model = torch.compile(model)
 
     assert config.training is not None, "Missing training configuration."
+    skip_training = config.training.skip_training
 
-    print("Building criterion...")
-    criterion = build_multi_layer_criterion(config.training, datasets["training"])
-    print(criterion)
+    if not skip_training:
+        print("Building criterion...")
+        criterion = build_multi_layer_criterion(config.training, datasets["training"])
+        print(criterion)
+    else:
+        print("Skipping training: criterion will not be built.")
+        criterion = None
 
     print("Loading segment decoder...")
     segment_decoder = load_segment_decoder(config.training.segment_decoder)
 
-    print("Loading learning rate scheduler factory...")
-    if config.training.lr_scheduler is not None:
+    if not skip_training and config.training.lr_scheduler is not None:
+        print("Loading learning rate scheduler factory...")
         lr_scheduler_factory, lr_scheduler_monitor = load_lr_scheduler_factory(config.training.lr_scheduler)
     else:
         lr_scheduler_factory, lr_scheduler_monitor = None, None
@@ -75,16 +80,22 @@ def launch_segmentation_training(config_path):
     logs_dir = f"{exp_config.output_dir}/logs/{exp_config.id}/{exp_config.variant}/{selected_seed}"
     loggers = load_loggers(logs_dir, exp_config)
 
-    lightning_module, best_checkpoint_path = run_training(
-        training_dataloader=dataloaders["training"],
-        validation_dataloader=dataloaders["validation"],
-        lightning_module=lightning_module,
-        experiment_config=config.experiment,
-        training_config=config.training,
-        loggers=loggers,
-        checkpoints_dir=checkpoints_dir,
-        monitor_loss="validation/loss",
-    )
+    if not skip_training:
+        lightning_module, best_checkpoint_path = run_training(
+            training_dataloader=dataloaders["training"],
+            validation_dataloader=dataloaders["validation"],
+            lightning_module=lightning_module,
+            experiment_config=config.experiment,
+            training_config=config.training,
+            loggers=loggers,
+            checkpoints_dir=checkpoints_dir,
+            monitor_loss="validation/loss",
+        )
+    else:
+        print(
+            "Skipping training: using checkpoint already loaded into lightning module."
+        )
+        best_checkpoint_path = None
 
     run_testing(
         checkpoint_path=best_checkpoint_path,
@@ -94,13 +105,14 @@ def launch_segmentation_training(config_path):
         loggers=loggers,
     )
 
-    run_testing(
-        checkpoint_path=best_checkpoint_path,
-        testing_dataloader=dataloaders["training"],
-        lightning_module=lightning_module,
-        experiment_config=config.experiment,
-        loggers=None,
-    )
+    if not skip_training:
+        run_testing(
+            checkpoint_path=best_checkpoint_path,
+            testing_dataloader=dataloaders["training"],
+            lightning_module=lightning_module,
+            experiment_config=config.experiment,
+            loggers=None,
+        )
 
     logits_dir = f"{exp_config.output_dir}/logits/{exp_config.id}/{exp_config.variant}/{selected_seed}"
     save_logits(lightning_module.test_logits, logits_dir)

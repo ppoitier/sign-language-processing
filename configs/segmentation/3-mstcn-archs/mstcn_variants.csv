@@ -1,0 +1,6 @@
+variant,config_file,n_stages,n_layers,hidden_channels
+xsmall,xsmall.yaml,1,10,64
+small,small.yaml,2,10,64
+base,base.yaml,4,10,64
+medium,medium.yaml,4,10,128
+large,large.yaml,6,12,128

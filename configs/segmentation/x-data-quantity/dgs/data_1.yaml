@@ -1,0 +1,10 @@
+from: "data.yaml"
+
+
+experiment:
+  variant: "data_1"
+
+
+datasets:
+  training:
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/dgs/shards/shard_000000.tar"

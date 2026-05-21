@@ -6,7 +6,6 @@ from pydantic import BaseModel, Field
 class ModelConfig(BaseModel):
     name: str
     kwargs: dict[str, Any] = Field(default_factory=dict)
-    checkpoint_path: Optional[str] = None
 
 
 class HeadConfig(ModelConfig):
