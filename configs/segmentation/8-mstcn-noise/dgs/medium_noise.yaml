@@ -1,0 +1,11 @@
+from: "data.yaml"
+
+
+experiment:
+  variant: "medium_noise"
+
+
+datasets:
+  training:
+    preprocessing:
+      annotation_transforms: "medium-noise"

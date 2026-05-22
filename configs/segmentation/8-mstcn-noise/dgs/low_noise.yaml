@@ -1,0 +1,11 @@
+from: "data.yaml"
+
+
+experiment:
+  variant: "low_noise"
+
+
+datasets:
+  training:
+    preprocessing:
+      annotation_transforms: "low-noise"
