@@ -1,14 +1,14 @@
 #!/bin/bash
 #
 #SBATCH --job-name=sls_kfold
-#SBATCH --time=06:00:00
+#SBATCH --time=12:00:00
 #
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=2
 #SBATCH --gres="gpu:1"
 #SBATCH --mem-per-cpu=16384
 #SBATCH --partition=gpu
-#SBATCH --array=0-15
+#SBATCH --array=0-7
 #
 #SBATCH --mail-user=pierre.poitier@unamur.be
 #SBATCH --mail-type=ALL
@@ -34,14 +34,14 @@ which python
 python --version
 
 config_files=(
-  "../../configs/segmentation/9-kfold/lsfb/fold0.yaml"
-  "../../configs/segmentation/9-kfold/lsfb/fold1.yaml"
-  "../../configs/segmentation/9-kfold/lsfb/fold2.yaml"
-  "../../configs/segmentation/9-kfold/lsfb/fold3.yaml"
-  "../../configs/segmentation/9-kfold/lsfb/fold4.yaml"
-  "../../configs/segmentation/9-kfold/lsfb/fold5.yaml"
-  "../../configs/segmentation/9-kfold/lsfb/fold6.yaml"
-  "../../configs/segmentation/9-kfold/lsfb/fold7.yaml"
+#  "../../configs/segmentation/9-kfold/lsfb/fold0.yaml"
+#  "../../configs/segmentation/9-kfold/lsfb/fold1.yaml"
+#  "../../configs/segmentation/9-kfold/lsfb/fold2.yaml"
+#  "../../configs/segmentation/9-kfold/lsfb/fold3.yaml"
+#  "../../configs/segmentation/9-kfold/lsfb/fold4.yaml"
+#  "../../configs/segmentation/9-kfold/lsfb/fold5.yaml"
+#  "../../configs/segmentation/9-kfold/lsfb/fold6.yaml"
+#  "../../configs/segmentation/9-kfold/lsfb/fold7.yaml"
 
   "../../configs/segmentation/9-kfold/dgs/fold0.yaml"
   "../../configs/segmentation/9-kfold/dgs/fold1.yaml"
