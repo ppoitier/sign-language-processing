@@ -2,7 +2,7 @@ datasets:
   training:
     shards_url: "/gpfs/scratch/acad/lsfb/datasets/lsfb-cont/shards/annotated/shard_{000002..000007}.tar"
     dataloader:
-      batch_size: 32
+      batch_size: 16
       shuffle: true
       n_workers: 4
     preprocessing:
@@ -23,7 +23,7 @@ datasets:
   validation:
     shards_url: "/gpfs/scratch/acad/lsfb/datasets/lsfb-cont/shards/annotated/shard_000001.tar"
     dataloader:
-      batch_size: 32
+      batch_size: 16
       shuffle: false
       n_workers: 4
     preprocessing:
@@ -44,7 +44,7 @@ datasets:
   testing:
     shards_url: "/gpfs/scratch/acad/lsfb/datasets/lsfb-cont/shards/annotated/shard_000000.tar"
     dataloader:
-      batch_size: 32
+      batch_size: 16
       shuffle: false
       n_workers: 4
     preprocessing:

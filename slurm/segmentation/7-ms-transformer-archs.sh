@@ -3,7 +3,7 @@
 # 10 configs: 5 sizes (xsmall, small, base, medium, large) × 2 datasets.
 #
 #SBATCH --job-name=sls_mstx_archs
-#SBATCH --time=06:00:00
+#SBATCH --time=12:00:00
 #
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=2

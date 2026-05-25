@@ -10,7 +10,7 @@
 #SBATCH --gres="gpu:1"
 #SBATCH --mem-per-cpu=16384
 #SBATCH --partition=gpu
-#SBATCH --array=0-5
+#SBATCH --array=0-11
 #
 #SBATCH --mail-user=pierre.poitier@unamur.be
 #SBATCH --mail-type=ALL
@@ -36,13 +36,21 @@ which python
 python --version
 
 config_files=(
-  "../../configs/segmentation/8-mstcn-noise/lsfb/low_noise.yaml"
-  "../../configs/segmentation/8-mstcn-noise/lsfb/medium_noise.yaml"
-  "../../configs/segmentation/8-mstcn-noise/lsfb/high_noise.yaml"
+  "../../configs/segmentation/8-mstcn-noise/lsfb/off_low_noise.yaml"
+  "../../configs/segmentation/8-mstcn-noise/lsfb/off_medium_noise.yaml"
+  "../../configs/segmentation/8-mstcn-noise/lsfb/off_high_noise.yaml"
 
-  "../../configs/segmentation/8-mstcn-noise/dgs/low_noise.yaml"
-  "../../configs/segmentation/8-mstcn-noise/dgs/medium_noise.yaml"
-  "../../configs/segmentation/8-mstcn-noise/dgs/high_noise.yaml"
+  "../../configs/segmentation/8-mstcn-noise/lsfb/io_low_noise.yaml"
+  "../../configs/segmentation/8-mstcn-noise/lsfb/io_medium_noise.yaml"
+  "../../configs/segmentation/8-mstcn-noise/lsfb/io_high_noise.yaml"
+
+  "../../configs/segmentation/8-mstcn-noise/dgs/off_low_noise.yaml"
+  "../../configs/segmentation/8-mstcn-noise/dgs/off_medium_noise.yaml"
+  "../../configs/segmentation/8-mstcn-noise/dgs/off_high_noise.yaml"
+
+  "../../configs/segmentation/8-mstcn-noise/dgs/io_low_noise.yaml"
+  "../../configs/segmentation/8-mstcn-noise/dgs/io_medium_noise.yaml"
+  "../../configs/segmentation/8-mstcn-noise/dgs/io_high_noise.yaml"
 )
 
 config_file=${config_files[$SLURM_ARRAY_TASK_ID]}

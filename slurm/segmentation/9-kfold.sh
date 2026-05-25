@@ -1,0 +1,63 @@
+#!/bin/bash
+#
+#SBATCH --job-name=sls_kfold
+#SBATCH --time=06:00:00
+#
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=2
+#SBATCH --gres="gpu:1"
+#SBATCH --mem-per-cpu=16384
+#SBATCH --partition=gpu
+#SBATCH --array=0-15
+#
+#SBATCH --mail-user=pierre.poitier@unamur.be
+#SBATCH --mail-type=ALL
+#
+#SBATCH --account=lsfb
+#
+#SBATCH --output=./out/9-kfold/%A_%a.out
+
+module purge
+module load EasyBuild/2025a
+module load CUDA/12.8.0
+#module load Python/3.13.1-GCCcore-14.2.0
+
+source ~/miniconda3/etc/profile.d/conda.sh
+conda activate slp
+export LD_LIBRARY_PATH=$CONDA_PREFIX/lib:$LD_LIBRARY_PATH
+
+# Should show conda's libstdc++, not /lib64/
+ldconfig -p | grep libstdc++
+strings $CONDA_PREFIX/lib/libstdc++.so.6 | grep GLIBCXX_3.4.29
+
+which python
+python --version
+
+config_files=(
+  "../../configs/segmentation/9-kfold/lsfb/fold0.yaml"
+  "../../configs/segmentation/9-kfold/lsfb/fold1.yaml"
+  "../../configs/segmentation/9-kfold/lsfb/fold2.yaml"
+  "../../configs/segmentation/9-kfold/lsfb/fold3.yaml"
+  "../../configs/segmentation/9-kfold/lsfb/fold4.yaml"
+  "../../configs/segmentation/9-kfold/lsfb/fold5.yaml"
+  "../../configs/segmentation/9-kfold/lsfb/fold6.yaml"
+  "../../configs/segmentation/9-kfold/lsfb/fold7.yaml"
+
+  "../../configs/segmentation/9-kfold/dgs/fold0.yaml"
+  "../../configs/segmentation/9-kfold/dgs/fold1.yaml"
+  "../../configs/segmentation/9-kfold/dgs/fold2.yaml"
+  "../../configs/segmentation/9-kfold/dgs/fold3.yaml"
+  "../../configs/segmentation/9-kfold/dgs/fold4.yaml"
+  "../../configs/segmentation/9-kfold/dgs/fold5.yaml"
+  "../../configs/segmentation/9-kfold/dgs/fold6.yaml"
+  "../../configs/segmentation/9-kfold/dgs/fold7.yaml"
+)
+
+config_file=${config_files[$SLURM_ARRAY_TASK_ID]}
+
+nvidia-smi
+echo "Job array ID: $SLURM_ARRAY_TASK_ID"
+echo "Config file:  $config_file"
+echo "Job start at $(date)"
+python ../../scripts/segmentation/train.py --config-path="$config_file"
+echo "Job end at $(date)"

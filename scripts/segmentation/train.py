@@ -2,6 +2,9 @@ from pprint import pprint
 
 import click
 import torch
+import torch._dynamo
+
+torch._dynamo.config.recompile_limit = 32
 torch.set_float32_matmul_precision("medium")
 
 from slp.core.parser import parse_config
@@ -61,7 +64,9 @@ def launch_segmentation_training(config_path):
 
     if not skip_training and config.training.lr_scheduler is not None:
         print("Loading learning rate scheduler factory...")
-        lr_scheduler_factory, lr_scheduler_monitor = load_lr_scheduler_factory(config.training.lr_scheduler)
+        lr_scheduler_factory, lr_scheduler_monitor = load_lr_scheduler_factory(
+            config.training.lr_scheduler
+        )
     else:
         lr_scheduler_factory, lr_scheduler_monitor = None, None
 

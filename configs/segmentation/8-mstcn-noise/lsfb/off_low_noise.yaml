@@ -1,0 +1,11 @@
+from: "off.yaml"
+
+
+experiment:
+  variant: "off_low_noise"
+
+
+datasets:
+  training:
+    preprocessing:
+      annotation_transforms: "low-noise"

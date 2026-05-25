@@ -1,6 +1,6 @@
 datasets:
   training:
-    shards_url: "/gpfs/scratch/acad/lsfb/datasets/dgs/shards/shard_{000000..000005}.tar"
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/lsfb-cont/shards/annotated/shard_{000002..000007}.tar"
     dataloader:
       batch_size: 32
       shuffle: true
@@ -21,7 +21,7 @@ datasets:
       max_empty_windows: 0
 
   validation:
-    shards_url: "/gpfs/scratch/acad/lsfb/datasets/dgs/shards/shard_000006.tar"
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/lsfb-cont/shards/annotated/shard_000001.tar"
     dataloader:
       batch_size: 32
       shuffle: false
@@ -42,7 +42,7 @@ datasets:
       max_empty_windows: 0
 
   testing:
-    shards_url: "/gpfs/scratch/acad/lsfb/datasets/dgs/shards/shard_000007.tar"
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/lsfb-cont/shards/annotated/shard_000000.tar"
     dataloader:
       batch_size: 32
       shuffle: false
@@ -64,7 +64,7 @@ datasets:
 
 
 experiment:
-  id: "segmentation/6-transformer-archs/dgs"
+  id: "segmentation/6-transformer-archs/lsfb"
   output_dir: "/gpfs/scratch/acad/lsfb/outputs/hydra_v2"
   debug: false
   show_progress_bar: false

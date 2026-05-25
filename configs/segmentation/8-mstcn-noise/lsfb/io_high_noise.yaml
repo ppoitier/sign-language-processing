@@ -1,0 +1,11 @@
+from: "io.yaml"
+
+
+experiment:
+  variant: "io_high_noise"
+
+
+datasets:
+  training:
+    preprocessing:
+      annotation_transforms: "high-noise"

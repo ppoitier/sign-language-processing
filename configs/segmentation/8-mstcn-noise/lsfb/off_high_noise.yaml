@@ -1,8 +1,8 @@
-from: "data.yaml"
+from: "off.yaml"
 
 
 experiment:
-  variant: "high_noise"
+  variant: "off_high_noise"
 
 
 datasets:

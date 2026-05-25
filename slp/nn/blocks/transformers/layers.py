@@ -11,8 +11,11 @@ Classes:
     TransformerDecoderLayer — self-attention + cross-attention + FFN.
 """
 
+import torch
 from torch import nn, Tensor
-from torch.nn.attention.flex_attention import flex_attention
+from torch.nn.attention.flex_attention import flex_attention as _flex_attention
+
+flex_attention = torch.compile(_flex_attention, dynamic=True)
 
 
 class TransformerEncoderLayer(nn.Module):
