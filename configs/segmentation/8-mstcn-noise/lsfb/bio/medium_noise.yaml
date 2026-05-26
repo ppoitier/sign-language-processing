@@ -1,0 +1,11 @@
+from: "base.yaml"
+
+
+experiment:
+  variant: "bio_medium_noise"
+
+
+datasets:
+  training:
+    preprocessing:
+      annotation_transforms: "medium-noise"

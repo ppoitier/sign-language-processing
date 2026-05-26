@@ -1,0 +1,11 @@
+from: "base.yaml"
+
+
+experiment:
+  variant: "bio_high_noise"
+
+
+datasets:
+  training:
+    preprocessing:
+      annotation_transforms: "high-noise"

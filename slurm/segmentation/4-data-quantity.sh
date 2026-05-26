@@ -10,7 +10,7 @@
 #SBATCH --gres="gpu:1"
 #SBATCH --mem-per-cpu=16384
 #SBATCH --partition=gpu
-#SBATCH --array=0-9
+#SBATCH --array=0-19
 #
 #SBATCH --mail-user=pierre.poitier@unamur.be
 #SBATCH --mail-type=ALL
@@ -36,17 +36,41 @@ which python
 python --version
 
 config_files=(
-  "../../configs/segmentation/4-data-quantity/lsfb/data_1.yaml"
-  "../../configs/segmentation/4-data-quantity/lsfb/data_2.yaml"
-  "../../configs/segmentation/4-data-quantity/lsfb/data_3.yaml"
-  "../../configs/segmentation/4-data-quantity/lsfb/data_4.yaml"
-  "../../configs/segmentation/4-data-quantity/lsfb/data_5.yaml"
+#  "../../configs/segmentation/4-data-quantity/lsfb/data_1.yaml"
+#  "../../configs/segmentation/4-data-quantity/lsfb/data_2.yaml"
+#  "../../configs/segmentation/4-data-quantity/lsfb/data_3.yaml"
+#  "../../configs/segmentation/4-data-quantity/lsfb/data_4.yaml"
+#  "../../configs/segmentation/4-data-quantity/lsfb/data_5.yaml"
+#
+#  "../../configs/segmentation/4-data-quantity/dgs/data_1.yaml"
+#  "../../configs/segmentation/4-data-quantity/dgs/data_2.yaml"
+#  "../../configs/segmentation/4-data-quantity/dgs/data_3.yaml"
+#  "../../configs/segmentation/4-data-quantity/dgs/data_4.yaml"
+#  "../../configs/segmentation/4-data-quantity/dgs/data_5.yaml"
 
-  "../../configs/segmentation/4-data-quantity/dgs/data_1.yaml"
-  "../../configs/segmentation/4-data-quantity/dgs/data_2.yaml"
-  "../../configs/segmentation/4-data-quantity/dgs/data_3.yaml"
-  "../../configs/segmentation/4-data-quantity/dgs/data_4.yaml"
-  "../../configs/segmentation/4-data-quantity/dgs/data_5.yaml"
+  "../../configs/segmentation/4-data-quantity/lsfb/io/data_1.yaml"
+  "../../configs/segmentation/4-data-quantity/lsfb/io/data_2.yaml"
+  "../../configs/segmentation/4-data-quantity/lsfb/io/data_3.yaml"
+  "../../configs/segmentation/4-data-quantity/lsfb/io/data_4.yaml"
+  "../../configs/segmentation/4-data-quantity/lsfb/io/data_5.yaml"
+
+  "../../configs/segmentation/4-data-quantity/dgs/io/data_1.yaml"
+  "../../configs/segmentation/4-data-quantity/dgs/io/data_2.yaml"
+  "../../configs/segmentation/4-data-quantity/dgs/io/data_3.yaml"
+  "../../configs/segmentation/4-data-quantity/dgs/io/data_4.yaml"
+  "../../configs/segmentation/4-data-quantity/dgs/io/data_5.yaml"
+
+  "../../configs/segmentation/4-data-quantity/lsfb/bio/data_1.yaml"
+  "../../configs/segmentation/4-data-quantity/lsfb/bio/data_2.yaml"
+  "../../configs/segmentation/4-data-quantity/lsfb/bio/data_3.yaml"
+  "../../configs/segmentation/4-data-quantity/lsfb/bio/data_4.yaml"
+  "../../configs/segmentation/4-data-quantity/lsfb/bio/data_5.yaml"
+
+  "../../configs/segmentation/4-data-quantity/dgs/bio/data_1.yaml"
+  "../../configs/segmentation/4-data-quantity/dgs/bio/data_2.yaml"
+  "../../configs/segmentation/4-data-quantity/dgs/bio/data_3.yaml"
+  "../../configs/segmentation/4-data-quantity/dgs/bio/data_4.yaml"
+  "../../configs/segmentation/4-data-quantity/dgs/bio/data_5.yaml"
 )
 
 config_file=${config_files[$SLURM_ARRAY_TASK_ID]}

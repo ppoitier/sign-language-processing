@@ -1,0 +1,11 @@
+from: "base.yaml"
+
+
+experiment:
+  variant: "bio_low_noise"
+
+
+datasets:
+  training:
+    preprocessing:
+      annotation_transforms: "low-noise"

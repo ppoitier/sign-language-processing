@@ -10,7 +10,7 @@
 #SBATCH --gres="gpu:1"
 #SBATCH --mem-per-cpu=16384
 #SBATCH --partition=gpu
-#SBATCH --array=0-11
+#SBATCH --array=0-5
 #
 #SBATCH --mail-user=pierre.poitier@unamur.be
 #SBATCH --mail-type=ALL
@@ -36,21 +36,29 @@ which python
 python --version
 
 config_files=(
-  "../../configs/segmentation/8-mstcn-noise/lsfb/off_low_noise.yaml"
-  "../../configs/segmentation/8-mstcn-noise/lsfb/off_medium_noise.yaml"
-  "../../configs/segmentation/8-mstcn-noise/lsfb/off_high_noise.yaml"
+#  "../../configs/segmentation/8-mstcn-noise/lsfb/off_low_noise.yaml"
+#  "../../configs/segmentation/8-mstcn-noise/lsfb/off_medium_noise.yaml"
+#  "../../configs/segmentation/8-mstcn-noise/lsfb/off_high_noise.yaml"
+#
+#  "../../configs/segmentation/8-mstcn-noise/lsfb/io/low_noise.yaml"
+#  "../../configs/segmentation/8-mstcn-noise/lsfb/io/medium_noise.yaml"
+#  "../../configs/segmentation/8-mstcn-noise/lsfb/io/high_noise.yaml"
 
-  "../../configs/segmentation/8-mstcn-noise/lsfb/io_low_noise.yaml"
-  "../../configs/segmentation/8-mstcn-noise/lsfb/io_medium_noise.yaml"
-  "../../configs/segmentation/8-mstcn-noise/lsfb/io_high_noise.yaml"
+  "../../configs/segmentation/8-mstcn-noise/lsfb/bio/low_noise.yaml"
+  "../../configs/segmentation/8-mstcn-noise/lsfb/bio/medium_noise.yaml"
+  "../../configs/segmentation/8-mstcn-noise/lsfb/bio/high_noise.yaml"
+#
+#  "../../configs/segmentation/8-mstcn-noise/dgs/off_low_noise.yaml"
+#  "../../configs/segmentation/8-mstcn-noise/dgs/off_medium_noise.yaml"
+#  "../../configs/segmentation/8-mstcn-noise/dgs/off_high_noise.yaml"
+#
+#  "../../configs/segmentation/8-mstcn-noise/dgs/io/low_noise.yaml"
+#  "../../configs/segmentation/8-mstcn-noise/dgs/io/medium_noise.yaml"
+#  "../../configs/segmentation/8-mstcn-noise/dgs/io/high_noise.yaml"
 
-  "../../configs/segmentation/8-mstcn-noise/dgs/off_low_noise.yaml"
-  "../../configs/segmentation/8-mstcn-noise/dgs/off_medium_noise.yaml"
-  "../../configs/segmentation/8-mstcn-noise/dgs/off_high_noise.yaml"
-
-  "../../configs/segmentation/8-mstcn-noise/dgs/io_low_noise.yaml"
-  "../../configs/segmentation/8-mstcn-noise/dgs/io_medium_noise.yaml"
-  "../../configs/segmentation/8-mstcn-noise/dgs/io_high_noise.yaml"
+  "../../configs/segmentation/8-mstcn-noise/dgs/bio/low_noise.yaml"
+  "../../configs/segmentation/8-mstcn-noise/dgs/bio/medium_noise.yaml"
+  "../../configs/segmentation/8-mstcn-noise/dgs/bio/high_noise.yaml"
 )
 
 config_file=${config_files[$SLURM_ARRAY_TASK_ID]}
