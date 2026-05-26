@@ -2,7 +2,7 @@ from: "data.yaml"
 
 
 experiment:
-  variant: "tridet-test"
+  variant: "b25"
   seed: random
 
 
@@ -12,7 +12,6 @@ model:
     name: "ms-tcn"
     kwargs:
       in_channels: 130
-      # (2) + (2 + 2*(B+1))
       out_channels: 56
       hidden_channels: 64
       n_stages: 4
@@ -26,6 +25,7 @@ model:
       name: "trident"
       kwargs:
         n_bins: 25
+       # (2) + (2 + 2*(B+1))
       n_channels: 54
 
 

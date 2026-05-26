@@ -1,0 +1,28 @@
+from: "base.yaml"
+
+
+experiment:
+  variant: "tridet-b40"
+
+
+model:
+  name: 'hydra'
+  backbone:
+    name: "ms-tcn"
+    kwargs:
+      in_channels: 130
+      out_channels: 86
+      hidden_channels: 64
+      n_stages: 4
+      n_layers: 10
+      activation: 'identity'
+  heads:
+    classification:
+      name: "identity"
+      n_channels: 2
+    regression:
+      name: "trident"
+      kwargs:
+        n_bins: 40
+       # 2 + 2*(B+1)
+      n_channels: 84

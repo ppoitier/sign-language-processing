@@ -2,7 +2,7 @@ from: "data.yaml"
 
 
 experiment:
-  variant: "tridet-test"
+  variant: "b25"
   seed: random
 
 

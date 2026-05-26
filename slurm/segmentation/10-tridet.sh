@@ -8,7 +8,7 @@
 #SBATCH --gres="gpu:1"
 #SBATCH --mem-per-cpu=16384
 #SBATCH --partition=gpu
-#SBATCH --array=0-1
+#SBATCH --array=0-3
 #
 #SBATCH --mail-user=pierre.poitier@unamur.be
 #SBATCH --mail-type=ALL
@@ -34,8 +34,13 @@ which python
 python --version
 
 config_files=(
-  "../../configs/segmentation/10-tridet/dgs/base.yaml"
-  "../../configs/segmentation/10-tridet/lsfb/base.yaml"
+#  "../../configs/segmentation/10-tridet/dgs/base.yaml"
+  "../../configs/segmentation/10-tridet/dgs/b10.yaml"
+  "../../configs/segmentation/10-tridet/dgs/b40.yaml"
+
+#  "../../configs/segmentation/10-tridet/lsfb/base.yaml"
+  "../../configs/segmentation/10-tridet/lsfb/b10.yaml"
+  "../../configs/segmentation/10-tridet/lsfb/b40.yaml"
 )
 
 config_file=${config_files[$SLURM_ARRAY_TASK_ID]}
