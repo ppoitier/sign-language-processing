@@ -1,0 +1,70 @@
+datasets:
+  training:
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/dgs/shards/shard_{000000..000005}.tar"
+    dataloader:
+      batch_size: 32
+      shuffle: true
+      n_workers: 2
+    preprocessing:
+      targets:
+        - 'temporal-segmentation'
+        - 'temporal-offsets'
+        - 'segments'
+        - 'bio-tags'
+        - 'boundaries-segments'
+        - 'boundaries-segmentation'
+        - 'boundaries-offsets'
+      pose_transforms: [ { name: 'norm+flatten2d' } ]
+      use_windows: true
+      window_size: 3200
+      window_stride: 2560
+      max_empty_windows: 0
+
+  validation:
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/dgs/shards/shard_000006.tar"
+    dataloader:
+      batch_size: 32
+      shuffle: false
+      n_workers: 2
+    preprocessing:
+      targets:
+        - 'temporal-segmentation'
+        - 'temporal-offsets'
+        - 'segments'
+        - 'bio-tags'
+        - 'boundaries-segments'
+        - 'boundaries-segmentation'
+        - 'boundaries-offsets'
+      pose_transforms: [ { name: 'norm+flatten2d' } ]
+      use_windows: true
+      window_size: 3200
+      window_stride: 2560
+      max_empty_windows: 0
+
+  testing:
+    shards_url: "/gpfs/scratch/acad/lsfb/datasets/dgs/shards/shard_000007.tar"
+    dataloader:
+      batch_size: 32
+      shuffle: false
+      n_workers: 2
+    preprocessing:
+      targets:
+        - 'temporal-segmentation'
+        - 'temporal-offsets'
+        - 'segments'
+        - 'bio-tags'
+        - 'boundaries-segments'
+        - 'boundaries-segmentation'
+        - 'boundaries-offsets'
+      pose_transforms: [ { name: 'norm+flatten2d' } ]
+      use_windows: true
+      window_size: 3200
+      window_stride: 2560
+      max_empty_windows: 0
+
+
+experiment:
+  id: "segmentation/11-rnn/dgs"
+  output_dir: "/gpfs/scratch/acad/lsfb/outputs/hydra_v2"
+  debug: false
+  show_progress_bar: false

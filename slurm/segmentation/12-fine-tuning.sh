@@ -1,21 +1,21 @@
 #!/bin/bash
 #
-#SBATCH --job-name=sls_tridet
-#SBATCH --time=12:00:00
+#SBATCH --job-name=sls_ft
+#SBATCH --time=16:00:00
 #
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=2
 #SBATCH --gres="gpu:1"
 #SBATCH --mem-per-cpu=16384
 #SBATCH --partition=gpu
-#SBATCH --array=0-3
+#SBATCH --array=0-0
 #
 #SBATCH --mail-user=pierre.poitier@unamur.be
 #SBATCH --mail-type=ALL
 #
 #SBATCH --account=lsfb
 #
-#SBATCH --output=./out/10-tridet/%A_%a.out
+#SBATCH --output=./out/12-ft/%A_%a.out
 
 module purge
 module load EasyBuild/2025a
@@ -34,13 +34,7 @@ which python
 python --version
 
 config_files=(
-#  "../../configs/segmentation/10-tridet/dgs/base.yaml"
-  "../../configs/segmentation/10-tridet/dgs/b10.yaml"
-  "../../configs/segmentation/10-tridet/dgs/b40.yaml"
-
-#  "../../configs/segmentation/10-tridet/lsfb/base.yaml"
-  "../../configs/segmentation/10-tridet/lsfb/b10.yaml"
-  "../../configs/segmentation/10-tridet/lsfb/b40.yaml"
+  "../../configs/segmentation/12-fine-tuning/lsfb/base_from_dgs.yaml"
 )
 
 config_file=${config_files[$SLURM_ARRAY_TASK_ID]}
