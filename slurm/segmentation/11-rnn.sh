@@ -8,7 +8,7 @@
 #SBATCH --gres="gpu:1"
 #SBATCH --mem-per-cpu=16384
 #SBATCH --partition=gpu
-#SBATCH --array=0-4
+#SBATCH --array=0-14
 #
 #SBATCH --mail-user=pierre.poitier@unamur.be
 #SBATCH --mail-type=ALL
@@ -34,11 +34,29 @@ which python
 python --version
 
 config_files=(
-  "../../configs/segmentation/11-rnn/dgs/rnn_gru_base.yaml"
-  "../../configs/segmentation/11-rnn/dgs/rnn_gru_xsmall.yaml"
-  "../../configs/segmentation/11-rnn/dgs/rnn_gru_small.yaml"
-  "../../configs/segmentation/11-rnn/dgs/rnn_gru_medium.yaml"
-  "../../configs/segmentation/11-rnn/dgs/rnn_gru_large.yaml"
+#  "../../configs/segmentation/11-rnn/dgs/rnn_gru_base.yaml"
+#  "../../configs/segmentation/11-rnn/dgs/rnn_gru_xsmall.yaml"
+#  "../../configs/segmentation/11-rnn/dgs/rnn_gru_small.yaml"
+#  "../../configs/segmentation/11-rnn/dgs/rnn_gru_medium.yaml"
+#  "../../configs/segmentation/11-rnn/dgs/rnn_gru_large.yaml"
+
+  "../../configs/segmentation/11-rnn/dgs/rnn_lstm_base.yaml"
+  "../../configs/segmentation/11-rnn/dgs/rnn_lstm_xsmall.yaml"
+  "../../configs/segmentation/11-rnn/dgs/rnn_lstm_small.yaml"
+  "../../configs/segmentation/11-rnn/dgs/rnn_lstm_medium.yaml"
+  "../../configs/segmentation/11-rnn/dgs/rnn_lstm_large.yaml"
+
+  "../../configs/segmentation/11-rnn/lsfb/rnn_gru_base.yaml"
+  "../../configs/segmentation/11-rnn/lsfb/rnn_gru_xsmall.yaml"
+  "../../configs/segmentation/11-rnn/lsfb/rnn_gru_small.yaml"
+  "../../configs/segmentation/11-rnn/lsfb/rnn_gru_medium.yaml"
+  "../../configs/segmentation/11-rnn/lsfb/rnn_gru_large.yaml"
+
+  "../../configs/segmentation/11-rnn/lsfb/rnn_lstm_base.yaml"
+  "../../configs/segmentation/11-rnn/lsfb/rnn_lstm_xsmall.yaml"
+  "../../configs/segmentation/11-rnn/lsfb/rnn_lstm_small.yaml"
+  "../../configs/segmentation/11-rnn/lsfb/rnn_lstm_medium.yaml"
+  "../../configs/segmentation/11-rnn/lsfb/rnn_lstm_large.yaml"
 )
 
 config_file=${config_files[$SLURM_ARRAY_TASK_ID]}
