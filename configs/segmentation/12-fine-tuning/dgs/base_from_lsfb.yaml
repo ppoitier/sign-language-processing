@@ -1,0 +1,56 @@
+from: "data.yaml"
+
+
+experiment:
+  variant: "base_from_lsfb"
+  seed: random
+
+
+model:
+  name: 'hydra'
+  backbone:
+    name: "ms-tcn"
+    kwargs:
+      in_channels: 130
+      out_channels: 4
+      hidden_channels: 64
+      n_stages: 4
+      n_layers: 10
+  heads:
+    classification:
+      name: "identity"
+      n_channels: 2
+    regression:
+      name: "identity"
+      n_channels: 2
+
+
+training:
+  checkpoint_path: "/gpfs/scratch/acad/lsfb/outputs/hydra_v2/checkpoints/segmentation/3-mstcn-archs/lsfb/base_4s_10l_64h/59503/epoch=164-step=13035.ckpt"
+
+  max_epochs: 500
+
+  loss_functions:
+    classification:
+      name: "cross-entropy"
+      use_weights: false
+      multi_layer: true
+    regression:
+      name: "gIoU"
+      use_weights: false
+      multi_layer: true
+
+  learning_rate: 2e-5
+  early_stopping_patience: 50
+
+  n_classes: 2
+
+  is_output_multistage: true
+  overfit_one_batch: false
+  use_offsets: true
+
+  heads_to_targets:
+    classification: temporal-segmentation
+    regression: temporal-offsets
+
+  segment_decoder: { name: 'offsets' }

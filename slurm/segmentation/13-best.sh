@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#SBATCH --job-name=sls_ft
+#SBATCH --job-name=sls_best
 #SBATCH --time=16:00:00
 #
 #SBATCH --ntasks=1
@@ -8,14 +8,14 @@
 #SBATCH --gres="gpu:1"
 #SBATCH --mem-per-cpu=16384
 #SBATCH --partition=gpu
-#SBATCH --array=0-0
+#SBATCH --array=0-1
 #
 #SBATCH --mail-user=pierre.poitier@unamur.be
 #SBATCH --mail-type=ALL
 #
 #SBATCH --account=lsfb
 #
-#SBATCH --output=./out/12-ft/%A_%a.out
+#SBATCH --output=./out/13-best/%A_%a.out
 
 module purge
 module load EasyBuild/2025a
@@ -34,8 +34,8 @@ which python
 python --version
 
 config_files=(
-#  "../../configs/segmentation/12-fine-tuning/lsfb/base_from_dgs.yaml"
-  "../../configs/segmentation/12-fine-tuning/dgs/base_from_lsfb.yaml"
+  "../../configs/segmentation/13-best-model/lsfb/base.yaml"
+  "../../configs/segmentation/13-best-model/dgs/base.yaml"
 )
 
 config_file=${config_files[$SLURM_ARRAY_TASK_ID]}
