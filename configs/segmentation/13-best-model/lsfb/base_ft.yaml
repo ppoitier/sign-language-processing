@@ -1,0 +1,59 @@
+from: "data.yaml"
+
+
+experiment:
+  variant: "4s_10l_128h_tridet25b_ft"
+  seed: random
+
+
+model:
+  name: 'hydra'
+  backbone:
+    name: "ms-tcn"
+    kwargs:
+      in_channels: 130
+      out_channels: 56
+      hidden_channels: 128
+      n_stages: 4
+      n_layers: 10
+  heads:
+    classification:
+      name: "identity"
+      n_channels: 2
+    regression:
+      name: "trident"
+      kwargs:
+        n_bins: 25
+        # (2) + (2 + 2*(B+1))
+      n_channels: 54
+
+
+training:
+  checkpoint_path: "/gpfs/scratch/acad/lsfb/outputs/hydra_v2/checkpoints/segmentation/13-best/dgs/4s_10l_128h_tridet25b/16379/epoch=92-step=13485.ckpt"
+
+  max_epochs: 300
+
+  loss_functions:
+    classification:
+      name: "cross-entropy"
+      use_weights: false
+      multi_layer: true
+    regression:
+      name: "gIoU"
+      use_weights: false
+      multi_layer: true
+
+  learning_rate: 1e-4
+  early_stopping_patience: 50
+
+  n_classes: 2
+
+  is_output_multistage: true
+  overfit_one_batch: false
+  use_offsets: true
+
+  heads_to_targets:
+    classification: temporal-segmentation
+    regression: temporal-offsets
+
+  segment_decoder: { name: 'offsets' }
