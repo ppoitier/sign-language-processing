@@ -36,5 +36,5 @@ datasets:
 experiment:
   id: "islr/depth/lsfb"
   output_dir: "/home/sign-language/outputs/depth"
-  debug: true
+  debug: false
   show_progress_bar: true
