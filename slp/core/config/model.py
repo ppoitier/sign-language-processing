@@ -21,6 +21,11 @@ class HydraConfig(ModelConfig):
     loss_on_all_stages: bool = True
 
 
+class VacModelConfig(ModelConfig):
+    visual_backbone: ModelConfig
+    contextual_backbone: ModelConfig
+
+
 class ContrastiveModelConfig(BaseModel):
     backbone: ModelConfig
     projector: ModelConfig

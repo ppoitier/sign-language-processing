@@ -179,7 +179,7 @@ class TransformerViT(nn.Module):
         hidden_channels: int,
         max_length: int,
         n_heads: int = 4,
-        n_layers: int = 6,
+        n_layers: int = 2,
         dim_feedforward: int = 2048,
         dropout: float = 0.1,
         pos_encoding: str = "rope",

@@ -7,6 +7,7 @@ from slp.utils.model import count_parameters
 
 from slp.trainers.generic import GenericTrainer
 from slp.schedulers.types import OptimizerFactory, SchedulerFactory
+from slp.metrics.classification.base import ClassificationMetrics
 
 
 class IsolatedRecognitionTrainer(GenericTrainer):
@@ -26,7 +27,7 @@ class IsolatedRecognitionTrainer(GenericTrainer):
         n_classes: int,
         is_output_multistage: bool = False,
         classification_head: str = "classification",
-        class_target: str = "class",
+        class_target: str = "isolated-label",
         optimizer_factory: Optional[OptimizerFactory] = None,
         scheduler_factory: Optional[SchedulerFactory] = None,
         scheduler_interval: str = "epoch",
@@ -49,15 +50,9 @@ class IsolatedRecognitionTrainer(GenericTrainer):
 
         self.classification_metrics = nn.ModuleDict(
             {
-                "training_metrics": metrics_factory(
-                    prefix="training/", n_classes=n_classes
-                ),
-                "validation_metrics": metrics_factory(
-                    prefix="validation/", n_classes=n_classes
-                ),
-                "testing_metrics": metrics_factory(
-                    prefix="testing/", n_classes=n_classes
-                ),
+                "training_metrics": ClassificationMetrics(prefix="training/", n_classes=n_classes),
+                "validation_metrics": ClassificationMetrics(prefix="validation/", n_classes=n_classes),
+                "testing_metrics": ClassificationMetrics(prefix="testing/", n_classes=n_classes),
             }
         )
 
@@ -66,7 +61,6 @@ class IsolatedRecognitionTrainer(GenericTrainer):
                 "model",
                 "criterion",
                 "test_logits",
-                "metrics_factory",
                 "optimizer_factory",
                 "scheduler_factory",
             ]

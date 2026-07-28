@@ -5,6 +5,7 @@ from slp.core.config.dataset import ContinuousDatasetConfig, IsolatedDatasetConf
 from slp.datasets.dataloaders import load_dataloader
 from slp.transforms.loading import load_pose_transform, load_video_transform
 from slp.targets.loading import load_continuous_target
+from slp.targets.isolated_label import IsolatedLabelTarget
 
 
 def load_continuous_dataset(
@@ -28,6 +29,9 @@ def load_continuous_dataset(
         video_transform = load_video_transform(config.preprocessing.video_transforms)
     return SignLanguageDataset(
         shards_url=config.shards_url,
+        load_videos=config.load_videos,
+        video_path=config.video_path,
+        video_index_path=config.video_index_path,
         targets=targets,
         annotations=("both_hands",),
         precompute_targets=True,
@@ -58,13 +62,9 @@ def load_continuous_datasets_and_loaders(
 def load_isolated_dataset(
     config: IsolatedDatasetConfig,
 ) -> SignLanguageDataset:
-    targets = None
+    targets = {'isolated-label': IsolatedLabelTarget()}
     pose_transform, video_transform = None, None
     if config.preprocessing:
-        # targets = {
-        #     target_id: load_continuous_target(target_id, config.preprocessing.annotation_transforms)
-        #     for target_id in config.preprocessing.targets
-        # }
         pose_transform = load_pose_transform(config.preprocessing.pose_transforms)
         video_transform = load_video_transform(config.preprocessing.video_transforms)
     return SignLanguageDataset(

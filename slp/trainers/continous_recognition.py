@@ -4,72 +4,6 @@ from slp.trainers.generic import GenericTrainer
 from slp.decoders.ctc import CTCDecoder, GreedyCTCDecoder
 
 
-def compute_wer(predicted: list[list[int]], references: list[list[int]]) -> dict:
-    """Compute Word Error Rate using edit distance.
-
-    Args:
-        predicted: List of predicted token ID sequences.
-        references: List of reference token ID sequences.
-
-    Returns:
-        Dict with 'substitutions', 'deletions', 'insertions',
-        'total_ref_tokens', and 'wer'.
-    """
-    total_sub, total_del, total_ins, total_ref = 0, 0, 0, 0
-
-    for pred, ref in zip(predicted, references):
-        n, m = len(ref), len(pred)
-        # Standard edit distance DP with operation tracking
-        dp = [[0] * (m + 1) for _ in range(n + 1)]
-        for i in range(n + 1):
-            dp[i][0] = i
-        for j in range(m + 1):
-            dp[0][j] = j
-
-        for i in range(1, n + 1):
-            for j in range(1, m + 1):
-                if ref[i - 1] == pred[j - 1]:
-                    dp[i][j] = dp[i - 1][j - 1]
-                else:
-                    dp[i][j] = 1 + min(
-                        dp[i - 1][j - 1],  # substitution
-                        dp[i - 1][j],       # deletion
-                        dp[i][j - 1],       # insertion
-                    )
-
-        # Backtrace to count S, D, I
-        i, j = n, m
-        s, d, ins = 0, 0, 0
-        while i > 0 or j > 0:
-            if i > 0 and j > 0 and ref[i - 1] == pred[j - 1]:
-                i -= 1
-                j -= 1
-            elif i > 0 and j > 0 and dp[i][j] == dp[i - 1][j - 1] + 1:
-                s += 1
-                i -= 1
-                j -= 1
-            elif i > 0 and dp[i][j] == dp[i - 1][j] + 1:
-                d += 1
-                i -= 1
-            else:
-                ins += 1
-                j -= 1
-
-        total_sub += s
-        total_del += d
-        total_ins += ins
-        total_ref += n
-
-    wer = (total_sub + total_del + total_ins) / max(total_ref, 1)
-    return {
-        "substitutions": total_sub,
-        "deletions": total_del,
-        "insertions": total_ins,
-        "total_ref_tokens": total_ref,
-        "wer": wer,
-    }
-
-
 class ContinuousRecognitionTrainer(GenericTrainer):
     """Trainer for continuous sign language recognition (CTC-based).
 
@@ -97,7 +31,7 @@ class ContinuousRecognitionTrainer(GenericTrainer):
         criterion: nn.Module,
         learning_rate: float,
         heads_to_targets: dict[str, str],
-        is_output_multilayer: bool = False,
+        is_output_multistage: bool = False,
         classification_head: str = "classification",
         glosses_target: str = "glosses",
         ctc_decoder: CTCDecoder | None = None,
@@ -107,7 +41,7 @@ class ContinuousRecognitionTrainer(GenericTrainer):
             criterion=criterion,
             learning_rate=learning_rate,
             heads_to_targets=heads_to_targets,
-            is_output_multilayer=is_output_multilayer,
+            is_output_multistage=is_output_multistage,
         )
         self.classification_head = classification_head
         self.glosses_target = glosses_target

@@ -16,7 +16,7 @@ class PositionalEncoding(nn.Module):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
         Args:
-            x: Tensor of shape (N, C_in, )
+            x: Tensor of shape (N, C_in, T)
         """
         return x + self.pe[:, :, : x.size(2)]
 

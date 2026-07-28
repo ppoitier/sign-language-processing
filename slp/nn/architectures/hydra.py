@@ -29,6 +29,7 @@ class HydraModel(nn.Module):
         Returns:
             A dictionary mapping head names to their respective lists of multi-stage output tensors.
         """
+
         # 1. Get features from the backbone
         features = self.backbone(x, mask)
 

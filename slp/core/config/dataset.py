@@ -20,7 +20,9 @@ class DataPreprocessing(BaseModel):
 class DatasetConfig(BaseModel):
     shards_url: str
     dataloader: DataLoaderConfig | None = None
-    include_videos: bool = False
+    load_videos: bool = False
+    video_path: str | None = None
+    video_index_path: str | None = None
     preprocessing: DataPreprocessing | None = None
 
 

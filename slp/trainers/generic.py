@@ -68,7 +68,11 @@ class GenericTrainer(TrainerBase):
         """
         features, masks, targets = batch["poses"], batch["masks"], batch["targets"]
         batch_size = features.size(0)
-        features = features.permute(0, 2, 1).float().contiguous()
+        if features.ndim == 3:
+            # Permute to fit CNN dimensions when temporal features.
+            # TODO: move this somewhere else? it's a code smell
+            features = features.permute(0, 2, 1)
+        features = features.float().contiguous()
         masks = masks.unsqueeze(1).bool().contiguous()
 
         raw_logits = self.model(features, masks)

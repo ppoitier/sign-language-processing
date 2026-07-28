@@ -7,11 +7,11 @@ import slp.nn.heads
 
 from torch import nn
 from slp.nn.architectures.hydra import HydraModel
-from slp.nn.architectures.cls_model import ClassificationModel
+from slp.nn.architectures.vac import VacModel
 from slp.nn.heads.multi_stage import SharedMultiStageHead, SingleStageHead
 from slp.nn.heads.channel_splitter import TaskChannelSplitter
 from slp.nn.heads.shared_channel_heads import SharedChannelHeads
-from slp.core.config.model import HydraConfig, HeadConfig
+from slp.core.config.model import HydraConfig, HeadConfig, VacModelConfig
 from slp.core.registry import BACKBONE_REGISTRY, HEAD_REGISTRY, NECK_REGISTRY
 
 
@@ -19,6 +19,11 @@ def load_head(head_config: HeadConfig) -> nn.Module:
     """Instantiates a single base head from its configuration."""
     head_cls = HEAD_REGISTRY.get(head_config.name)
     return head_cls(**head_config.kwargs)
+
+
+def build_backbone(config_backbone):
+    backbone_cls = BACKBONE_REGISTRY.get(config_backbone.name)
+    return backbone_cls(**config_backbone.kwargs)
 
 
 def build_hydra_model(config: HydraConfig) -> HydraModel:
@@ -63,4 +68,11 @@ def build_hydra_model(config: HydraConfig) -> HydraModel:
         backbone=backbone,
         neck=neck,
         head_assembly=head_assembly
+    )
+
+
+def build_vac_model(config: VacModelConfig) -> VacModel:
+    return VacModel(
+        visual_encoder=build_backbone(config.visual_backbone),
+        contextual_encoder=build_backbone(config.contextual_backbone),
     )

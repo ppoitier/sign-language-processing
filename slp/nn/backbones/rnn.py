@@ -22,7 +22,6 @@ class RNN(nn.Module):
         self,
         in_channels: int,
         hidden_channels: int,
-        out_channels: int,
         num_layers: int = 1,
         bidirectional: bool = False,
         rnn_type: str = "lstm",
@@ -46,10 +45,9 @@ class RNN(nn.Module):
             bidirectional=bidirectional,
         )
 
-        rnn_out_channels = hidden_channels * 2 if bidirectional else hidden_channels
-        self.conv_out = nn.Conv1d(rnn_out_channels, out_channels, kernel_size=1)
+        self.c_out = hidden_channels * 2 if bidirectional else hidden_channels
 
-    def forward(self, x: Tensor, mask: Tensor) -> Tensor:
+    def forward(self, x: Tensor, mask: Tensor | None = None) -> Tensor:
         """
         Args:
             x: Input tensor of shape (N, C_in, T).
@@ -61,25 +59,27 @@ class RNN(nn.Module):
         # PyTorch RNNs expect (N, T, C_in) when batch_first=True
         x = x.permute(0, 2, 1).contiguous()
 
-        # 1. Compute valid sequence lengths from the mask
-        lengths = mask.squeeze(1).sum(dim=1).to(torch.int64).cpu()
+        if mask is None:
+            # No padding: run the RNN directly, no pack/unpack needed.
+            out, _ = self.rnn(x)
+        else:
+            # 1. Compute valid sequence lengths from the mask
+            lengths = mask.squeeze(1).sum(dim=1).to(torch.int64).cpu()
+            # 2. Pack the sequence
+            packed_x = pack_padded_sequence(
+                x, lengths, batch_first=True, enforce_sorted=False
+            )
+            # 3. Pass through RNN
+            packed_out, _ = self.rnn(packed_x)
+            # 4. Unpack back to a padded tensor of shape (N, T, rnn_out_channels)
+            out, _ = pad_packed_sequence(
+                packed_out, batch_first=True, total_length=x.size(1)
+            )
 
-        # 2. Pack the sequence
-        packed_x = pack_padded_sequence(
-            x, lengths, batch_first=True, enforce_sorted=False
-        )
-
-        # 3. Pass through RNN
-        packed_out, _ = self.rnn(packed_x)
-
-        # 4. Unpack back to a padded tensor of shape (N, T, rnn_out_channels)
-        out, _ = pad_packed_sequence(
-            packed_out, batch_first=True, total_length=x.size(1)
-        )
-
-        # Permute back to (N, C, T) for the 1D convolution and final output
+        # Back to (N, C_out, T)
         out = out.permute(0, 2, 1)
 
-        logits = self.conv_out(out)
+        if mask is not None:
+            out = out * mask
 
-        return logits * mask
+        return out

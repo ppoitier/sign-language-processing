@@ -35,18 +35,18 @@ class ResNet2D(nn.Module):
 
     def __init__(
         self,
-        num_layers: int = 50,
+        n_layers: int = 50,
         pretrained: bool = True,
     ):
         super().__init__()
 
-        if num_layers not in self._CONFIGS:
+        if n_layers not in self._CONFIGS:
             raise ValueError(
                 f"num_layers must be one of {list(self._CONFIGS.keys())}, "
-                f"got {num_layers}"
+                f"got {n_layers}"
             )
 
-        factory, weights, embed_dim = self._CONFIGS[num_layers]
+        factory, weights, embed_dim = self._CONFIGS[n_layers]
         self.c_out = embed_dim
         self.resnet = factory(weights=weights if pretrained else None)
         self.resnet.fc = nn.Identity()
@@ -54,10 +54,27 @@ class ResNet2D(nn.Module):
     def forward(self, x: Tensor, mask: Optional[Tensor] = None) -> Tensor:
         """
         Args:
-            x:    Input tensor of shape (N, C_in, L, T).
+            x:    Input tensor of shape (N, C_in, H, W) or (N, T, C_in, H, W).
             mask: Unused. Accepted for API compatibility.
 
         Returns:
-            Output tensor of shape (N, C_out).
+            Output tensor of shape (N, C_out) or (N, C_out, T).
         """
-        return self.resnet(x)
+        batch_size = x.size(0)
+        collapsed = x.dim() == 5
+        if collapsed:
+            x = x.flatten(0, 1)  # (N, T, C, H, W) -> (N*T, C, H, W)
+        out = self.resnet(x)
+        if collapsed:
+            out = out.reshape(batch_size, -1, out.size(-1))  # (N*T, C_out) -> (N, T, C_out)
+            out = out.transpose(1, 2)  # (N, T, C_out) -> (N, C_out, T)
+        return out
+
+
+if __name__ == "__main__":
+    import torch
+
+    x = torch.randn(1, 3, 65, 64)
+    model = ResNet2D()
+    y = model(x)
+    print(y.size())

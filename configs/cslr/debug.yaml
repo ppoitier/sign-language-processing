@@ -1,0 +1,72 @@
+experiment:
+  id: "cslr/0-debug/phoenix"
+  variant: "debug"
+  seed: random
+  output_dir: "/gpfs/scratch/acad/lsfb/outputs/hydra_v2"
+  debug: true
+  show_progress_bar: true
+
+
+datasets:
+  training:
+    shards_url: "file:F:/datasets/sign-language/phoenix/shards/shard_{000000..000003}.tar"
+    load_videos: true
+    video_path: "F:/datasets/sign-language/phoenix/videos.tar"
+    video_index_path: "F:/datasets/sign-language/phoenix/videos.tar.index.json"
+    dataloader:
+      batch_size: 2
+      shuffle: true
+      n_workers: 0
+    preprocessing:
+      targets:
+        - 'segments'
+      pose_transforms: [ { name: 'norm+flatten2d' } ]
+      use_windows: false
+
+  validation:
+    shards_url: "file:F:/datasets/sign-language/phoenix/shards/shard_000004.tar"
+    load_videos: true
+    video_path: "F:/datasets/sign-language/phoenix/videos.tar"
+    video_index_path: "F:/datasets/sign-language/phoenix/videos.tar.index.json"
+    dataloader:
+      batch_size: 2
+      shuffle: false
+      n_workers: 0
+    preprocessing:
+      targets:
+        - 'segments'
+      pose_transforms: [ { name: 'norm+flatten2d' } ]
+      use_windows: false
+
+  testing:
+    shards_url: "file:F:/datasets/sign-language/phoenix/shards/shard_000004.tar"
+    load_videos: true
+    video_path: "F:/datasets/sign-language/phoenix/videos.tar"
+    video_index_path: "F:/datasets/sign-language/phoenix/videos.tar.index.json"
+    dataloader:
+      batch_size: 8
+      shuffle: false
+      n_workers: 0
+    preprocessing:
+      targets:
+        - 'segments'
+      pose_transforms: [ { name: 'norm+flatten2d' } ]
+      use_windows: false
+
+
+model:
+  name: 'vac'
+  visual_backbone:
+    name: 'chain'
+    kwargs:
+      backbones:
+        resnet2d: {n_layers: 18, pretrained: true}
+        temporal_conv1d: {}
+  contextual_backbone:
+    name: 'rnn'
+    kwargs:
+      in_channels: 1024
+      hidden_channels: 512
+      num_layers: 2
+      bidirectional: true
+      rnn_type: 'lstm'

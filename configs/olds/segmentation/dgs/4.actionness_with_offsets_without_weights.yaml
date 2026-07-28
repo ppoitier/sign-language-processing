@@ -1,7 +1,0 @@
-from: "3.actionness_with_offsets_and_weights.yaml"
-
-id: "actionness_with_offsets_without_weights"
-
-training:
-  criterion:
-    use_weights: false

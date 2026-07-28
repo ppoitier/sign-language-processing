@@ -10,4 +10,12 @@ class LinearHead(nn.Module):
         self.fc = nn.Conv1d(in_features, out_features, kernel_size=1)
 
     def forward(self, x):
-        return self.fc(x)
+        squeeze_output = x.dim() == 2
+        if squeeze_output:
+            x = x.unsqueeze(-1)  # (N, C) -> (N, C, 1)
+
+        out = self.fc(x)
+
+        if squeeze_output:
+            out = out.squeeze(-1)  # (N, C_out, 1) -> (N, C_out)
+        return out
