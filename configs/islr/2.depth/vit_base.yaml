@@ -1,0 +1,60 @@
+from: "data_huma01.yaml"
+
+
+experiment:
+  variant: "z_mediapipe/vit_4h6l80d64s"
+  seed: random
+
+
+model:
+  name: 'hydra'
+  backbone:
+    name: 'vit'
+    kwargs:
+      in_channels: 195
+      hidden_channels: 80
+      max_length: 64
+      n_heads: 4
+      n_layers: 6
+      dim_feedforward: 2048
+      dropout: 0.1
+      pos_encoding: "sinusoidal"
+      pool: "cls"
+  channels_to_head_routing: "shared"
+  heads:
+    classification:
+      name: "linear"
+      n_channels: 80
+      kwargs:
+        in_features: 80
+        out_features: 500
+
+
+training:
+  max_epochs: 200
+
+  loss_functions:
+    classification:
+      name: "cross-entropy"
+      use_weights: false
+      multi_layer: false
+
+  learning_rate: 1.0e-4
+  early_stopping_patience: 20
+  lr_scheduler:
+    name: 'warmup-plateau-cosine-annealing'
+    kwargs:
+      n_warmup_steps: 20
+      n_plateau_steps: 0
+      max_steps: 200
+      lr: 1.0e-4
+      start_lr: 1.0e-6
+      end_lr: 1.0e-6
+
+  n_classes: 500
+
+  is_output_multistage: true
+  overfit_one_batch: false
+
+  heads_to_targets:
+    classification: isolated-label

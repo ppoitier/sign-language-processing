@@ -1,0 +1,40 @@
+datasets:
+  training:
+    shards_url: "/home/sign-language/datasets/lsfb-isol/shards/500/shard_{000002..000009}.tar"
+    dataloader:
+      batch_size: 256
+      shuffle: true
+      n_workers: 23
+    preprocessing:
+      targets:
+        - 'temporal-segmentation'
+      pose_transforms: [ {name: 'islr+flatten3d'} ]
+
+  validation:
+    shards_url: "/home/sign-language/datasets/lsfb-isol/shards/500/shard_000001.tar"
+    dataloader:
+      batch_size: 256
+      shuffle: false
+      n_workers: 23
+    preprocessing:
+      targets:
+        - 'temporal-segmentation'
+      pose_transforms: [ {name: 'islr+flatten3d'} ]
+
+  testing:
+    shards_url: "/home/sign-language/datasets/lsfb-isol/shards/500/shard_000000.tar"
+    dataloader:
+      batch_size: 256
+      shuffle: false
+      n_workers: 23
+    preprocessing:
+      targets:
+        - 'temporal-segmentation'
+      pose_transforms: [ {name: 'islr+flatten3d'} ]
+
+
+experiment:
+  id: "islr/depth/lsfb"
+  output_dir: "/home/sign-language/outputs/depth"
+  debug: true
+  show_progress_bar: true
