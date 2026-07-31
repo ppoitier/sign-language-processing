@@ -42,3 +42,5 @@ POSE_TRANSFORM_REGISTRY = Registry("pose-transform")
 VIDEO_TRANSFORM_REGISTRY = Registry("video-transform")
 
 SEGMENT_DECODER_REGISTRY = Registry("segment-decoder")
+
+SSL_METHOD_REGISTRY = Registry("ssl-method")

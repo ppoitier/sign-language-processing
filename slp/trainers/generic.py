@@ -1,6 +1,6 @@
 from typing import Optional
 
-from torch import nn, optim, Tensor
+from torch import nn, Tensor
 
 from slp.trainers.base import TrainerBase
 from slp.schedulers.types import OptimizerFactory, SchedulerFactory
@@ -36,12 +36,14 @@ class GenericTrainer(TrainerBase):
         super().__init__()
         self.model = model
         self.criterion = criterion
-        self.learning_rate = learning_rate
 
-        self.optimizer_factory = optimizer_factory
-        self.scheduler_factory = scheduler_factory
-        self.scheduler_interval = scheduler_interval
-        self.scheduler_monitor = scheduler_monitor
+        self.setup_optimization(
+            learning_rate=learning_rate,
+            optimizer_factory=optimizer_factory,
+            scheduler_factory=scheduler_factory,
+            scheduler_interval=scheduler_interval,
+            scheduler_monitor=scheduler_monitor,
+        )
 
         self.heads_to_targets = heads_to_targets
         self.is_output_multistage = is_output_multistage
@@ -167,25 +169,3 @@ class GenericTrainer(TrainerBase):
         _, eval_logits, _, batch_size = self.prediction_step(batch, "testing")
         self.cache_test_logits(eval_logits, batch)
         self.on_test_batch(eval_logits, batch, batch_size)
-
-    def configure_optimizers(self):
-        if self.optimizer_factory is not None:
-            optimizer = self.optimizer_factory(self.parameters())
-        else:
-            optimizer = optim.AdamW(self.parameters(), lr=self.learning_rate)
-
-        if self.scheduler_factory is None:
-            return optimizer
-
-        scheduler = self.scheduler_factory(optimizer)
-
-        lr_scheduler_config = {
-            "scheduler": scheduler,
-            "interval": self.scheduler_interval,
-            "frequency": 1,
-        }
-
-        if self.scheduler_monitor is not None:
-            lr_scheduler_config["monitor"] = self.scheduler_monitor
-
-        return {"optimizer": optimizer, "lr_scheduler": lr_scheduler_config}

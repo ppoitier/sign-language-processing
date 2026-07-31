@@ -5,7 +5,11 @@ from uuid import uuid4
 from pydantic import BaseModel, Field
 
 from slp.core.config.dataset import ContinuousDatasetConfig
-from slp.core.config.training import SegmentationTrainingConfig, TrainingConfig
+from slp.core.config.training import (
+    RepresentationLearningTrainingConfig,
+    SegmentationTrainingConfig,
+    TrainingConfig,
+)
 from slp.core.config.model import HydraConfig, VacModelConfig
 
 
@@ -37,6 +41,14 @@ class SegmentationTaskConfig(TaskConfig):
     datasets: dict[str, ContinuousDatasetConfig]
     model: HydraConfig
     training: Optional[SegmentationTrainingConfig] = None
+
+
+class RepresentationLearningTaskConfig(TaskConfig):
+    """Self-supervised pretraining of a backbone, task-agnostic by design."""
+
+    datasets: dict[str, ContinuousDatasetConfig]
+    model: HydraConfig
+    training: Optional[RepresentationLearningTrainingConfig] = None
 
 
 class ContinuousRecognitionTaskConfig(TaskConfig):
