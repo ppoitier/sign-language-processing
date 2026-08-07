@@ -8,7 +8,7 @@ from lightning.pytorch.loggers import Logger
 from torch.utils.data import DataLoader
 
 from slp.core.config.experiment import ExperimentConfig
-from slp.core.config.training import TrainingConfig
+from slp.core.config.training import BaseTrainingConfig
 
 
 def run_training(
@@ -16,7 +16,7 @@ def run_training(
     validation_dataloader: DataLoader,
     lightning_module: pl.LightningModule,
     experiment_config: ExperimentConfig,
-    training_config: TrainingConfig,
+    training_config: BaseTrainingConfig,
     loggers: list[Logger],
     checkpoints_dir: str,
     monitor_loss: str = 'validation/loss',

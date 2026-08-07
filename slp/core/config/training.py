@@ -40,7 +40,7 @@ class TrainingConfig(BaseTrainingConfig):
 
     n_classes: Optional[int] = None
     is_output_multistage: bool = False
-    heads_to_targets: dict[str, str]
+    heads_to_targets: dict[str, str] = Field(default_factory=dict)
 
 
 class SegmentDecoderConfig(BaseModel):
@@ -69,6 +69,8 @@ class RepresentationLearningTrainingConfig(BaseTrainingConfig):
     method: SSLMethodConfig
     embedding_head: str = "projection"
     is_output_multistage: bool = False
+
+    embedding_dim: int = 2048
 
     log_representation_stats: bool = True
     cache_test_embeddings: bool = False

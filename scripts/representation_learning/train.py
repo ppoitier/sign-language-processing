@@ -43,6 +43,9 @@ def launch_representation_learning(config_path):
     model = build_hydra_model(config.model)
     print(model)
 
+    print("Compiling model...")
+    model = torch.compile(model)
+
     assert config.training is not None, "Missing training configuration."
 
     lr_scheduler_factory, lr_scheduler_monitor = None, None
@@ -56,10 +59,6 @@ def launch_representation_learning(config_path):
     lightning_module = load_representation_learning_trainer(
         model=model,
         training_config=config.training,
-        # Saves repeating the projector width in the method kwargs.
-        embedding_dim=infer_embedding_dim(
-            config.model, config.training.embedding_head
-        ),
         scheduler_factory=lr_scheduler_factory,
         scheduler_monitor=lr_scheduler_monitor,
     )

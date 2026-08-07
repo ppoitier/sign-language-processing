@@ -100,45 +100,49 @@ class RepresentationLearningTrainer(TrainerBase):
         """Skip frozen parameters, such as BYOL's target encoder."""
         return (p for p in self.parameters() if p.requires_grad)
 
-    def extract_views(self, batch: dict) -> tuple[list[Tensor], list[Optional[Tensor]]]:
-        """Unpack the augmented views and their masks from a batch.
-
-        ``batch["poses"]`` is expected to be a tuple of view tensors. A single
-        tensor is accepted too, which is what makes single-view methods (and
-        debugging on a supervised loader) work unchanged.
-        """
-        views = batch["poses"]
-        if isinstance(views, Tensor):
-            views = (views,)
-        views = list(views)
-
-        masks = batch.get("masks")
-        if masks is None:
-            masks = [None] * len(views)
-        elif isinstance(masks, Tensor):
-            # One shared mask: the views keep the original temporal layout.
-            masks = [masks] * len(views)
-        else:
-            masks = list(masks)
-
-        if len(masks) != len(views):
-            raise ValueError(
-                f"Got {len(views)} views but {len(masks)} masks. The batch must "
-                f"provide either one mask per view or a single shared mask."
-            )
-
-        expected = self.method.n_views
-        if len(views) != expected:
-            raise ValueError(
-                f"{type(self.method).__name__} expects {expected} views per sample, "
-                f"but the batch provides {len(views)}. Adjust the augmentation "
-                f"pipeline or the method's 'n_views'."
-            )
-
-        return views, masks
+    # # I think this function should be removed. It's unnecessary
+    # def extract_views(self, batch: dict) -> tuple[list[Tensor], list[Optional[Tensor]]]:
+    #     """Unpack the augmented views and their masks from a batch.
+    #
+    #     ``batch["poses"]`` is expected to be a tuple of view tensors. A single
+    #     tensor is accepted too, which is what makes single-view methods (and
+    #     debugging on a supervised loader) work unchanged.
+    #     """
+    #     views = batch["poses"]
+    #     if isinstance(views, Tensor):
+    #         views = (views,)
+    #     views = list(views)
+    #
+    #     masks = batch.get("masks")
+    #     if masks is None:
+    #         masks = [None] * len(views)
+    #     elif isinstance(masks, Tensor):
+    #         # One shared mask: the views keep the original temporal layout.
+    #         masks = [masks] * len(views)
+    #     else:
+    #         masks = list(masks)
+    #
+    #     if len(masks) != len(views):
+    #         raise ValueError(
+    #             f"Got {len(views)} views but {len(masks)} masks. The batch must "
+    #             f"provide either one mask per view or a single shared mask."
+    #         )
+    #
+    #     expected = self.method.n_views
+    #     if len(views) != expected:
+    #         raise ValueError(
+    #             f"{type(self.method).__name__} expects {expected} views per sample, "
+    #             f"but the batch provides {len(views)}. Adjust the augmentation "
+    #             f"pipeline or the method's 'n_views'."
+    #         )
+    #
+    #     return views, masks
 
     def prediction_step(self, batch: dict, mode: str):
-        views, masks = self.extract_views(batch)
+        # batch['poses'] is already a tuple of tensors of shape (N, T, C_in)
+        # batch['masks'] is already a tuple of boolean tensors of shape (N, T)
+
+        views, masks = batch['poses'], batch['masks']
         batch_size = views[0].size(0)
 
         output = self.method(self.encoder, views, masks)
@@ -157,7 +161,7 @@ class RepresentationLearningTrainer(TrainerBase):
             self.log(
                 f"{mode}/{loss_name}",
                 loss_value,
-                on_step=True,
+                on_step=False,
                 on_epoch=True,
                 batch_size=batch_size,
             )
@@ -212,7 +216,6 @@ def load_representation_learning_trainer(
     model: nn.Module,
     training_config: RepresentationLearningTrainingConfig,
     method: Optional[SSLMethod] = None,
-    embedding_dim: Optional[int] = None,
     optimizer_factory: Optional[OptimizerFactory] = None,
     scheduler_factory: Optional[SchedulerFactory] = None,
     scheduler_interval: str = "epoch",
@@ -222,7 +225,7 @@ def load_representation_learning_trainer(
     print(f"Total number of parameters in the model: {n_parameters:,}")
 
     if method is None:
-        method = build_ssl_method(training_config.method, embedding_dim=embedding_dim)
+        method = build_ssl_method(training_config.method, embedding_dim=training_config.embedding_dim)
     print(f"Using self-supervised method: {type(method).__name__}")
 
     checkpoint_path = training_config.checkpoint_path

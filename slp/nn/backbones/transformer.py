@@ -5,9 +5,6 @@ All backbones follow the framework convention:
     - Input:  x (N, C, T), mask (N, 1, T) where 1=valid, 0=pad
     - Output: list[Tensor] (one per stage) or Tensor
 
-The (N, C, T) <--> (N, T, C) transpose happens at each backbone's
-boundary. Core layers operate in standard PyTorch (N, T, C).
-
 Architectures:
     MultiStageTransformer    — multi-scale dense features via staged
                                downsampling

@@ -1,0 +1,79 @@
+datasets:
+  training:
+    shards_url: "F:/datasets/sign-language/lsfb-isol/shards/500/shard_{000002..000009}.tar"
+    dataloader:
+      batch_size: 64
+      shuffle: true
+      n_workers: 0
+    preprocessing:
+      targets:
+        - 'isolated-label'
+      pose_transforms: [ {name: 'simclr-ready'} ]
+
+  validation:
+    shards_url: "F:/datasets/sign-language/lsfb-isol/shards/500/shard_000001.tar"
+    dataloader:
+      batch_size: 64
+      shuffle: false
+      n_workers: 0
+    preprocessing:
+      targets:
+        - 'isolated-label'
+      pose_transforms: [ {name: 'simclr-ready'} ]
+
+  testing:
+    shards_url: "F:/datasets/sign-language/lsfb-isol/shards/500/shard_000000.tar"
+    dataloader:
+      batch_size: 64
+      shuffle: false
+      n_workers: 0
+    preprocessing:
+      targets:
+        - 'isolated-label'
+      pose_transforms: [ {name: 'simclr-ready'} ]
+
+
+experiment:
+  id: "contrastive"
+  variant: "simclr/debug/overfitting"
+  output_dir: "F:/outputs/islr"
+  debug: false
+  show_progress_bar: true
+
+
+model:
+  name: 'hydra'
+  backbone:
+    name: 'vit'
+    kwargs:
+      in_channels: 130
+      hidden_channels: 512
+      max_length: 64
+      n_heads: 4
+      n_layers: 6
+      dim_feedforward: 2048
+      dropout: 0.1
+      pos_encoding: "sinusoidal"
+      pool: "cls"
+  heads:
+    projection:
+      name: "projection"
+      n_channels: 512
+      kwargs:
+        in_features: 512
+        out_features: 128
+        hidden_features: 512
+        n_layers: 2
+
+
+training:
+  method:
+    name: "simclr"
+  max_epochs: 200
+
+  embedding_dim: 1024
+
+  learning_rate: 1.0e-4
+  early_stopping_patience: 20
+
+  overfit_one_batch: true
