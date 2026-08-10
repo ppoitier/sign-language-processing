@@ -22,4 +22,6 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
+    "sign-language-tools",
+    "sign-language-data-loading",
 ]

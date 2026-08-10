@@ -10,7 +10,6 @@ from slp.core.parser import parse_config
 from slp.core.config.experiment import RepresentationLearningTaskConfig
 from slp.datasets.loading import load_isolated_datasets_and_loaders
 from slp.nn.model_builder import build_hydra_model
-from slp.nn.ssl.loading import infer_embedding_dim
 from slp.utils.random import set_seed
 from slp.utils.loggers import load_loggers
 from slp.trainers.representation_learning import load_representation_learning_trainer
@@ -44,7 +43,7 @@ def launch_representation_learning(config_path):
     print(model)
 
     print("Compiling model...")
-    model = torch.compile(model)
+    model = torch.compile(model, dynamic=True)
 
     assert config.training is not None, "Missing training configuration."
 

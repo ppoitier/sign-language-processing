@@ -12,5 +12,7 @@ def load_dataloader(dataset: SignLanguageDataset, config: DataLoaderConfig):
         shuffle=config.shuffle,
         num_workers=config.n_workers,
         pin_memory=config.pin_memory,
-        collate_fn=SignLanguageCollator(targets=dataset.targets),
+        collate_fn=SignLanguageCollator(
+            targets=dataset.targets, fixed_length=config.fixed_length
+        ),
     )

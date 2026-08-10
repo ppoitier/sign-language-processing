@@ -9,6 +9,7 @@ class DataLoaderConfig(BaseModel):
     shuffle: bool = True
     n_workers: int = 0
     pin_memory: bool = True
+    fixed_length: int | None = None
 
 
 class DataPreprocessing(BaseModel):
