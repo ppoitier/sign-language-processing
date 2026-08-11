@@ -40,8 +40,8 @@ def stochastic_augments_model_ready():
         Compose(
             [
                 Concatenate(["upper_pose", "left_hand", "right_hand"]),
-                NormalizeByReferenceEdge(ref_edge=(11, 12)),
-                CenterOnLandmarks((11, 12)),
+                # NormalizeByReferenceEdge(ref_edge=(11, 12)),
+                # CenterOnLandmarks((11, 12)),
                 DropCoordinates("z"),
                 TemporalRandomCrop(size=64),
                 Randomize(GaussianNoise(0.002), probability=0.6),
@@ -52,7 +52,7 @@ def stochastic_augments_model_ready():
                     probability=0.6,
                 ),
                 Randomize(RandomScale(min_scale=0.5, max_scale=1.5), probability=0.2),
-                Clip(),
+                # Clip(),
                 Flatten(),
             ]
         )

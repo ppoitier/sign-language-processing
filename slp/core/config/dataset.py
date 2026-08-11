@@ -25,6 +25,7 @@ class DatasetConfig(BaseModel):
     video_path: str | None = None
     video_index_path: str | None = None
     preprocessing: DataPreprocessing | None = None
+    pose_body_parts: tuple[str, ...] = ("upper_pose", "left_hand", "right_hand")
 
 
 class ContinuousDataPreprocessing(DataPreprocessing):

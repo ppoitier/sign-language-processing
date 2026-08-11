@@ -69,6 +69,7 @@ def load_isolated_dataset(
         video_transform = load_video_transform(config.preprocessing.video_transforms)
     return SignLanguageDataset(
         shards_url=config.shards_url,
+        body_parts=config.pose_body_parts,
         isolated=True,
         targets=targets,
         annotations=None,
