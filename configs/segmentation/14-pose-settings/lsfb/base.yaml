@@ -11,7 +11,8 @@ model:
   backbone:
     name: "ms-tcn"
     kwargs:
-      in_channels: 130
+#      in_channels: 130
+      in_channels: 210 # = upper_body + left/right_hand + lips
       out_channels: 4
       hidden_channels: 64
       n_stages: 4

@@ -1,4 +1,3 @@
-bitsandbytes
 click
 einops
 lightning
@@ -14,7 +13,7 @@ tensorboard
 torch
 torchao
 torchmetrics
-torchvision
 torchtune
+torchvision
 tqdm
 webdataset

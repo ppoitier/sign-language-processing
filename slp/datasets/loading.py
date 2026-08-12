@@ -29,6 +29,7 @@ def load_continuous_dataset(
         video_transform = load_video_transform(config.preprocessing.video_transforms)
     return SignLanguageDataset(
         shards_url=config.shards_url,
+        body_parts=config.pose_body_parts,
         load_videos=config.load_videos,
         video_path=config.video_path,
         video_index_path=config.video_index_path,

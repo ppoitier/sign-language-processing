@@ -16,7 +16,7 @@ class HydraConfig(ModelConfig):
     backbone: ModelConfig
     neck: Optional[ModelConfig] = None
     heads: OrderedDict[str, HeadConfig] = Field(default_factory=OrderedDict)
-    channels_to_head_routing: Literal["split", "shared"] = "shared"
+    channels_to_head_routing: Literal["split", "shared"] = "split"
     multi_layer: bool = True
     loss_on_all_stages: bool = True
 
