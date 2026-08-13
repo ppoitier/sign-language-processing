@@ -2,7 +2,7 @@ from: "base.yaml"
 
 
 experiment:
-  variant: "mstcn_base/setting03"
+  variant: "mstcn_medium/poses_s01_hands"
   seed: random
 
 
@@ -11,28 +11,22 @@ datasets:
     pose_body_parts: [ "left_hand", "right_hand" ]
     preprocessing:
       pose_transforms:
-        - {
-          name: 'norm+flatten2d',
-          kwargs: { body_parts: [ "left_hand", "right_hand" ] }
-        }
+        - { name: 'norm+flatten2d',
+            kwargs: { body_parts: [ "left_hand", "right_hand" ] } }
 
   validation:
     pose_body_parts: [ "left_hand", "right_hand" ]
     preprocessing:
       pose_transforms:
-        - {
-          name: 'norm+flatten2d',
-          kwargs: { body_parts: [ "left_hand", "right_hand" ] }
-        }
+        - { name: 'norm+flatten2d',
+            kwargs: { body_parts: [ "left_hand", "right_hand" ] } }
 
   testing:
     pose_body_parts: [ "left_hand", "right_hand" ]
     preprocessing:
       pose_transforms:
-        - {
-          name: 'norm+flatten2d',
-          kwargs: { body_parts: [ "left_hand", "right_hand" ] }
-        }
+        - { name: 'norm+flatten2d',
+            kwargs: { body_parts: [ "left_hand", "right_hand" ] } }
 
 
 model:
@@ -40,7 +34,7 @@ model:
   backbone:
     name: "ms-tcn"
     kwargs:
-      in_channels: 84 # = left/right_hand
+      in_channels: 84 # = left/right_hand (42 x 2d)
       out_channels: 4
       hidden_channels: 64
       n_stages: 4

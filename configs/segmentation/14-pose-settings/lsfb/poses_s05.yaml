@@ -1,0 +1,48 @@
+from: "base.yaml"
+
+
+experiment:
+  variant: "mstcn_medium/poses_s05_hands+up+lips+eyes+eyebrows"
+  seed: random
+
+
+datasets:
+  training:
+    pose_body_parts: [ "upper_pose", "left_hand", "right_hand", "lips", "left_eye", "left_iris", "right_eye", "right_iris", "left_eyebrow", "right_eyebrow" ]
+    preprocessing:
+      pose_transforms:
+        - { name: 'norm+flatten2d',
+            kwargs: { body_parts: [ "upper_pose", "left_hand", "right_hand", "lips", "left_eye", "left_iris", "right_eye", "right_iris", "left_eyebrow", "right_eyebrow" ] } }
+
+  validation:
+    pose_body_parts: [ "upper_pose", "left_hand", "right_hand", "lips", "left_eye", "left_iris", "right_eye", "right_iris", "left_eyebrow", "right_eyebrow" ]
+    preprocessing:
+      pose_transforms:
+        - { name: 'norm+flatten2d',
+            kwargs: { body_parts: [ "upper_pose", "left_hand", "right_hand", "lips", "left_eye", "left_iris", "right_eye", "right_iris", "left_eyebrow", "right_eyebrow" ] } }
+
+  testing:
+    pose_body_parts: [ "upper_pose", "left_hand", "right_hand", "lips", "left_eye", "left_iris", "right_eye", "right_iris", "left_eyebrow", "right_eyebrow" ]
+    preprocessing:
+      pose_transforms:
+        - { name: 'norm+flatten2d',
+            kwargs: { body_parts: [ "upper_pose", "left_hand", "right_hand", "lips", "left_eye", "left_iris", "right_eye", "right_iris", "left_eyebrow", "right_eyebrow" ] } }
+
+
+model:
+  name: 'hydra'
+  backbone:
+    name: "ms-tcn"
+    kwargs:
+      in_channels: 330 # = upper_body + hands + lips + eyes + eyebrows (165 x 2d)
+      out_channels: 4
+      hidden_channels: 64
+      n_stages: 4
+      n_layers: 10
+  heads:
+    classification:
+      name: "identity"
+      n_channels: 2
+    regression:
+      name: "identity"
+      n_channels: 2

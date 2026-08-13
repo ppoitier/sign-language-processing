@@ -2,7 +2,7 @@ from: "data.yaml"
 
 
 experiment:
-  variant: "mstcn_base/base"
+  variant: "mstcn_medium/base"
   seed: random
 
 
@@ -13,7 +13,7 @@ model:
     kwargs:
       in_channels: 130
       out_channels: 4
-      hidden_channels: 64
+      hidden_channels: 128
       n_stages: 4
       n_layers: 10
   heads:

@@ -68,6 +68,6 @@ datasets:
 
 experiment:
   id: "segmentation/14-pose-settings/lsfb"
-  output_dir: "/gpfs/scratch/acad/lsfb/outputs/hydra_v2"
+  output_dir: "/gpfs/scratch/acad/lsfb/outputs/hydra_v3"
   debug: false
   show_progress_bar: false

@@ -2,36 +2,36 @@ from: "base.yaml"
 
 
 experiment:
-  variant: "mstcn_base/setting01"
+  variant: "mstcn_medium/poses_s02_hands+up"
   seed: random
 
 
 datasets:
   training:
-    pose_body_parts: ["upper_pose", "left_hand", "right_hand", "lips"]
+    pose_body_parts: [ "upper_pose", "left_hand", "right_hand" ]
     preprocessing:
       pose_transforms:
         - {
           name: 'norm+flatten2d',
-          kwargs: {body_parts: [ "upper_pose", "left_hand", "right_hand", "lips" ]}
+          kwargs: { body_parts: [ "upper_pose", "left_hand", "right_hand" ] }
         }
 
   validation:
-    pose_body_parts: ["upper_pose", "left_hand", "right_hand", "lips"]
+    pose_body_parts: [ "upper_pose", "left_hand", "right_hand" ]
     preprocessing:
       pose_transforms:
         - {
           name: 'norm+flatten2d',
-          kwargs: {body_parts: [ "upper_pose", "left_hand", "right_hand", "lips" ]}
+          kwargs: { body_parts: [ "upper_pose", "left_hand", "right_hand" ] }
         }
 
   testing:
-    pose_body_parts: ["upper_pose", "left_hand", "right_hand", "lips"]
+    pose_body_parts: [ "upper_pose", "left_hand", "right_hand" ]
     preprocessing:
       pose_transforms:
         - {
           name: 'norm+flatten2d',
-          kwargs: {body_parts: [ "upper_pose", "left_hand", "right_hand", "lips" ]}
+          kwargs: { body_parts: [ "upper_pose", "left_hand", "right_hand" ] }
         }
 
 
@@ -40,7 +40,7 @@ model:
   backbone:
     name: "ms-tcn"
     kwargs:
-      in_channels: 210 # = upper_body + left/right_hand + lips
+      in_channels: 130 # = upper_body + left/right_hand (65 x 2d)
       out_channels: 4
       hidden_channels: 64
       n_stages: 4
