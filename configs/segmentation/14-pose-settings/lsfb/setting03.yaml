@@ -1,0 +1,54 @@
+from: "base.yaml"
+
+
+experiment:
+  variant: "mstcn_base/setting03"
+  seed: random
+
+
+datasets:
+  training:
+    pose_body_parts: [ "left_hand", "right_hand" ]
+    preprocessing:
+      pose_transforms:
+        - {
+          name: 'norm+flatten2d',
+          kwargs: { body_parts: [ "left_hand", "right_hand" ] }
+        }
+
+  validation:
+    pose_body_parts: [ "left_hand", "right_hand" ]
+    preprocessing:
+      pose_transforms:
+        - {
+          name: 'norm+flatten2d',
+          kwargs: { body_parts: [ "left_hand", "right_hand" ] }
+        }
+
+  testing:
+    pose_body_parts: [ "left_hand", "right_hand" ]
+    preprocessing:
+      pose_transforms:
+        - {
+          name: 'norm+flatten2d',
+          kwargs: { body_parts: [ "left_hand", "right_hand" ] }
+        }
+
+
+model:
+  name: 'hydra'
+  backbone:
+    name: "ms-tcn"
+    kwargs:
+      in_channels: 84 # = left/right_hand
+      out_channels: 4
+      hidden_channels: 64
+      n_stages: 4
+      n_layers: 10
+  heads:
+    classification:
+      name: "identity"
+      n_channels: 2
+    regression:
+      name: "identity"
+      n_channels: 2

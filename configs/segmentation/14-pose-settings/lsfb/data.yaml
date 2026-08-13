@@ -1,6 +1,7 @@
 datasets:
   training:
     shards_url: "/gpfs/scratch/acad/lsfb/datasets/lsfb-cont/shards/annotated/shard_{000002..000007}.tar"
+    pose_body_parts: ["upper_pose", "left_hand", "right_hand", "lips"]
     dataloader:
       batch_size: 32
       shuffle: true
@@ -10,7 +11,11 @@ datasets:
         - 'temporal-segmentation'
         - 'temporal-offsets'
         - 'segments'
-      pose_transforms: [ { name: 'norm+flatten2d' } ]
+      pose_transforms:
+        - {
+          name: 'norm+flatten2d',
+          kwargs: { body_parts: [ "upper_pose", "left_hand", "right_hand", "lips" ] }
+        }
       use_windows: true
       window_size: 3200
       window_stride: 2560
@@ -18,6 +23,7 @@ datasets:
 
   validation:
     shards_url: "/gpfs/scratch/acad/lsfb/datasets/lsfb-cont/shards/annotated/shard_000001.tar"
+    pose_body_parts: ["upper_pose", "left_hand", "right_hand", "lips"]
     dataloader:
       batch_size: 32
       shuffle: false
@@ -27,7 +33,11 @@ datasets:
         - 'temporal-segmentation'
         - 'temporal-offsets'
         - 'segments'
-      pose_transforms: [ { name: 'norm+flatten2d' } ]
+      pose_transforms:
+        - {
+          name: 'norm+flatten2d',
+          kwargs: { body_parts: [ "upper_pose", "left_hand", "right_hand", "lips" ] }
+        }
       use_windows: true
       window_size: 3200
       window_stride: 2560
@@ -35,6 +45,7 @@ datasets:
 
   testing:
     shards_url: "/gpfs/scratch/acad/lsfb/datasets/lsfb-cont/shards/annotated/shard_000000.tar"
+    pose_body_parts: ["upper_pose", "left_hand", "right_hand", "lips"]
     dataloader:
       batch_size: 32
       shuffle: false
@@ -44,7 +55,11 @@ datasets:
         - 'temporal-segmentation'
         - 'temporal-offsets'
         - 'segments'
-      pose_transforms: [ { name: 'norm+flatten2d' } ]
+      pose_transforms:
+        - {
+          name: 'norm+flatten2d',
+          kwargs: { body_parts: [ "upper_pose", "left_hand", "right_hand", "lips" ] }
+        }
       use_windows: true
       window_size: 3200
       window_stride: 2560
